@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import { Column, DataType, HasOne, Model, Table } from 'sequelize-typescript'
+import UsuarioPreferencia from './UsuarioPreferencias'
 
 @Table({
     tableName: 'Usuario',
@@ -49,4 +50,6 @@ export default class Usuario extends Model {
     })
     pais!: string
 
+    @HasOne(() => UsuarioPreferencia)
+    preferencias: UsuarioPreferencia;
 }

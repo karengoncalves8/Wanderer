@@ -3,12 +3,12 @@ import { createContext, use, type PropsWithChildren } from 'react';
 import { useStorageState } from '../hooks/useStorageState';
 
 const AuthContext = createContext<{
-  signIn: () => void;
+  signIn: (token: string) => void;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
 }>({
-  signIn: () => null,
+  signIn: (token: string) => null,
   signOut: () => null,
   session: null,
   isLoading: false,
@@ -27,20 +27,17 @@ export function useSession() {
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('session');
 
+  const signIn = async (token: string) => {
+    setSession(token); 
+  };
+
+  const signOut = async () => {
+    setSession(null);  
+  };
+
   return (
-    <AuthContext
-      value={{
-        signIn: () => {
-          // Perform sign-in logic here
-          setSession('xxx');
-        },
-        signOut: () => {
-          setSession(null);
-        },
-        session,
-        isLoading,
-      }}>
+    <AuthContext.Provider value={{ signIn, signOut, session, isLoading }}>
       {children}
-    </AuthContext>
+    </AuthContext.Provider>
   );
 }

@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # Serviço do backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "5000:5000"  # Mapeia a porta do backend para a máquina local
+    environment:
+      - DB_HOST=postgres-wanderer
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres  # Altere para sua senha de banco real
+      - DB_NAME=wanderer  # Nome do banco de dados que você quer usar
+      - DB_DIALECT=postgres  # Ou 'postgres', se for PostgreSQL
+      - JWT_SECRET='batata12345'
+    depends_on:
+      - postgres-wanderer  # Garante que o banco de dados estará pronto antes de iniciar o backend
+    volumes:
+      - ./:/app  # Mapeia o código-fonte local para dentro do container
+    networks:
+      - app-network
+
+  # Serviço do banco de dados
+  postgres-wanderer:
+    image: postgres:13         # Usando a imagem oficial do PostgreSQL
+    container_name: postgres-wanderer
+    environment:
+      - POSTGRES_USER=postgres  # Usuário para o banco
+      - POSTGRES_PASSWORD=postgres  # Senha do banco
+      - POSTGRES_DB=wanderer    # Nome do banco de dados
+    ports:
+      - "5432:5432"  # Porta do banco de dados
+    volumes:
+      - db-data:/var/lib/mysql  # Persistência dos dados do banco
+    networks:
+      - app-network
+
+volumes:
+  db-data:  # Volume persistente para os dados do banco de dados
+
+networks:
+  app-network:
+    driver: bridge
