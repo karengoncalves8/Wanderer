@@ -22,11 +22,15 @@ function RootNavigator() {
   return (
     <Stack>
       <Stack.Protected guard={!!session}>
-        <Stack.Screen name="(app)" />
+        <Stack.Screen name="(app)" options={{
+          headerShown: false,
+        }}/>
       </Stack.Protected>
 
       <Stack.Protected guard={!session}>
-        <Stack.Screen name="login" />
+        <Stack.Screen name="login/index" options={{
+          headerShown: false, 
+        }} />
       </Stack.Protected>
     </Stack>
   );

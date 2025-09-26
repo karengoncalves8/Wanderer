@@ -1,7 +1,9 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript'
+import { PrefAcomodacao, PrefIdioma, PrefOrcamento, PrefTransporte } from '../enums/UsuarioPreferenciaEnums'
+import Usuario from './Usuario'
 
 @Table({
-    tableName: 'Usuario',
+    tableName: 'UsuarioPreferencia',
     timestamps: false
 })
 export default class UsuarioPreferencia extends Model {
@@ -14,39 +16,36 @@ export default class UsuarioPreferencia extends Model {
     id!: number
 
     @Column({
-        type: DataType.STRING(80),
+        type: DataType.ENUM('portugues', 'ingles', 'espanhol', 'frances'),
         allowNull: false
     })
-    idioma!: number
+    idioma!: PrefIdioma 
 
     @Column({
-        type: DataType.STRING(80),
+        type: DataType.ENUM('carro', 'onibus', 'aviao', 'trem'), 
         allowNull: false
     })
-    email!: string
+    transporte!: PrefTransporte
 
     @Column({
-        type: DataType.STRING(80),
+        type: DataType.ENUM('hotel', 'apartamento', 'hostel', 'pousada'), // Exemplos de acomodação
         allowNull: false
     })
-    senha!: string
+    acomodacao!: PrefAcomodacao
 
     @Column({
-        type: DataType.DATEONLY(),
+        type: DataType.ENUM('baixo', 'medio', 'alto'), // Exemplos de orcamento
         allowNull: false
     })
-    dataNascimento!: Date
+    orcamento!: PrefOrcamento
 
+    @ForeignKey(() => Usuario)
     @Column({
-        type: DataType.STRING(100),
+        type: DataType.INTEGER,
         allowNull: false
     })
-    cidade!: string
+    usuarioId!: number  
 
-    @Column({
-        type: DataType.STRING(100),
-        allowNull: false
-    })
-    pais!: string
-
+    @BelongsTo(() => Usuario)
+    usuario: Usuario;
 }

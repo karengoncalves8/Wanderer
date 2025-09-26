@@ -1,6 +1,5 @@
+import sequelize from "./config/db_connection";
 import router from "./routes";
-import sequelize from "./config/db_connection"; 
-import { registerSwagger } from "./interfaces/swaggers/swagger";
 
 const express = require('express');
 const app = express();
@@ -11,7 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(router);
-registerSwagger(app)
+// registerSwagger(app)
 
 const PORT = process.env.API_PORT || 5000;
 

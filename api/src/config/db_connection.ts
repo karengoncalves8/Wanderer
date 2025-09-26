@@ -1,5 +1,7 @@
-import { Sequelize } from 'sequelize-typescript';
 import dotenv from 'dotenv';
+import { Sequelize } from 'sequelize-typescript';
+import Usuario from '../models/Usuario';
+import UsuarioPreferencia from '../models/UsuarioPreferencias';
 
 dotenv.config();
 
@@ -10,7 +12,7 @@ const sequelize = new Sequelize({
   host: process.env.DB_HOST, 
   port: parseInt(process.env.DB_PORT), 
   dialect: 'postgres',
-  models: [],  
+  models: [Usuario, UsuarioPreferencia],  
 });
 
 export default sequelize;
