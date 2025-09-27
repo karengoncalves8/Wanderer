@@ -1,6 +1,6 @@
 import InputWithIcon from '@/components/Inputs/InputWithIcon/InputWithIcon';
 import { useSession } from '@/context/AuthContext';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import Button from '@/components/Buttons/Button';
 import InputPassword from '@/components/Inputs/InputPassword/InputPassword';
@@ -52,6 +52,10 @@ export default function SignIn() {
         />
       </View>
       <Button label='Entrar' onPress={() => handleLogin()}/>
+        <View style={styles.registerMessage}>
+            <Text style={styles.registerQuestion}>Ainda não tem uma conta?</Text>
+            <Text style={styles.link} onPress={() => router.push('/register')}>Cadastre-se</Text>
+        </View>
     </View>
   );
 }
