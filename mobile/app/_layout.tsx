@@ -31,6 +31,9 @@ function RootNavigator() {
         <Stack.Screen name="login/index" options={{
           headerShown: false, 
         }} />
+        <Stack.Screen name="register/index" options={{
+          headerShown: false, 
+        }} />
       </Stack.Protected>
     </Stack>
   );
