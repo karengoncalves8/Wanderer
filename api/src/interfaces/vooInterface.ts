@@ -1,0 +1,12 @@
+export interface Voo {
+  departure_airport: { id: string; time: string };
+  arrival_airport: { id: string; time: string };
+  duration: number;
+  airline: string;
+  airline_logo: string;
+  travel_class: string;
+  price: number;
+  departure_token?: string;
+  flight_number: string;
+  booking_token?: string;
+}

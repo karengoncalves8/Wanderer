@@ -1,15 +1,17 @@
 import React from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable, StyleProp, Text, ViewStyle } from 'react-native';
 import styles from './styles';
 
 interface ButtonProps {
   label: string;
   onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
 }
 
 const Button = ({
   label,
-  onPress
+  onPress,
+  style
 }: ButtonProps) => {
 
   return (
@@ -18,6 +20,7 @@ const Button = ({
             style={({ pressed }) => [
                 styles.button,
                 pressed && styles.buttonPressed,
+                style
             ]}
         >
             <Text style={styles.label}>{label}</Text>
