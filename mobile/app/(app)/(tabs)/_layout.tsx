@@ -1,6 +1,8 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 
+import FeIcon from 'react-native-vector-icons/Feather';
+import MaIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function TabLayout() {
 
@@ -8,17 +10,25 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+        },
+        tabBarItemStyle: {
+          padding: 10
+        },
+        tabBarLabelStyle: { display: "none" }
       }}>
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
+          tabBarIcon: ({ color }) => <FeIcon name='home' color={color} size={28}/>
         }}
       />
       <Tabs.Screen
-        name="booking"
+        name="booking/index"
         options={{
-          title: 'Booking',
+          tabBarIcon: ({ color }) => <MaIcon name='ticket-confirmation-outline' color={color} size={28}/>
         }}
       />
     </Tabs>

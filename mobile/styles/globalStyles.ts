@@ -34,6 +34,10 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
     color: colors.gray800,
   },
+  title: {
+    fontSize: 20,
+    color: colors.gray800
+  }
 });
 
 export { colors, globalStyles };
