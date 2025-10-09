@@ -4,63 +4,72 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        display: 'flex',
         flex: 1,
-        width: '100%',
-        gap: 15,
         justifyContent: 'flex-end',
-
     },
     caixaCadastrar: {
-        backgroundColor: colors.gray200, 
-        display: 'flex',
-        justifyContent: 'flex-end',
-        padding: 12,
-        height: '90%',
-        borderTopRightRadius: 24,
-        borderTopLeftRadius: 24,
-
-    },
-    caixaCheckBox:{
         backgroundColor: colors.gray200,
-        //backgroundColor: 'red', 
-        display: 'flex',
-        justifyContent: 'flex-end',
-        padding: 12,
-        height: '70%',
+        padding: 20,
         borderTopRightRadius: 24,
         borderTopLeftRadius: 24,
-
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        gap: 20,
+        height: '90%',
+    },
+    caixaCheckBox: {
+        backgroundColor: colors.gray200,
+        padding: 20,
+        borderTopRightRadius: 24,
+        borderTopLeftRadius: 24,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        gap: 20,
+        height: '90%',
     },
     formLogin: {
-        display: 'flex',
-        gap: 10,
-        //backgroundColor: 'red',
+        flex: 1,
         paddingBottom: 15,
-        height: '70%',
     },
     Button: {
-        marginBottom: 45,
-        marginTop: 10,
+        marginBottom: 30,
     },
-   checkBox: {
+    checkBox: {
         display: 'flex',
-        flexDirection: "row",
-        flexWrap: "wrap",
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         marginVertical: 5,
         justifyContent: 'space-between',
         borderRadius: 12,
-        marginTop: 1,
     },
-    label:{
-        marginLeft: 20,
+    label: {
+        marginLeft: 5,
         fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 5,
+        marginTop: 10,
     },
     title: {
-    fontSize: 28,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    paddingBottom: 70,
+        fontSize: 28,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    scrollContent: {
+        paddingBottom: 20,
+        gap: 15,
+    },
+    selectBox: {
+        borderWidth: 1,
+        borderColor: colors.gray300,
+        borderRadius: 8,
+        marginBottom: 10,
+    },
+    radioItem: {
+        flexDirection: 'row-reverse',
+        paddingVertical: 2,
     },
 });
 

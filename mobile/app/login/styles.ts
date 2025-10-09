@@ -3,27 +3,33 @@ import { colors } from '@/styles/globalStyles';
 import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
-    justifyContent: 'flex-end',
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  logo: {
+    display: 'flex', 
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    flex: 1
   },
   
   caixa:{
-    width: '100%',
-    //backgroundColor: 'red',
+    flex: 1,
+    height: '100%',
     backgroundColor: colors.gray200,
-    padding: 10,
-    //marginBottom: 5, // Espaço inferior
-    height: '50%',
+    padding: 20,
     borderTopRightRadius:24,
     borderTopLeftRadius:24,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    gap: 20,
   },
 
   formLogin: {
     display: 'flex', 
-    gap: 20, 
-    flex: 2, 
-    justifyContent: 'flex-end',
-    //backgroundColor: 'blue',
+    gap: 10
   },
 
   registerMessage: {
@@ -42,16 +48,13 @@ const styles = StyleSheet.create({
     color: colors.sky500,
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 16,
-    marginBottom: 30
+    fontSize: 16
   },
   
   button: {
-    backgroundColor: colors.sky500, // Use a cor do botão conforme a paleta
-    paddingVertical: 15,
+    backgroundColor: colors.sky500, 
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 20,
   },
 
   buttonText: {
@@ -64,7 +67,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: 'center',
     fontWeight: 'bold',
-    marginBottom: '30%',
   },
 
   subTitle: {
@@ -72,7 +74,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: 'center',
     fontWeight: 'bold',
-    marginTop: 20
   }
 
 

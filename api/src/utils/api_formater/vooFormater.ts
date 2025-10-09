@@ -21,7 +21,8 @@ export const formatVoos = (apiData: any): Voo[] => {
             price: bestFlight.price, // preço total do pacote
             departure_token: bestFlight.departure_token ? bestFlight.departure_token : '',
             flight_number: flight.flight_number,
-            booking_token: bestFlight.booking_token ? bestFlight.booking_token : ''
+            booking_token: bestFlight.booking_token ? bestFlight.booking_token : '',
+            booking_url: ''
         });
         });
     });
@@ -44,7 +45,8 @@ export const formatVoos = (apiData: any): Voo[] => {
             price: bestFlight.price, // preço total do pacote
             departure_token: bestFlight.departure_token ? bestFlight.departure_token : '',
             flight_number: flight.flight_number,
-            booking_token: bestFlight.booking_token ? bestFlight.booking_token : ''
+            booking_token: bestFlight.booking_token ? bestFlight.booking_token : '',
+            booking_url: ''
         });
         });
     });

@@ -10,11 +10,23 @@ dotenv.config();
 const SERPAPI_KEY = process.env.SERPAPI_KEY;
 const SERPAPI_URL = "https://serpapi.com/search.json";
 
+function normalizePostDataToQueryString(postData: unknown): string {
+	if (!postData) return "";
+	if (typeof postData === "string") {
+	  return postData.startsWith("?") ? postData.slice(1) : postData;
+	}
+	const usp = new URLSearchParams();
+	Object.entries(postData as Record<string, unknown>).forEach(([k, v]) => {
+	  if (v !== undefined && v !== null) usp.append(k, String(v));
+	});
+	return usp.toString();
+}
+
 export const voosController = {
 
 	// Buscar voos
 	searchVoos: async (req: Request, res: Response): Promise<void> => {
-		const { iataOrigem, iataDestino, dataPartida, dataVolta, idaEVolta } = req.query;
+		const { iataOrigem, iataDestino, dataPartida, dataVolta, idaEVolta, classe } = req.query;
 
 		const isIdaEVolta: boolean = typeof idaEVolta === 'string' && idaEVolta.toLowerCase() === 'true';
 
@@ -30,17 +42,18 @@ export const voosController = {
 		try {
 			// 1. Checar se já existe no Mongo
 			const existente = await BuscarVoo.findOne({
-			iataOrigem: (iataOrigem as string).toUpperCase(),
-			iataDestino: (iataDestino as string).toUpperCase(),
-			dataPartida,
-			dataVolta,
-			idaEVolta: isIdaEVolta
+				iataOrigem: (iataOrigem as string).toUpperCase(),
+				iataDestino: (iataDestino as string).toUpperCase(),
+				dataPartida,
+				dataVolta,
+				idaEVolta: isIdaEVolta,
+				classe
 			});
 
 			if (existente) {
-			console.log("🔎 Retornando do cache MongoDB");
-			res.json(existente.resultados);
-			return;
+				console.log("🔎 Retornando do cache MongoDB");
+				res.json(existente.resultados);
+				return;
 			}
 
 			// 2. Montar URL e buscar na API externa
@@ -51,11 +64,26 @@ export const voosController = {
 			flightUrl += `&outbound_date=${dataPartida}`;
 			if (isIdaEVolta) flightUrl += `&return_date=${dataVolta}`;
 			flightUrl += `&type=${type}`;
+			flightUrl += `&travel_class=${classe}`;
 			flightUrl += `&currency=BRL&hl=en&api_key=${SERPAPI_KEY}`;
 
 			const response = await axios.get(flightUrl);
 
 			const formattedFlights = formatVoos(response.data);
+
+			const filteredFlights = formattedFlights.filter((voo) => {
+				return voo.departure_airport.id === (iataOrigem as string).toUpperCase() && voo.arrival_airport.id === (iataDestino as string).toUpperCase();
+			});
+
+			const flightsWithRedirects = await Promise.all(
+				filteredFlights.map(async (voo) => {
+				  if (voo.booking_token) {
+					const redirectUrl = await voosController.getBookingRedirectUrl(flightUrl, voo.booking_token, voo.airline);
+					return { ...voo, booking_url: redirectUrl };
+				  }
+				  return voo;
+				})
+			  );
 
 			// 3. Salvar no Mongo
 			await BuscarVoo.create({
@@ -64,14 +92,58 @@ export const voosController = {
 				dataPartida,
 				dataVolta,
 				idaEVolta: isIdaEVolta,
-				resultados: formattedFlights
+				classe,
+				resultados: flightsWithRedirects
 			});
 
-			res.json(formattedFlights);
+			res.json(flightsWithRedirects);
 
 		} catch (error) {
 			console.error("Erro ao chamar a API de voos:", error);
 			res.status(500).json({ error: "Erro ao buscar dados de voos" });
 		}
-	}
+	},
+
+	async getBookingRedirectUrl(flightUrl: string, booking_token: string, airline: string): Promise<string | null> {
+		try {
+			flightUrl += `&booking_token=${booking_token}`;
+			console.log("🚀 Buscando URL de redirecionamento para booking_token:", booking_token);
+			const response = await axios.get(flightUrl);
+			console.log("🚀 Resposta da API:", response.data);
+	  
+			const options = response.data?.booking_options ?? [];
+			if (options.length === 0) return "";
+			console.log("🚀 Opções encontradas:", options);
+		
+			// Pega a primeira opção "together" que tem a URL
+			const together = options.find((option: any) => option.together.book_with === airline).together;
+			console.log("Opção encontrada:", together, together.booking_request);
+			if (!together?.booking_request?.url || !together.booking_request.post_data)  {
+				console.log("🚀 URL ou post_data ausente.");
+				return "";
+			  }
+		
+			const url = together.booking_request.url;
+			const postData = together.booking_request.post_data;
+
+			console.log("🚀 URL de redirecionamento encontrada:", url);
+			console.log("🚀 Post data:", postData);
+			
+			const urlResponse = await axios.post(url, postData);
+
+			console.log("🚀 Resposta da URL de redirecionamento:", urlResponse.data);
+			
+			const regex = /content="[^"]*url='([^']+)'/;
+			const match = urlResponse.data.match(regex);
+
+			if (match && match[1]) {
+				return match[1];
+			} else {
+				return "";
+			}
+		} catch (error) {
+			console.error("Erro ao gerar URL de redirecionamento:", error);
+			return "";
+		}
+	},
 };

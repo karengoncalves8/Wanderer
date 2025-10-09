@@ -14,7 +14,7 @@ export interface Usuario {
 export interface UsuarioPreferencia {
     id?: number,
     idioma: PrefIdioma,
-    trasporte: PrefTransporte,
+    transporte: PrefTransporte,
     acomodacao: PrefAcomodacao,
     orcamento: PrefOrcamento
 }

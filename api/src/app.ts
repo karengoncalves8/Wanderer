@@ -23,8 +23,9 @@ sequelize.sync({ force: false })
   .then(async () => {
     console.log('Database synchronized');
 
-    const server = app.listen(PORT, () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
+      console.log(`Server accessible at http://0.0.0.0:${PORT}`);
     });
 
   })

@@ -1,32 +1,70 @@
-
-import { Voo } from '@/interfaces/VooAPI';
+import FlightCard from '@/components/Cards/FlightCard';
+import { useSession } from '@/context/AuthContext';
+import { Voo, VooAPISearch } from '@/interfaces/VooAPI';
+import { vooAPIService } from '@/services/vooAPIService';
 import { colors } from '@/styles/globalStyles';
-import { useLocalSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams, useRouter } from 'expo-router/build/hooks';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
+import { format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 
 export default function BookingFlights() {
+    const router = useRouter();
     const { origem, destino, dataPartida, classe } = useLocalSearchParams(); 
+    const { session } = useSession();
 
     const [voos, setVoos] = useState<Voo[] | null>(null);
 
-    // const fetchResults = async (params: VooAPISearch) => {
-    //     try{
-    //         const data = vooAPIService.searchVoo()
-    //     }
-    // }
+    const fetchResults = async (params: VooAPISearch) => {
+        try{
+            console.log("token", session)
+            const data = await vooAPIService.searchVoo(params, session!);
+            console.log("data", data)
+            if (Array.isArray(data)) {
+                setVoos(data);
+            } else {
+                console.warn('Erro na busca de voos:', data);
+                setVoos([]);
+            }
+        } catch (error) {
+            console.log(error);
+            setVoos([]);
+        }
+    }
+    
     useEffect(() => {
-
+        fetchResults({
+            iataOrigem: String(origem ?? ''),
+            iataDestino: String(destino ?? ''),
+            dataPartida: String(dataPartida ?? ''),
+            classe: Number(classe ?? 0),
+            idaEVolta: false
+        })
     }, [origem, destino, dataPartida, classe])
 
     return (
-        <View>
-            <Text>origem: {origem}</Text>
-            <Text>Check-in: {destino}</Text>
-            <Text>Check-out: {dataPartida}</Text>
-            <Text>Hospedes: {classe}</Text>
+        <View style={{ flex: 1, backgroundColor: '#fff', padding: 12 }}>
+            {dataPartida &&
+                <Text style={styles.subtitle}>{format(parseISO(dataPartida as string), "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</Text>
+            }
+            {voos && voos.length > 0 ? (
+                <FlatList
+                    data={voos}
+                    keyExtractor={(item, index) => index.toString()}
+                    ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+                    renderItem={({ item }) => (
+                        <FlightCard voo={item} />
+                    )}
+                    contentContainerStyle={{ paddingVertical: 8 }}
+                />
+            ) : (
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ color: colors.gray300 }}>Nenhum voo encontrado</Text>
+                </View>
+            )}
         </View>
     );
 }
@@ -47,6 +85,11 @@ const styles = StyleSheet.create({
         color: colors.gray100,
         fontWeight: 'bold',
         textAlignVertical: 'center'
+    },
+    subtitle: {
+        fontSize: 20,
+        color: colors.sky500,
+        fontWeight: 'bold'
     },
     card: {
         flex: 3,

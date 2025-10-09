@@ -9,7 +9,6 @@ import { StyleSheet, Text, View } from 'react-native';
 
 
 import Button from '@/components/Buttons/Button';
-import { ClassesVoo } from '@/enums/ClassesVoo';
 import { useRouter } from 'expo-router';
 import { SelectList } from 'react-native-dropdown-select-list';
 import FeIcon from 'react-native-vector-icons/Feather';
@@ -38,13 +37,12 @@ export default function Booking() {
         setTabOption(selectedOption);
     };
 
-    const classesOptions = Object.keys(ClassesVoo)
-    .filter((key) => isNaN(Number(key))) // Filtra as chaves numéricas (essas são geradas automaticamente)
-    .map((key) => ({
-        key, 
-        value: key, // Agora o `value` é o nome da classe, não o número
-        numberValue: ClassesVoo[key as keyof typeof ClassesVoo] // Guarda o número (valor do enum)
-    }));
+    const classesOptions = [
+        {key:'1', value:'Econômica'},
+        {key:'2', value:'Premium'},
+        {key:'3', value:'Executiva'},
+        {key:'4', value:'Primeira Classe'},
+        ]
 
     const handleSubmit = async () => {
         try{
@@ -145,8 +143,8 @@ export default function Booking() {
                                 Icon={FeIcon} 
                                 iconProps={{ name: 'users' }} 
                                 inputType="default"
-                                onChangeText={setCidade}
-                                value={cidade}
+                                onChangeText={(text: string) => setHospedes(Number(text))}
+                                value={hospedes.toString()}
                             />
                             <InputDateWithIcon 
                                 label="Check-in"

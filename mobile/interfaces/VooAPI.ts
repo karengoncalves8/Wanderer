@@ -18,4 +18,5 @@ export interface Voo {
   departure_token?: string;
   flight_number: string;
   booking_token?: string;
+  booking_url?: string;
 }

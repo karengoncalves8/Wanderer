@@ -8,6 +8,7 @@ interface BuscaVooDoc extends Document {
   dataPartida: string;
   dataVolta?: string;
   idaEVolta: boolean;
+  classe: number;
   resultados: Voo[]; 
   criadoEm: Date;
 }
@@ -18,6 +19,7 @@ const FlightSearchSchema = new Schema<BuscaVooDoc>({
   dataPartida: { type: String, required: true },
   dataVolta: { type: String },
   idaEVolta: { type: Boolean, required: true },
+  classe: { type: Number, required: true },
   resultados: { type: Schema.Types.Mixed, required: true },
   criadoEm: { type: Date, default: Date.now, expires: 60 * 60 * 24 } 
   // expira em 24h (TTL index do Mongo)
