@@ -6,6 +6,8 @@ export default function AppLayout() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="itinerary" options={{ presentation: 'modal', title: 'Modal' }} />
+      <Stack.Screen name="booking-flights" options={{ presentation: 'modal', title: 'Resultados' }} />
+      <Stack.Screen name="booking-hotel" options={{ presentation: 'modal', title: 'Resultados' }} />
     </Stack>
   );
 }

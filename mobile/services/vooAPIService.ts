@@ -2,10 +2,13 @@ import { Api } from "@/config/api";
 import { ApiException } from "@/config/apiException";
 import { Voo, VooAPISearch } from "@/interfaces/VooAPI";
 
-const searchVoo = async (params: VooAPISearch): Promise<Voo[] | ApiException> => {
+const searchVoo = async (params: VooAPISearch, token: string): Promise<Voo[] | ApiException> => {
   try {
-    const { data } = await Api.get(`/voos?iataOrigem=${params.iataOrigem}&iataDestino=${params.iataDestino}&dataPartida=${params.dataPartida}&idaEVolta=${params.idaEVolta}`);
-    return data.token;
+    const { data } = await Api.get(`/voos?iataOrigem=${params.iataOrigem}&iataDestino=${params.iataDestino}&dataPartida=${params.dataPartida}&idaEVolta=${params.idaEVolta}&classe=${params.classe}`, {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }});
+    return data;
   } catch (error) {
     if (error instanceof Error) {
       return new ApiException(error.message || "Erro ao consultar empresas.");
