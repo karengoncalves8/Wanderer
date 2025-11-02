@@ -20,6 +20,12 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: { display: "none" }
       }}>
+        <Tabs.Screen
+        name="trips/index"
+        options={{
+          tabBarIcon: ({ color }) => <IoIcon name='trail-sign-outline' color={color} size={28} />
+        }}
+      />
       <Tabs.Screen
         name="home"
         options={{
@@ -30,12 +36,6 @@ export default function TabLayout() {
         name="booking/index"
         options={{
           tabBarIcon: ({ color }) => <MaIcon name='ticket-confirmation-outline' color={color} size={28}/>
-        }}
-      />
-      <Tabs.Screen
-        name="trips/index"
-        options={{
-          tabBarIcon: ({ color }) => <IoIcon name='trail-sign-outline' color={color} size={28} />
         }}
       />
     </Tabs>

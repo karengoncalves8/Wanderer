@@ -39,6 +39,8 @@ export const voosController = {
 			return;
 		}
 
+		console.log("🚀 Buscando voos para a data de", dataPartida);
+
 		try {
 			// 1. Checar se já existe no Mongo
 			const existente = await BuscarVoo.findOne({
@@ -107,17 +109,14 @@ export const voosController = {
 	async getBookingRedirectUrl(flightUrl: string, booking_token: string, airline: string): Promise<string | null> {
 		try {
 			flightUrl += `&booking_token=${booking_token}`;
-			console.log("🚀 Buscando URL de redirecionamento para booking_token:", booking_token);
 			const response = await axios.get(flightUrl);
-			console.log("🚀 Resposta da API:", response.data);
 	  
 			const options = response.data?.booking_options ?? [];
 			if (options.length === 0) return "";
-			console.log("🚀 Opções encontradas:", options);
 		
 			// Pega a primeira opção "together" que tem a URL
 			const together = options.find((option: any) => option.together.book_with === airline).together;
-			console.log("Opção encontrada:", together, together.booking_request);
+
 			if (!together?.booking_request?.url || !together.booking_request.post_data)  {
 				console.log("🚀 URL ou post_data ausente.");
 				return "";
@@ -125,13 +124,8 @@ export const voosController = {
 		
 			const url = together.booking_request.url;
 			const postData = together.booking_request.post_data;
-
-			console.log("🚀 URL de redirecionamento encontrada:", url);
-			console.log("🚀 Post data:", postData);
 			
 			const urlResponse = await axios.post(url, postData);
-
-			console.log("🚀 Resposta da URL de redirecionamento:", urlResponse.data);
 			
 			const regex = /content="[^"]*url='([^']+)'/;
 			const match = urlResponse.data.match(regex);

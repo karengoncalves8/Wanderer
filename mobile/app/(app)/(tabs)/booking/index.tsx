@@ -46,12 +46,11 @@ export default function Booking() {
 
     const handleSubmit = async () => {
         try{
-            console.log("PAAAAAAAA", tabOption)
             if(tabOption == 'Passagens'){
                 const params = {
                     origem,
                     destino,
-                    dataPartida: checkIn.toISOString().split('T')[0],
+                    dataPartida: dataPartida.toISOString().split('T')[0],
                     classe,
                 }
                 router.push({

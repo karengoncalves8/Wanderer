@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
     modalTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: colors.gray700
+        color: colors.gray700,
+        maxWidth: '80%',
     },
     closeButton: {
         padding: 3,

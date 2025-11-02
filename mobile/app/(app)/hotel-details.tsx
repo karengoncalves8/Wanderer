@@ -22,7 +22,7 @@ const { width } = Dimensions.get('window');
 const HotelDetails = () => {
     const { hotelData, checkin, checkout, hospedes } = useLocalSearchParams();
 
-    const [open, setOpen] = useState(false);
+    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     
     const hotel: AcomodacaoAPI = useMemo(() => {
         try {
@@ -50,7 +50,7 @@ const HotelDetails = () => {
                 const supported = await Linking.canOpenURL(hotel.link);
                 if (supported) {
                     await Linking.openURL(hotel.link);
-                    setOpen(true);
+                    setOpenConfirmationModal(true);
                 } else {
                     console.warn('Não foi possível abrir a URL:', hotel.link);
                 }
@@ -199,13 +199,13 @@ const HotelDetails = () => {
 
             
             <GenericModal
-                visible={open}
-                onClose={() => setOpen(false)}
+                visible={openConfirmationModal}
+                onClose={() => setOpenConfirmationModal(false)}
                 title="Deseja salvar as informações de sua acomodação?"
                 footerButtons={
                     <>
-                        <Button label="Salvar" style={styles.modalButton} onPress={() => setOpen(false)} />
-                        <Button label="Cancelar" style={styles.modalButton} onPress={() => setOpen(false)} />
+                        <Button label="Cancelar" style={styles.modalButton} onPress={() => setOpenConfirmationModal(false)} />
+                        <Button label="Salvar" style={styles.modalButton} onPress={() => setOpenConfirmationModal(false)} />
                     </>
                 }
             >

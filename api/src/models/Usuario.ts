@@ -1,6 +1,7 @@
-import { Column, DataType, HasOne, Model, Table } from 'sequelize-typescript'
+import { Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript'
 import UsuarioPreferencia from './UsuarioPreferencias'
-
+import Viagem from './Viagem'
+    
 @Table({
     tableName: 'Usuario',
     timestamps: false
@@ -52,4 +53,7 @@ export default class Usuario extends Model {
 
     @HasOne(() => UsuarioPreferencia)
     preferencias: UsuarioPreferencia;
+
+    @HasMany(() => Viagem)
+    viagens: Viagem[];
 }

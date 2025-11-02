@@ -1,13 +1,13 @@
 // components/ui/AppModal.tsx
 import React, { useEffect, useRef } from "react";
 import {
-    Animated,
-    BackHandler,
-    Easing,
-    Modal,
-    Pressable,
-    Text,
-    View
+  Animated,
+  BackHandler,
+  Easing,
+  Modal,
+  Pressable,
+  Text,
+  View
 } from "react-native";
 
 import MaIcons from 'react-native-vector-icons/MaterialIcons';
