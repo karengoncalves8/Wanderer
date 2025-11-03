@@ -9,7 +9,7 @@ export const Api = axios.create({
   // baseURL: Platform.OS === 'android' 
   //   ? 'http://10.0.2.2:5000'  // Android emulator localhost
   //   : 'http://192.168.137.1:5000', // iOS simulator or physical device
-  baseURL: 'http://192.168.15.12:5000',
+  baseURL: 'http://192.168.12.13:5000',
   timeout: 10000, // 10 second timeout
   headers: {
     'Content-Type': 'application/json',

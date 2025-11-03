@@ -21,6 +21,12 @@ export default function TabLayout() {
         tabBarLabelStyle: { display: "none" }
       }}>
       <Tabs.Screen
+        name="home"
+        options={{
+          tabBarIcon: ({ color }) => <FeIcon name='home' color={color} size={28} />
+        }}
+      />
+      <Tabs.Screen
         name="trips/index"
         options={{
           tabBarIcon: ({ color }) => <IoIcon name='trail-sign-outline' color={color} size={28} />
@@ -33,9 +39,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="home"
+        name="trips/styles"
         options={{
-          tabBarIcon: ({ color }) => <FeIcon name='home' color={color} size={28} />
+          href: null, 
         }}
       />
       <Tabs.Screen

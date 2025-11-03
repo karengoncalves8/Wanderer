@@ -24,7 +24,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 dotenv_1.default.config();
 app.use(cors({
-    origin: ['http://localhost:8081', 'http://10.0.2.2:8081', 'http://192.168.15.12:8081', 'exp://192.168.137.1:8081', 'exp://192.168.15.12:8081'],
+    origin: ['http://localhost:8081', 'http://10.0.2.2:8081', 'http://192.168.12.13:8081', 'exp://192.168.12.13:8081', 'exp://192.168.15.12:8081'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']

@@ -17,6 +17,7 @@ import Toast from 'react-native-toast-message';
 import Button from '../Buttons/Button';
 import { acomodacaoService } from '@/services/acomodacaoService';
 import { parseTime } from '@/utils/timeRelated/parseTimeString';
+import { SelectList } from 'react-native-dropdown-select-list';
 
 type AcomodacaoFormProps = {
     data: Acomodacao
@@ -26,7 +27,7 @@ type AcomodacaoFormProps = {
 const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
     const { session } = useSession();
 
-    const [viagens, setViagens] = useState<Array<{ label: string; value: number }>>([])
+    const [viagens, setViagens] = useState<Array<{ key: string; value: string }>>([])
 
     const [nome, setNome ] = useState(data.nome || '')
     const [localizacao, setLocalizacao ] = useState(data.localizacao || '')
@@ -53,7 +54,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
             return;
         }
         let viagensAtuais = response.filter(v => v.status === ViagemStatus.ATUAL);
-        let formattedViagens = viagensAtuais.map(v => ({ label: v.nome, value: v.id! }));
+        // react-native-dropdown-select-list expects items shaped as { key: string, value: string }
+        let formattedViagens = viagensAtuais.map(v => ({ key: v.id!.toString(), value: v.nome }));
         setViagens(formattedViagens);
     }
 
@@ -102,13 +104,16 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
 
     return (
          <View style={styles.form}>
-            <SelectWithLabel
-                label='Viagem'
+            <SelectList
+                // setSelected receives the saved property (we'll save the key which is the id as string)
+                setSelected={(val: string) => setViagemId(Number(val))}
+                data={viagens}
+                // data items are { key: string, value: string } so save the key to get the id
+                save="key"
                 placeholder='Selecione uma viagem'
-                options={viagens}
-                onChangeOption={(val: number) => setViagemId(val)}
-                selectedValue={viagemId}
-            />
+                searchPlaceholder='Pesquisar'
+            />  
+
             <InputWithIcon 
                 label='Nome'
                 placeholder='Nome da acomodacao'
