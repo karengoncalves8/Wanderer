@@ -58,8 +58,8 @@ Desde o cadastro e preferências do usuário até o planejamento completo com vo
 | 05 | 7 | Alta | Como usuário, quero pesquisar acomodações com filtros, para escolher a melhor opção. | 13 | 1 |
 | 06 | 8 | Alta | Como usuário, quero reservar acomodações e salvar a reserva, para garantir meu lugar. | 5 | 1 |
 | 07 | 9 | Alta | Como usuário, quero criar itinerários personalizados, para planejar minha viagem. | 8 | 2 |
-| 07 | 10 | Média | Como usuário, quero visualizar meu itinerário em um mapa interativo, para ter visão geográfica. | 8 | 2 |
-| 08 | 11 | Alta | Como usuário, quero receber sugestões automáticas de atrações, para aproveitar melhor a viagem. | 13 | 2 |
+| 07 | 10 | Média | Como usuário, quero visualizar meu itinerário em um mapa interativo, para ter visão geográfica. | 8 | 3 |
+| 08 | 11 | Alta | Como usuário, quero receber sugestões automáticas de atrações, para aproveitar melhor a viagem. | 13 | 3 |
 | 09 | 12 | Média | Como usuário, quero criar lista de tarefas relacionadas à viagem, para me preparar adequadamente. | 3 | 2 |
 | 09 | 13 | Média | Como usuário, quero criar lista de itens de viagem, para não esquecer nada. | 3 | 2 |
 | 10 | 14 | Alta | Como usuário, quero registrar e visualizar gastos, para acompanhar meu orçamento. | 8 | 2 |
