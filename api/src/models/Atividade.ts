@@ -43,10 +43,9 @@ export default class Atividade extends Model {
 
     @Column({
         type: DataType.FLOAT,
-        allowNull: false,
-        defaultValue: 0
+        allowNull: true,
     })
-    preco!: number;
+    preco?: number;
 
     @ForeignKey(() => AtividadeCategoria)
     @Column({

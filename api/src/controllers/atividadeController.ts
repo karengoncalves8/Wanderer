@@ -2,6 +2,11 @@ import { Request, Response } from 'express'
 import Atividade from '../models/Atividade'
 import AtividadeCategoria from '../models/AtividadeCategoria'
 import AtividadeLocal from '../models/AtividadeLocal'
+import Viagem from '../models/Viagem'
+import Despesa from '../models/Despesa'
+import Gastos from '../models/Gastos'
+import DespesaCategoria from '../models/DespesaCategoria'
+import { addNewDespesa } from '../services/gastosService'
 
 export const atividadeController = {
   // Criar atividade e seus dados de local
@@ -21,6 +26,12 @@ export const atividadeController = {
       }
 
       const created = await Atividade.findByPk(atividade.id, { include: [AtividadeLocal] })
+
+      if(preco){
+          addNewDespesa(viagemId, `${atividade.nome}`, preco, 'Entretenimento')
+      }
+      
+
       return res.status(201).json(created)
     } catch (error: any) {
       return res.status(400).json({ error: 'Erro ao criar atividade', detalhes: error.message })

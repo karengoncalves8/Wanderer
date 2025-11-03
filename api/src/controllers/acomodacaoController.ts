@@ -1,11 +1,20 @@
 import { Request, Response } from 'express'
 import Acomodacao from '../models/Acomodacao'
+import Despesa from '../models/Despesa'
+import Gastos from '../models/Gastos'
+import Viagem from '../models/Viagem'
+import DespesaCategoria from '../models/DespesaCategoria'
+import { addNewDespesa } from '../services/gastosService'
 
 export const acomodacaoController = {
   createAcomodacao: async (req: Request, res: Response) => {
     try {
       const { nome, preco, tipo, localizacao, gps_long, gps_lat, check_in, check_out, data_entrada, data_saida, dias, viagemId } = req.body
       const acomodacao = await Acomodacao.create({ nome, preco, tipo, localizacao, gps_long, gps_lat, check_in, check_out, data_entrada, data_saida, dias, viagemId })
+
+      
+      addNewDespesa(viagemId, `${acomodacao.nome} - ${acomodacao.tipo}`, preco, 'Hospedagem')
+      
       return res.status(201).json(acomodacao)
     } catch (error: any) {
       return res.status(400).json({ error: 'Erro ao criar acomodação', detalhes: error.message })

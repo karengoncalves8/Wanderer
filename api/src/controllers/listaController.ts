@@ -24,8 +24,8 @@ export const listaController = {
 
   getAllListasByViagemId: async (req: Request, res: Response) => {
     try {
-      const { viagemId } = req.params
-      const listas = await Lista.findAll({ where: { viagemId }, include: [ListaItem] })
+      const { id } = req.params
+      const listas = await Lista.findAll({ where: { viagemId: id }, include: [ListaItem] })
       return res.status(200).json(listas)
     } catch (error: any) {
       return res.status(400).json({ error: 'Erro ao buscar listas', detalhes: error.message })

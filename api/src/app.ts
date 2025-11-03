@@ -26,7 +26,7 @@ const PORT = process.env.API_PORT || 5000;
 
 conn_mongo()
 
-sequelize.sync({ force: true }) 
+sequelize.sync({ force: false }) 
   .then(async () => {
     console.log('Database synchronized');
 

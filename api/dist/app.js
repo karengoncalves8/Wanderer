@@ -35,7 +35,7 @@ app.use(routes_1.default);
 (0, swagger_1.registerSwagger)(app);
 const PORT = process.env.API_PORT || 5000;
 (0, mongo_connection_1.conn_mongo)();
-db_connection_1.default.sync({ force: true })
+db_connection_1.default.sync({ force: false })
     .then(() => __awaiter(void 0, void 0, void 0, function* () {
     console.log('Database synchronized');
     yield (0, seed_1.default)();

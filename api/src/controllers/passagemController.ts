@@ -1,6 +1,11 @@
 import { Request, Response } from 'express'
 import Passagem from '../models/Passagem'
 import PassagemLocal from '../models/PassagemLocal'
+import Despesa from '../models/Despesa'
+import Gastos from '../models/Gastos'
+import Viagem from '../models/Viagem'
+import DespesaCategoria from '../models/DespesaCategoria'
+import { addNewDespesa } from '../services/gastosService'
 
 export const passagemController = {
   // Criar passagem junto com locais (partida/chegada ou múltiplos trechos)
@@ -22,6 +27,9 @@ export const passagemController = {
       }
 
       const created = await Passagem.findByPk(passagem.id, { include: [PassagemLocal] })
+
+      addNewDespesa(viagemId, `${passagem.companhia} - ${passagem.numero}`, preco, 'Transporte')
+
       return res.status(201).json(created)
     } catch (error: any) {
       return res.status(400).json({ error: 'Erro ao criar passagem', detalhes: error.message })

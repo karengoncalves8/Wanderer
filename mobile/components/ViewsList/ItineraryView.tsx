@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -76,6 +76,15 @@ const ItineraryItemCard = ({ item }: { item: FeedItem }) => {
         {item.type === 'passagem' && item.passagem?.arquivo_pdf && (
           <Text style={styles.linkText}>Baixar Passagem  ⬇️</Text>
         )}
+        {item.type === 'atividade' && item.atividade?.atividadeLocal?.localizacao && (
+          <Text style={styles.linkText}>{item.atividade.atividadeLocal.localizacao}</Text>
+        )}
+        {item.type === 'acomodacao_checkin' && item.acomodacao?.nome && (
+          <Text style={styles.linkText}>{item.acomodacao.check_in.toString()}</Text>
+        )}
+        {item.type === 'acomodacao_checkout' && item.acomodacao?.nome && (
+          <Text style={styles.linkText}>{item.acomodacao.check_out.toString()}</Text>
+        )}
       </View>
     </View>
   );
@@ -84,6 +93,17 @@ const ItineraryItemCard = ({ item }: { item: FeedItem }) => {
 export default function ItineraryView({ viagem, atividades = [], passagens = [], acomodacoes }: ItineraryViewProps) {
   const tripDays = useMemo(() => getTripDates(viagem?.dataIda ? createDateFromString(viagem.dataIda) : undefined, viagem?.dataVolta ? createDateFromString(viagem.dataVolta) : undefined), [viagem?.dataIda, viagem?.dataVolta]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  useEffect(() => {
+    console.log('[Itinerary] tripDays keys', tripDays.map(d => sameDayKey(d)));
+    // reset selection when date range changes
+    setSelectedIndex(0);
+  }, [tripDays]);
+  useEffect(() => {
+    console.log('[Itinerary] atividades count', atividades?.length ?? 0, (atividades ?? []).map(a => a.data));
+  }, [atividades]);
+  useEffect(() => {
+    console.log('[Itinerary] selectedIndex', selectedIndex, 'selectedDay', tripDays[selectedIndex]?.toISOString?.());
+  }, [selectedIndex, tripDays]);
 
   const acc = (acomodacoes ?? viagem?.acomodacoes ?? []) as Acomodacao[];
 
@@ -98,10 +118,12 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
   const buildFeedForDay = (day: Date): FeedItem[] => {
     const key = sameDayKey(day);
     const items: FeedItem[] = [];
+    console.log('[Itinerary] Building feed for day', day?.toISOString?.(), 'key', key);
 
     // Atividades exactly on the day
     (atividades ?? []).forEach(a => {
       const d = createDateFromString(a.data);
+      console.log('[Itinerary] atividade', a.id, 'raw', a.data, 'parsed', d?.toISOString?.(), 'dayKey', sameDayKey(d), 'matches?', sameDayKey(d) === key);
       if (!d || sameDayKey(d) !== key) return;
       items.push({
         type: 'atividade',

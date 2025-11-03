@@ -15,6 +15,8 @@ import GenericModal from '@/components/Modals/GenericModal/Modal';
 import AtividadeForm from '@/components/Forms/AtividadeForm';
 import { atividadeService } from '@/services/atividadeService';
 import { Atividade } from '@/interfaces/Atividade';
+import GastosView from '@/components/ViewsList/GastosView';
+import ListasView from '@/components/ViewsList/ListasView';
 
 export default function TripDetails() {
     const { id } = useLocalSearchParams();
@@ -22,7 +24,6 @@ export default function TripDetails() {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<string>('visao');
     const [atividadeModalOpen, setAtividadeModalOpen] = useState(false);
-    const [atividades, setAtividades] = useState<Atividade[]>([]);
 
     const fetchViagemDetails = async () => {
         if (!id) return;
@@ -42,16 +43,7 @@ export default function TripDetails() {
         console.log("viagem", response)
         
         setViagem(response);
-        await fetchAtividades();
         setLoading(false);
-    };
-
-    const fetchAtividades = async () => {
-        if (!id) return;
-        const resp = await atividadeService.getAllAtividades(Number(id));
-        if (!(resp instanceof ApiException)) {
-            setAtividades(resp as Atividade[]);
-        }
     };
 
     useEffect(() => {
@@ -79,26 +71,18 @@ export default function TripDetails() {
             case 'visao':
                 return <VisaoGeralView viagem={viagem} />;
             case 'itinerario':
-                return <ItineraryView viagem={viagem} atividades={atividades} />;
+                return <ItineraryView viagem={viagem} acomodacoes={viagem.acomodacoes} atividades={viagem.atividades} passagens={viagem.passagens} />;
             case 'gastos':
-                return (
-                    <View style={styles.tabContent}>
-                        <Text>Gastos em desenvolvimento...</Text>
-                    </View>
-                );
+                return <GastosView viagem={viagem} onCreated={() => fetchViagemDetails()}/>;
             case 'listas':
-                return (
-                    <View style={styles.tabContent}>
-                        <Text>Listas em desenvolvimento...</Text>
-                    </View>
-                );
+                return <ListasView viagem={viagem} onCreated={() => fetchViagemDetails()} />;
             default:
                 return <VisaoGeralView viagem={viagem} />;
         }
     };
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -137,11 +121,11 @@ export default function TripDetails() {
                         dataIda={new Date(viagem.dataIda)}
                         dataVolta={new Date(viagem.dataVolta)}
                         onClose={() => setAtividadeModalOpen(false)}
-                        onCreated={() => { fetchViagemDetails(); fetchAtividades(); }}
+                        onCreated={() => { fetchViagemDetails(); }}
                     />
                 )}
             </GenericModal>
-        </ScrollView>
+        </View>
     );
 }
 

@@ -4,7 +4,7 @@ import Gastos from "./Gastos";
 
 @Table({
     tableName: 'Despesa',
-    timestamps: false
+    timestamps: true
 })
 export default class Despesa extends Model {
 
