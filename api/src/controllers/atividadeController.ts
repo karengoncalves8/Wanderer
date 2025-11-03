@@ -7,14 +7,13 @@ export const atividadeController = {
   // Criar atividade e seus dados de local
   createAtividade: async (req: Request, res: Response) => {
     try {
-      const { nome, data, hora_inicio, hora_fim, preco, viagemId, local } = req.body
+      const { nome, data, hora_inicio, hora_fim, preco, viagemId, local, atividadeCategoriaId } = req.body
 
-      const atividade = await Atividade.create({ nome, data, hora_inicio, hora_fim, preco, viagemId })
+      const atividade = await Atividade.create({ nome, data, hora_inicio, hora_fim, preco, viagemId, atividadeCategoriaId })
 
       if (local) {
         await AtividadeLocal.create({
-          cidade: local.cidade,
-          pais: local.pais,
+          localizacao: local.localizacao,
           lat: local.lat,
           long: local.long,
           atividadeId: atividade.id,
@@ -64,7 +63,7 @@ export const atividadeController = {
   updateAtividade: async (req: Request, res: Response) => {
     try {
       const { id } = req.params
-      const { nome, data, hora_inicio, hora_fim, preco, viagemId, local } = req.body
+      const { nome, data, hora_inicio, hora_fim, preco, viagemId, local, atividadeCategoriaId } = req.body
 
       const atividade = await Atividade.findByPk(id)
       if (!atividade) return res.status(404).json({ message: 'Atividade não encontrada' })
@@ -75,21 +74,20 @@ export const atividadeController = {
       atividade.hora_fim = hora_fim ?? atividade.hora_fim
       atividade.preco = preco ?? atividade.preco
       atividade.viagemId = viagemId ?? atividade.viagemId
+      atividade.atividadeCategoriaId = atividadeCategoriaId ?? atividade.atividadeCategoriaId
       await atividade.save()
 
       if (local) {
         // mantém um registro de local por atividade
         const existingLocal = await AtividadeLocal.findOne({ where: { atividadeId: atividade.id } })
         if (existingLocal) {
-          existingLocal.cidade = local.cidade ?? existingLocal.cidade
-          existingLocal.pais = local.pais ?? existingLocal.pais
+          existingLocal.localizacao = local.localizacao ?? existingLocal.localizacao
           existingLocal.lat = local.lat ?? existingLocal.lat
           existingLocal.long = local.long ?? existingLocal.long
           await existingLocal.save()
         } else {
           await AtividadeLocal.create({
-            cidade: local.cidade,
-            pais: local.pais,
+            localizacao: local.localizacao,
             lat: local.lat,
             long: local.long,
             atividadeId: atividade.id,

@@ -16,7 +16,7 @@ interface InputProps {
 
 const InputWithIcon = ({label, placeholder, Icon, iconProps, inputType = 'default', onChangeText, value}: InputProps) => {
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container]}>
 			{Icon && <Icon  {...iconProps}  style={styles.icon} />} 
 			<View style={styles.textContainer}>
 			<Text style={styles.label}>{label}</Text>
@@ -27,6 +27,8 @@ const InputWithIcon = ({label, placeholder, Icon, iconProps, inputType = 'defaul
 					keyboardType={inputType}
 					onChangeText={onChangeText}
 					value={value}
+					numberOfLines={1}
+					
 				/>
 			</View>
 		</View>

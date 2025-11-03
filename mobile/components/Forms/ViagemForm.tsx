@@ -11,6 +11,7 @@ import MaIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 import Button from '../Buttons/Button';
 import InputDateWithIcon from '../Inputs/InputDate/InputDate';
+import { calculateDaysBetweenDates }  from '../../utils/dateRelated/calculateDaysBetweenDates';
 
 type ViagemFormProps = {
     data: Viagem | undefined
@@ -23,14 +24,13 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
     const [nome, setNome ] = useState(data?.nome || '')
     const [dataIda, setDataIda] = useState(data?.dataIda || new Date())
     const [dataVolta, setDataVolta] = useState(data?.dataVolta || new Date())
-    const [duracao, setDuracao ] = useState(data?.duracao || '')
     const [destino_cidade, setDestinoCidade ] = useState(data?.destino_cidade || '')
     const [destino_pais, setDestinoPais ] = useState(data?.destino_pais || '')
     const [orcamento, setOrcamento ] = useState('')
     const [img_url, setImgUrl ] = useState(data?.img_url || '')
 
     const handleSubmit = async () => {
-        if(!nome || !dataIda || !dataVolta || !duracao || !destino_cidade || !destino_pais || !orcamento) {
+        if(!nome || !dataIda || !dataVolta || !destino_pais || !orcamento) {
             Toast.show({
                 type: 'error',
                 text1: 'Erro',
@@ -38,6 +38,8 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
             });
             return
         }
+
+        let duracao = calculateDaysBetweenDates(dataIda, dataVolta);
 
         const dados = {
             nome,
@@ -77,9 +79,11 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
         let adresses = place.details?.addressComponents;
         let country = adresses?.find((address: any) => address.types.includes("country"))?.shortText;
         let city = adresses?.find((address: any) => address.types.includes("administrative_area_level_2"))?.longText;
-        let img_url = place.details?.photos?.[0]?.flagContentUri;
-        setDestinoCidade(city);
+        let img_url = place.details?.photos?.[0]?.name;
         setDestinoPais(country);
+        if(city){
+            setDestinoCidade(city);
+        }
         setImgUrl(img_url);
     }
     
@@ -123,26 +127,15 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
                         value={dataVolta}  
                     />
                 </View>
-                <View style={styles.inputGroup}>
-                    <InputWithIcon 
-                        label="Duração"
-                        placeholder="10:00"
-                        Icon={MaIcon} 
-                        inputType='numeric'
-                        iconProps={{ name: 'calendar-month-outline' }} 
-                        onChangeText={setDuracao}
-                        value={duracao as string}  
-                    />
-                    <InputWithIcon 
-                        label="Orçamento"
-                        placeholder="10:00"
-                        Icon={MaIcon} 
-                        inputType='numeric'
-                        iconProps={{ name: 'calendar-month-outline' }} 
-                        onChangeText={setOrcamento}
-                        value={orcamento as string}  
-                    />
-                </View>
+                <InputWithIcon 
+                    label="Orçamento"
+                    placeholder="R$ 0,00"
+                    Icon={MaIcon} 
+                    inputType='numeric'
+                    iconProps={{ name: 'calendar-month-outline' }} 
+                    onChangeText={setOrcamento}
+                    value={orcamento as string}  
+                />
                 <Button 
                     label="Salvar"
                     onPress={() => handleSubmit()}

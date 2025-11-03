@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: colors.gray100,
     height: 95,
+    width: '100%',
     padding: 10,
     borderRadius: 10,
   },
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 2,
     fontSize: 16,
+    width: '100%',
     padding: 0,
   },
   icon: {

@@ -3,6 +3,7 @@ import sequelize from "./config/db_connection";
 import { conn_mongo } from "./config/mongo_connection";
 import { registerSwagger } from "./interfaces/swaggers/swagger";
 import router from "./routes";
+import runSeed from './seeds/seed';
 
 const express = require('express');
 const app = express();
@@ -10,7 +11,12 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 dotenv.config();
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:8081', 'http://10.0.2.2:8081', 'http://192.168.15.12:8081', 'exp://192.168.137.1:8081', 'exp://192.168.15.12:8081'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(router);
@@ -24,6 +30,8 @@ sequelize.sync({ force: true })
   .then(async () => {
     console.log('Database synchronized');
 
+    await runSeed();
+    
     const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
       console.log(`Server accessible at http://0.0.0.0:${PORT}`);

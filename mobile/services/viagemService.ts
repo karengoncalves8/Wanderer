@@ -4,7 +4,7 @@ import { Viagem } from "@/interfaces/Viagem";
 
 const getAllViagens = async (usuario_id: number): Promise<Viagem[] | ApiException> => {
   try {
-    const { data } = await Api.get(`/viagem/${usuario_id}`);
+    const { data } = await Api.get(`/viagem/usuario/${usuario_id}`);
     return data as Viagem[];
   } catch (error) {
     if (error instanceof Error) {
@@ -16,7 +16,7 @@ const getAllViagens = async (usuario_id: number): Promise<Viagem[] | ApiExceptio
 
 const updateAllViagensStatus = async (usuario_id: number): Promise<Viagem[] | ApiException> => {
   try {
-    const { data } = await Api.get(`/viagem/${usuario_id}/status`);
+    const { data } = await Api.get(`/viagem/usuario/${usuario_id}/status`);
     return data as Viagem[];
   } catch (error) {
     if (error instanceof Error) {
@@ -26,9 +26,21 @@ const updateAllViagensStatus = async (usuario_id: number): Promise<Viagem[] | Ap
   }
 }
 
+const getViagemById = async (viagemId: number): Promise<Viagem | ApiException> => {
+  try {
+    const { data } = await Api.get(`/viagem/${viagemId}`);
+    return data as Viagem;
+  } catch (error) {
+    if (error instanceof Error) {
+      return new ApiException(error.message || "Erro ao consultar viagem.");
+    }
+    return new ApiException("Erro desconhecido.");
+  }
+};
+
 const createViagem = async (viagem: any, usuario_id: number): Promise<Viagem | ApiException> => {
   try {
-    const { data } = await Api.post(`/viagem/${usuario_id}`, viagem);
+    const { data } = await Api.post(`/viagem/usuario/${usuario_id}`, viagem);
     return data as Viagem;
   } catch (error) {
     if (error instanceof Error) {
@@ -41,5 +53,6 @@ const createViagem = async (viagem: any, usuario_id: number): Promise<Viagem | A
 export const viagemService = {
     createViagem,
     getAllViagens,
-    updateAllViagensStatus
+    updateAllViagensStatus,
+    getViagemById
 }

@@ -27,8 +27,9 @@ export const viagemController = {
         status
       })
 
-      const gastos = await Gastos.create({
+      await Gastos.create({
         orcamento,
+        total: 0,
         viagemId: viagem.id
       })
 

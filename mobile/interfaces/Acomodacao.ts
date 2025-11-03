@@ -1,9 +1,10 @@
 import { Avaliacao } from "./Avaliacao";
 
 export interface Acomodacao {
-    id: number;
+    id?: number;
     nome: string;
     preco: number;
+    tipo: string;
     gps_lat: number;
     gps_long: number;
     localizacao: string;

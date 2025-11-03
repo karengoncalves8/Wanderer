@@ -4,6 +4,8 @@ import Acomodacao from "./Acomodacao";
 import Gastos from "./Gastos";
 import Passagem from "./Passagem";
 import Usuario from "./Usuario";
+import Atividade from "./Atividade";
+import Lista from "./Lista";
 
 @Table({
     tableName: 'Viagem',
@@ -44,9 +46,9 @@ export default class Viagem extends Model {
 
     @Column({
         type: DataType.STRING(50),
-        allowNull: false
+        allowNull: true
     })
-    destino_cidade!: string 
+    destino_cidade?: string 
 
     @Column({
         type: DataType.STRING(50),
@@ -61,7 +63,7 @@ export default class Viagem extends Model {
     status!: ViagemStatus
 
     @Column({
-        type: DataType.STRING(255),
+        type: DataType.STRING(600),
         allowNull: true
     })
     img_url?: string
@@ -84,4 +86,10 @@ export default class Viagem extends Model {
 
     @HasMany(() => Passagem)
     passagens: Passagem[];
+
+    @HasMany(() => Atividade)
+    atividades: Atividade[];
+
+    @HasMany(() => Lista)
+    listas: Lista[];
 }

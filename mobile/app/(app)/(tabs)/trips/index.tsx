@@ -1,5 +1,6 @@
 
 import { Text, View } from 'react-native';
+import { router } from 'expo-router';
 
 import Button from '@/components/Buttons/Button';
 import ViagemCard from '@/components/Cards/ViagemCard';
@@ -9,14 +10,17 @@ import { ApiException } from '@/config/apiException';
 import { useSession } from '@/context/AuthContext';
 import { Viagem } from '@/interfaces/Viagem';
 import { viagemService } from '@/services/viagemService';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Toast from 'react-native-toast-message';
 import styles from './styles';
+import { ViagemStatus } from '@/enums/ViagemStatus';
 
 export default function Trips() {
     const { session } = useSession();
 
-    const [viagens, setViagens] = useState<Viagem[] | null>(null);
+    const [viagensAtuais, setViagensAtuais] = useState<Viagem[] | null>(null);
+    const [viagensFuturas, setViagensFuturas] = useState<Viagem[] | null>(null);
+    const [viagensHistorico, setViagensHistorico] = useState<Viagem[] | null>(null);
     const [viagemSelecionada, setViagemSelecionada] = useState(null);
 
     const [showFormModal, setShowFormModal] = useState(false);
@@ -31,8 +35,21 @@ export default function Trips() {
             });
             return;
         }
-        setViagens(response as Viagem[]);
+        let viagensAtuais = response.filter(v => v.status === ViagemStatus.ATUAL);
+        let viagensFuturas = response.filter(v => v.status === ViagemStatus.FUTURA);
+        let viagensHistorico = response.filter(v => v.status === ViagemStatus.HISTORICO);
+        
+        setViagensAtuais(viagensAtuais);
+        setViagensFuturas(viagensFuturas);
+        setViagensHistorico(viagensHistorico);
     }
+
+    const handleViagemPress = (viagem: Viagem) => {
+        router.push({
+            pathname: '/trips/[id]',
+            params: { id: viagem.id!.toString() }
+        } as any);
+    };
 
     const handleModalClose = () => {
         setShowFormModal(false);
@@ -40,24 +57,32 @@ export default function Trips() {
         fetchViagens();
     }
 
+    useEffect(() => {
+        fetchViagens();
+    }, []);
+
     return (
         <View style={{ flex: 1, margin: 15, backgroundColor: '#f0f0f0' }}>
             <View style={styles.header}>
                 <Text style={styles.title}> Viagens</Text>
                 <Button style={styles.button} label='Nova Viagem' onPress={() => setShowFormModal(true)} /> 
             </View>
-            
-            <Text style={styles.subTitle}> Atual </Text>
-            {viagens?.map((viagem) => (
-                <ViagemCard key={viagem.id} viagem={viagem} />
-            ))}
+              <Text style={styles.subTitle}> Atual </Text>
+                {viagensAtuais?.map((viagem) => (
+                    <ViagemCard key={viagem.id} viagem={viagem} onPress={handleViagemPress} />
+                ))}
 
             
             <Text style={styles.subTitle}> Futuras </Text>
-                
+                {viagensFuturas?.map((viagem) => (
+                    <ViagemCard key={viagem.id} viagem={viagem} onPress={handleViagemPress} />
+                ))}
             
             <Text style={styles.subTitle}> Histórico </Text>
-            
+                 {viagensHistorico?.map((viagem) => (
+                    <ViagemCard key={viagem.id} viagem={viagem} onPress={handleViagemPress} />
+                ))}
+
             <GenericModal 
                 visible={showFormModal}
                 onClose={() => setShowFormModal(false)}

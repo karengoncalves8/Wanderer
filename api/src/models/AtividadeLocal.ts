@@ -16,16 +16,10 @@ export default class AtividadeLocal extends Model {
     id!: number;
 
     @Column({
-        type: DataType.STRING(80),
+        type: DataType.STRING(150),
         allowNull: true
     })
-    cidade?: string;
-
-    @Column({
-        type: DataType.STRING(80),
-        allowNull: true
-    })
-    pais?: string;
+    localizacao?: string;
 
     @Column({
         type: DataType.INTEGER,

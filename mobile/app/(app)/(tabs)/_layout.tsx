@@ -20,10 +20,16 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: { display: "none" }
       }}>
-        <Tabs.Screen
+      <Tabs.Screen
         name="trips/index"
         options={{
           tabBarIcon: ({ color }) => <IoIcon name='trail-sign-outline' color={color} size={28} />
+        }}
+      />
+      <Tabs.Screen
+        name="trips/[id]"
+        options={{
+          href: null, 
         }}
       />
       <Tabs.Screen

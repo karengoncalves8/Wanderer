@@ -24,11 +24,15 @@ const AuthContext = createContext<{
   signIn: (token: string) => void;
   signOut: () => void;
   session?: Session | null;
+  user?: Session['user'] | null;
+  token?: string | null;
   isLoading: boolean;
 }>({
   signIn: (_token: string) => null,
   signOut: () => null,
   session: null,
+  user: null,
+  token: null,
   isLoading: false,
 });
 
@@ -85,9 +89,15 @@ export function SessionProvider({ children }: PropsWithChildren) {
       console.log("Invalid session");
     }
   }
-
   return (
-    <AuthContext.Provider value={{ signIn, signOut, session: sessionData, isLoading }}>
+    <AuthContext.Provider value={{ 
+      signIn, 
+      signOut, 
+      session: sessionData, 
+      user: sessionData?.user || null,
+      token: sessionData?.token || null,
+      isLoading 
+    }}>
       {children}
     </AuthContext.Provider>
   );

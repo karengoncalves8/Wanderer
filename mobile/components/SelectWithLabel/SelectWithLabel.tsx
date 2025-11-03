@@ -8,10 +8,11 @@ interface InputProps {
   label: string;
   placeholder: string;
   onChangeOption?: (value: any) => void;
-  options: any[]
+  options: any[];
+  selectedValue?: any;
 }
 
-const SelectWithLabel = ({label, placeholder, options, onChangeOption}: InputProps) => {
+const SelectWithLabel = ({label, placeholder, options, onChangeOption, selectedValue}: InputProps) => {
 	return (
         <View style={styles.container}>
             <Text style={styles.label}>{label}</Text>
@@ -20,7 +21,8 @@ const SelectWithLabel = ({label, placeholder, options, onChangeOption}: InputPro
                 data={options} 
                 save="value"
                 placeholder={placeholder}
-                inputStyles={{width: 50}}
+                defaultOption={selectedValue ? options.find(option => option.value === selectedValue) : undefined}
+                
             />
         </View>
   	);

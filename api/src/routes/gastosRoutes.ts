@@ -5,7 +5,7 @@ import { verifyToken } from '../middlewares/authMiddleware'
 const router = Router()
 
 router.post('/', verifyToken, gastosController.createGastos)
-router.get('/', verifyToken, gastosController.getAllGastos)
+router.get('/viagem/:id', verifyToken, gastosController.getGastosByViagemId)
 router.get('/:id', verifyToken, gastosController.getGastosById)
 router.put('/:id', verifyToken, gastosController.updateGastos)
 router.delete('/:id', verifyToken, gastosController.deleteGastos)

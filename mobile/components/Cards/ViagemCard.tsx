@@ -1,14 +1,18 @@
 import { Viagem } from "@/interfaces/Viagem";
+import { googleAPIService } from "@/services/googleAPIService";
 import { colors } from "@/styles/globalStyles";
-import React from "react";
+import { setDayOfYear } from "date-fns";
+import { useEffect, useState } from "react";
 import {
     Image,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
     ViewStyle,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { formatDateStringToStringWithBar } from "@/utils/formatters/formatDateToString";
 
 export type ViagemCardProps = {
     viagem: Viagem;
@@ -21,21 +25,54 @@ export default function ViagemCard({
     style,
     onPress,
 }: ViagemCardProps) {
+    const [imgUri, setImgUri] = useState<string | null>(null);
 
-    return (
-        <View style={[styles.card, style]}>
-             <Image
-        source={{ uri: 'https://forbes.com.br/wp-content/uploads/2024/03/Life_tendencias-de-viagem-2024.jpg' }}
-        style={styles.image}
-      />
+    useEffect(() => {
+        const fetchImage = async () => {
+            let defaultImg = "https://forbes.com.br/wp-content/uploads/2024/03/Life_tendencias-de-viagem-2024.jpg"
+            // if (viagem.img_url) {
+            //     try {
+            //         const uri = await googleAPIService.getPlaceImageUri(viagem.img_url);
+            //         console.log("uri", uri);
+            //         if (typeof uri === 'string') {
+            //             setImgUri(uri);
+            //         } else {
+            //             setImgUri(defaultImg);
+            //         }
+            //     } catch (error) {
+            //         console.error("Erro ao buscar imagem:", error);
+            //         setImgUri(defaultImg);
+            //     }
+            // }
+            // else {
+            //     setImgUri(defaultImg);
+            // }
+            setImgUri(defaultImg);
+        };
+        fetchImage();
+    }, [viagem]);    return (
+        <TouchableOpacity 
+            style={[styles.card, style]} 
+            onPress={() => onPress?.(viagem)}
+            activeOpacity={0.7}
+        >
+            {imgUri ? (
+                <Image
+                source={{ uri: imgUri }}
+                style={styles.image}        
+                />
+            ) : (
+                <Text>...</Text>
+            )}
+             
             <View>
                 <Text style={[styles.viagemName]}>{viagem.nome}</Text>
-                <Text style={[styles.viagemDate]}>{viagem.dataIda.toLocaleDateString()} - {viagem.dataVolta.toLocaleDateString()}</Text>
+                <Text style={[styles.viagemDate]}>{formatDateStringToStringWithBar(viagem.dataIda)} - {formatDateStringToStringWithBar(viagem.dataVolta)}</Text>
                 <Text style={[styles.viagemDate]}>{viagem.duracao} dias</Text>
             </View>
             <Ionicons name="chevron-forward" size={24} color="#2D8CFF" />
 
-        </View>
+        </TouchableOpacity>
     );
 }
 
