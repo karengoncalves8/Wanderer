@@ -27,15 +27,27 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="booking/index"
-        options={{
-          tabBarIcon: ({ color }) => <MaIcon name='ticket-confirmation-outline' color={color} size={28}/>
-        }}
-      />
-      <Tabs.Screen
         name="trips/index"
         options={{
           tabBarIcon: ({ color }) => <IoIcon name='trail-sign-outline' color={color} size={28} />
+        }}
+      />
+      <Tabs.Screen
+        name="trips/[id]"
+        options={{
+          href: null, 
+        }}
+      />
+      <Tabs.Screen
+        name="trips/styles"
+        options={{
+          href: null, 
+        }}
+      />
+      <Tabs.Screen
+        name="booking/index"
+        options={{
+          tabBarIcon: ({ color }) => <MaIcon name='ticket-confirmation-outline' color={color} size={28}/>
         }}
       />
     </Tabs>

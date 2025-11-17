@@ -60,7 +60,7 @@ exports.usuarioController = {
             if (!isMatch) {
                 return res.status(401).json({ message: 'Senha incorreta' });
             }
-            const token = jsonwebtoken_1.default.sign({ id: usuario.id, nome: usuario.nome, email: usuario.email }, JWT_SECRET, { expiresIn: '1h' });
+            const token = jsonwebtoken_1.default.sign({ id: usuario.id, nome: usuario.nome, email: usuario.email }, JWT_SECRET, { expiresIn: '24h' });
             return res.status(200).json({ token });
         }
         catch (error) {

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
 const UsuarioPreferencias_1 = __importDefault(require("./UsuarioPreferencias"));
+const Viagem_1 = __importDefault(require("./Viagem"));
 let Usuario = class Usuario extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -70,6 +71,10 @@ __decorate([
     (0, sequelize_typescript_1.HasOne)(() => UsuarioPreferencias_1.default),
     __metadata("design:type", UsuarioPreferencias_1.default)
 ], Usuario.prototype, "preferencias", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => Viagem_1.default),
+    __metadata("design:type", Array)
+], Usuario.prototype, "viagens", void 0);
 Usuario = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'Usuario',

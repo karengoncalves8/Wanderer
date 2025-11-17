@@ -3,7 +3,7 @@ import GenericModal from '@/components/Modals/GenericModal/Modal';
 import { AcomodacaoAPI } from '@/interfaces/acomodacaoAPI';
 import { colors } from '@/styles/globalStyles';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Dimensions,
     Image,
@@ -15,6 +15,12 @@ import {
     View
 } from 'react-native';
 import MaIcon from 'react-native-vector-icons/MaterialIcons';
+import { router } from 'expo-router';
+import { Acomodacao } from '@/interfaces/Acomodacao';
+import AcomodacaoForm from '@/components/Forms/AcomodacaoForm';
+import { googleAPIService } from '@/services/googleAPIService';
+import { ApiException } from '@/config/apiException';
+import { calculateDaysBetweenDates } from '@/utils/dateRelated/calculateDaysBetweenDates';
 
 
 const { width } = Dimensions.get('window');
@@ -22,7 +28,10 @@ const { width } = Dimensions.get('window');
 const HotelDetails = () => {
     const { hotelData, checkin, checkout, hospedes } = useLocalSearchParams();
 
-    const [open, setOpen] = useState(false);
+    const [formattedAcomodacao, setFormattedAcomodacao] = useState<Acomodacao | null>(null);
+
+    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
+    const [openSaveModal, setOpenSaveModal] = useState(false);
     
     const hotel: AcomodacaoAPI = useMemo(() => {
         try {
@@ -50,7 +59,7 @@ const HotelDetails = () => {
                 const supported = await Linking.canOpenURL(hotel.link);
                 if (supported) {
                     await Linking.openURL(hotel.link);
-                    setOpen(true);
+                    setOpenConfirmationModal(true);
                 } else {
                     console.warn('Não foi possível abrir a URL:', hotel.link);
                 }
@@ -59,6 +68,50 @@ const HotelDetails = () => {
             }
         }
     };
+
+    const fetchAcomodacaoLocation = async () => {
+        try {
+            const result = await googleAPIService.getReverseGeolocation(hotel.gps_latitude, hotel.gps_longtitude);
+            if (result instanceof ApiException) {
+                console.error('Erro ao buscar localização:', result);
+            } else {
+                console.log("resultado usca", result);
+                setFormattedAcomodacao({
+                    nome: hotel.name,
+                    localizacao: result.results[0]?.formatted_address || '',
+                    check_in: hotel.check_in_time + ':00',
+                    check_out: hotel.check_out_time + ':00',
+                    data_entrada: new Date(checkin as string),
+                    data_saida: new Date(checkout as string),
+                    preco: hotel.prices,
+                    gps_lat: hotel.gps_latitude,
+                    gps_long: hotel.gps_longtitude,
+                    tipo: hotel.type || 'Hotel',
+                    dias: calculateDaysBetweenDates(new Date(checkin as string), new Date(checkout as string)),
+                    viagemId: -1
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao buscar localização:', error);
+        }
+    };
+
+    const handleSaveConfirmation = () => {
+        setOpenConfirmationModal(false);
+        fetchAcomodacaoLocation();
+    }
+
+    useEffect(() => {
+        if (formattedAcomodacao) {
+            console.log("formatted", formattedAcomodacao)
+            setOpenSaveModal(true);
+        }
+    }, [formattedAcomodacao]);
+
+    const onCloseSave = () => {
+        setOpenSaveModal(false);
+        router.push('/(app)/(tabs)/trips');
+    }
 
     if (!hotel.name) {
         return (
@@ -199,13 +252,13 @@ const HotelDetails = () => {
 
             
             <GenericModal
-                visible={open}
-                onClose={() => setOpen(false)}
+                visible={openConfirmationModal}
+                onClose={() => setOpenConfirmationModal(false)}
                 title="Deseja salvar as informações de sua acomodação?"
                 footerButtons={
                     <>
-                        <Button label="Salvar" style={styles.modalButton} onPress={() => setOpen(false)} />
-                        <Button label="Cancelar" style={styles.modalButton} onPress={() => setOpen(false)} />
+                        <Button label="Cancelar" style={styles.modalButton} onPress={() => setOpenConfirmationModal(false)} />
+                        <Button label="Salvar" style={styles.modalButton} onPress={() => handleSaveConfirmation()} />
                     </>
                 }
             >
@@ -213,6 +266,18 @@ const HotelDetails = () => {
                     Vimos que você selecionou a acomodação {hotel.name}, dia {checkin} até {checkout}, para {hospedes} hóspede(s). Caso tenha de fato agendado, podemos salva-lá a sua viagem.
                 </Text>
             </GenericModal>
+
+            <GenericModal
+                visible={openSaveModal}
+                onClose={() => setOpenSaveModal(false)}
+                title="Salvar Acomodação"
+            >
+                <AcomodacaoForm
+                    data={formattedAcomodacao!}
+                    onClose={onCloseSave}
+                />
+            </GenericModal>
+            
         </>
     );
 };

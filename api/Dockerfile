@@ -19,5 +19,5 @@ COPY . .
 # Exponha a porta que o backend vai rodar
 EXPOSE 5000
 
-# Comando para iniciar o servidor com nodemon
-CMD ["nodemon", "src/app.ts"]
+# Comando para iniciar o servidor
+CMD ["npm", "start"]

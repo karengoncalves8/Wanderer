@@ -55,7 +55,7 @@ export const usuarioController = {
                 return res.status(401).json({ message: 'Senha incorreta' })
             }
 
-            const token = jwt.sign({ id: usuario.id, nome: usuario.nome, email: usuario.email }, JWT_SECRET, { expiresIn: '1h' })
+            const token = jwt.sign({ id: usuario.id, nome: usuario.nome, email: usuario.email }, JWT_SECRET, { expiresIn: '24h' })
 
             return res.status(200).json({ token })
         } catch (error: any) {

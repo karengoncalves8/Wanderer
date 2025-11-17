@@ -3,6 +3,7 @@ import { SessionProvider, useSession } from '@/context/AuthContext';
 import { SplashScreenController } from '@/splash/splash';
 import { Stack } from 'expo-router';
 
+import Toast from 'react-native-toast-message';
 
 
 export default function Root() {
@@ -20,6 +21,7 @@ function RootNavigator() {
   const { session } = useSession();
 
   return (
+    <>
     <Stack>
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="(app)" options={{
@@ -36,5 +38,7 @@ function RootNavigator() {
         }} />
       </Stack.Protected>
     </Stack>
+    <Toast />
+    </>
   );
 }

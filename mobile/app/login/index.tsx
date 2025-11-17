@@ -5,6 +5,7 @@ import { Image, ImageBackground, KeyboardAvoidingView, Text, View } from 'react-
 import Button from '@/components/Buttons/Button';
 import InputPassword from '@/components/Inputs/InputPassword/InputPassword';
 import { usuarioService } from '@/services/usuarioService';
+import { viagemService } from '@/services/viagemService';
 import { colors } from '@/styles/globalStyles';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -12,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
 
 export default function SignIn() {
-  const { signIn } = useSession();
+  const { signIn, session } = useSession();
 
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
@@ -25,6 +26,8 @@ export default function SignIn() {
       }
 
       await signIn(token as string);
+
+      await viagemService.updateAllViagensStatus(session?.user.id!);
 
       router.replace('/home');
     } catch (error) {

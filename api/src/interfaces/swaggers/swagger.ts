@@ -1,6 +1,17 @@
 import { Express } from "express";
 import swaggerUi from "swagger-ui-express";
 import { usuarioSwagger } from './usuarioSwagger'
+import { viagemSwagger } from './viagemSwagger'
+import { passagemSwagger } from './passagemSwagger'
+import { acomodacaoSwagger } from './acomodacaoSwagger'
+import { gastosSwagger } from './gastosSwagger'
+import { despesaSwagger } from './despesaSwagger'
+import { despesaCategoriaSwagger } from './despesaCategoriaSwagger'
+import { atividadeSwagger } from './atividadeSwagger'
+import { atividadeCategoriaSwagger } from './atividadeCategoriaSwagger'
+import { listaSwagger } from './listaSwagger'
+import { listaItemSwagger } from './listaItemSwagger'
+import { avaliacaoSwagger } from './avaliacaoSwagger'
 
 export function registerSwagger(app: Express): void {
   const openapi = {
@@ -13,6 +24,17 @@ export function registerSwagger(app: Express): void {
     servers: [{ url: "/" }],
     paths: {
       ...usuarioSwagger,
+      ...viagemSwagger,
+      ...passagemSwagger,
+      ...acomodacaoSwagger,
+      ...gastosSwagger,
+      ...despesaSwagger,
+      ...despesaCategoriaSwagger,
+      ...atividadeSwagger,
+      ...atividadeCategoriaSwagger,
+      ...listaSwagger,
+      ...listaItemSwagger,
+      ...avaliacaoSwagger,
     },
   } as const
 

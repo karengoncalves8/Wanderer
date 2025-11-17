@@ -19,7 +19,7 @@
     "@types/sequelize": "^4.28.20",
     "@types/ws": "^8.5.13",
     "nodemon": "^3.0.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "-": "^0.0.1",
