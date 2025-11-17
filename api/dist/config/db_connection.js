@@ -27,7 +27,7 @@ const sequelize = new sequelize_typescript_1.Sequelize({
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT),
-    dialect: 'mysql',
+    dialect: 'postgres',
     models: [Usuario_1.default, UsuarioPreferencias_1.default, Acomodacao_1.default, Atividade_1.default, Gastos_1.default, Passagem_1.default, PassagemLocal_1.default, Viagem_1.default, Lista_1.default, ListaItem_1.default, Avaliacao_1.default, AtividadeCategoria_1.default, AtividadeLocal_1.default, Despesa_1.default, DespesaCategoria_1.default],
 });
 exports.default = sequelize;

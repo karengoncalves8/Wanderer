@@ -12,7 +12,7 @@ const bodyParser = require('body-parser');
 dotenv.config();
 
 app.use(cors({
-  origin: ['http://localhost:8081', 'http://10.0.2.2:8081', 'http://192.168.12.13:8081', 'exp://192.168.12.13:8081', 'exp://192.168.15.12:8081'],
+  origin: ['http://localhost:8081', 'http://10.0.2.2:8081', `http://${process.env.IP_ADDRESS}:8081`, `exp://${process.env.IP_ADDRESS}:8081`],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
