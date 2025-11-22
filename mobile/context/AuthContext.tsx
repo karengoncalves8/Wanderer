@@ -2,6 +2,8 @@ import { jwtDecode } from 'jwt-decode';
 import { createContext, use, type PropsWithChildren } from 'react';
 
 import { useStorageState } from '../hooks/useStorageState';
+import { authenticateWithBiometrics } from '@/utils/biometry/biometricAuth';
+import Toast from 'react-native-toast-message';
 
 type JwtPayload = {
   id: number;
@@ -23,6 +25,7 @@ type Session = {
 const AuthContext = createContext<{
   signIn: (token: string) => void;
   signOut: () => void;
+  signInWithBiometrics: () => Promise<void>;
   session?: Session | null;
   user?: Session['user'] | null;
   token?: string | null;
@@ -30,6 +33,7 @@ const AuthContext = createContext<{
 }>({
   signIn: (_token: string) => null,
   signOut: () => null,
+  signInWithBiometrics: () => Promise.resolve(),
   session: null,
   user: null,
   token: null,
@@ -48,16 +52,40 @@ export function useSession() {
 
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('session');
+  const [[, cachedSession], setCachedSession] = useStorageState('cached-session');
 
   const signIn = async (token: string) => {
     const payload = jwtDecode<JwtPayload>(token);
     const user = { id: payload.id, nome: payload.nome, email: payload.email };
     setSession(JSON.stringify({ token, user }));
+    setCachedSession(JSON.stringify({ token, user }));
   };
 
   const signOut = async () => {
     setSession(null);
   };
+
+  async function signInWithBiometrics() {
+    const res = await authenticateWithBiometrics();
+    if (res.success) {
+      // restore user automatically using secure storage token
+      if (!res.success) return;
+      if (!cachedSession) {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro',
+          text2: 'Nenhuma sessão armazenada. Faça login manualmente.'
+        });
+      }
+
+      try {
+        const restored = JSON.parse(cachedSession!) as Session;
+        setSession(JSON.stringify(restored));
+      } catch {
+        setCachedSession(null);      
+      }
+    }
+  }
 
   // Migrate legacy values: if storage contains a raw JWT (non-JSON), convert to JSON once.
   // Also avoid throwing during render if parsing fails.
@@ -93,6 +121,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     <AuthContext.Provider value={{ 
       signIn, 
       signOut, 
+      signInWithBiometrics,
       session: sessionData, 
       user: sessionData?.user || null,
       token: sessionData?.token || null,
