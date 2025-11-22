@@ -14,6 +14,18 @@ const getAllAtividades = async (viagem_id: number): Promise<Atividade[] | ApiExc
   }
 }
 
+const getAtividadesByData = async (viagem_id: number, data: string): Promise<Atividade[] | ApiException> => {
+  try {
+    const { data: responseData } = await Api.get(`/atividade/viagem/${viagem_id}/data/${data}`);
+    return responseData as Atividade[];
+  } catch (error) {
+    if (error instanceof Error) {
+      return new ApiException(error.message || "Erro ao consultar atividades por data.");
+    }
+    return new ApiException("Erro desconhecido.");
+  }
+}
+
 
 const createAtividade = async (atividade: any): Promise<Atividade | ApiException> => {
   try {
@@ -29,5 +41,6 @@ const createAtividade = async (atividade: any): Promise<Atividade | ApiException
 
 export const atividadeService = {
   getAllAtividades,
+  getAtividadesByData,
   createAtividade
 }

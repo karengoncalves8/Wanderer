@@ -1,3 +1,5 @@
+import * as Location from "expo-location";
+
 import ViagemCard from '@/components/Cards/ViagemCard';
 import { ApiException } from '@/config/apiException';
 import { useSession } from '@/context/AuthContext';
@@ -14,6 +16,7 @@ export default function Home() {
     
     const [viagens, setViagens] = useState<Viagem[] | null>(null);
     const [viagemSelecionada, setViagemSelecionada] = useState(null);
+    const [userLocation, setUserLocation] = useState<{ lat: number; long: number } | null>(null);
 
     const [showFormModal, setShowFormModal] = useState(false);
 
@@ -43,12 +46,37 @@ export default function Home() {
         if (session?.user?.id) fetchViagens();
     }, [session]);
 
+    useEffect(() => {
+        (async () => {
+            const { status } = await Location.getForegroundPermissionsAsync();
+            if (status === 'granted') return;
+
+            const response  = await Location.requestForegroundPermissionsAsync();
+            if (response.status !== "granted") {
+                console.warn("Permission denied");
+                Toast.show({
+                    type: 'error',
+                    text1: 'Erro',
+                    text2: 'Permissão para acessar localização negada. Por favor, habilite nas configurações do dispositivo.'
+                });
+                return;
+            }
+
+            const location = await Location.getCurrentPositionAsync({});
+            setUserLocation({ lat: location.coords.latitude, long: location.coords.longitude });
+        })();
+    }, []);
+
     const handleViagemPress = (viagem: Viagem) => {
         router.push({
             pathname: '/trips/[id]',
             params: { id: viagem.id!.toString() }
         } as any);
     };
+
+    useEffect(() => {
+        console.log("User location updated:", userLocation);
+    }, [userLocation]);
 
         
     return (
