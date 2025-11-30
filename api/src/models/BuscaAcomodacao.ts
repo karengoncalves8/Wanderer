@@ -7,6 +7,8 @@ interface BuscaAcomodacaoDoc extends Document {
     checkin: Date,
     checkout: Date,
     hospedes: number,
+    usuarioPais: string;
+    idioma: string;
     resultados: AcomodacaoAPI[]; 
     criadoEm: Date;
 }
@@ -16,6 +18,8 @@ const HotelsSearchSchema = new Schema<BuscaAcomodacaoDoc>({
   checkin: { type: Date, required: true },
   checkout: { type: Date, required: true },
   hospedes: { type: Number, required: true },
+  usuarioPais: { type: String, required: true },
+  idioma: { type: String, required: true },
   resultados: { type: Schema.Types.Mixed, required: true },
   criadoEm: { type: Date, default: Date.now, expires: 60 * 60 * 24 } 
   // expira em 24h (TTL index do Mongo)

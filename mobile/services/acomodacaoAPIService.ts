@@ -4,7 +4,7 @@ import { AcomodacaoAPI, AcomodacaoAPISearch } from "@/interfaces/acomodacaoAPI";
 
 const searchAcomodacao = async (params: AcomodacaoAPISearch): Promise<AcomodacaoAPI[] | ApiException> => {
   try {
-    const { data } = await Api.get(`/acomodacoesAPI?cidade=${params.cidade}&checkin=${params.checkin}&checkout=${params.checkout}&hospedes=${params.hospedes}`);
+    const { data } = await Api.get(`/acomodacoesAPI?cidade=${params.cidade}&checkin=${params.checkin}&checkout=${params.checkout}&hospedes=${params.hospedes}&idioma=${params.idioma}&usuarioPais=${params.usuarioPais}`);
     return data;
   } catch (error) {
     if (error instanceof Error) {

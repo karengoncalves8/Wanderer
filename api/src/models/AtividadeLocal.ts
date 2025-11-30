@@ -22,13 +22,13 @@ export default class AtividadeLocal extends Model {
     localizacao?: string;
 
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.DECIMAL,
         allowNull: true
     })
     lat?: number;
 
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.DECIMAL,
         allowNull: true
     })
     long?: number;

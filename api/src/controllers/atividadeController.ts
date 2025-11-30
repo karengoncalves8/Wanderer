@@ -6,6 +6,7 @@ import Viagem from '../models/Viagem'
 import Despesa from '../models/Despesa'
 import Gastos from '../models/Gastos'
 import DespesaCategoria from '../models/DespesaCategoria'
+import { Op } from 'sequelize'
 import { addNewDespesa } from '../services/gastosService'
 
 export const atividadeController = {
@@ -65,6 +66,34 @@ export const atividadeController = {
       const atividade = await Atividade.findByPk(id, { include: [AtividadeLocal, AtividadeCategoria] })
       if (!atividade) return res.status(404).json({ message: 'Atividade não encontrada' })
       return res.status(200).json(atividade)
+    } catch (error: any) {
+      return res.status(400).json({ error: 'Erro ao buscar atividade', detalhes: error.message })
+    }
+  },
+
+  getAtividadesLocalizacaoByViagemId: async (req: Request, res: Response) => {
+    try {
+      const { viagemId, data } = req.params
+      const parsedDate = data 
+      const date = new Date(parsedDate)
+      const startOfDay = new Date(date)
+      startOfDay.setUTCHours(0, 0, 0, 0)
+
+      const endOfDay = new Date(date)
+      endOfDay.setUTCHours(23, 59, 59, 999)
+
+      console.log('Searchin data range:', startOfDay, endOfDay);
+
+      const atividades = await Atividade.findAll({
+        where: {
+          viagemId,
+          data: { [Op.between]: [startOfDay, endOfDay] },
+        },
+        include: [AtividadeLocal, AtividadeCategoria],
+        order: [['hora_inicio', 'ASC']],
+      })
+      if (!atividades) return res.status(404).json({ message: 'Atividade não encontrada' })
+      return res.status(200).json(atividades)
     } catch (error: any) {
       return res.status(400).json({ error: 'Erro ao buscar atividade', detalhes: error.message })
     }

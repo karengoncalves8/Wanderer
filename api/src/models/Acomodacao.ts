@@ -40,14 +40,14 @@ export default class Acomodacao extends Model {
     localizacao!: string;
 
     @Column({
-        type: DataType.INTEGER,
-        allowNull: false
+        type: DataType.DECIMAL,
+        allowNull: true
     })
     gps_long!: number;
 
     @Column({
-        type: DataType.INTEGER,
-        allowNull: false
+        type: DataType.DECIMAL,
+        allowNull: true
     })
     gps_lat!: number;
 

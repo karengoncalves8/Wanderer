@@ -5,6 +5,8 @@ export interface VooAPISearch {
     dataVolta?: string;
     idaEVolta: boolean;
     classe: number;
+    usuarioPais: string;
+    idioma: string;
 }
 
 export interface Voo {

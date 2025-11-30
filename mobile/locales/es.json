@@ -1,0 +1,59 @@
+{
+  "common": {
+    "success": "Éxito",
+    "error": "Error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "loading": "Cargando...",
+    "logout": "Cerrar sesión"
+  },
+  "validation": {
+    "required": "Campo obligatorio",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "invalidEmail": "Email inválido"
+  },
+  "home": {
+    "greeting": "Hola, {{name}}",
+    "continuePlanning": "Continuar Planificando",
+    "popularDestinations": "Destinos Populares",
+    "noTripsFound": "No se encontraron viajes. ¡Comienza uno ahora!",
+    "loadingTrips": "Cargando viajes...",
+    "tripsFetchError": "Error al consultar viajes.",
+    "destinationsFetchError": "Error al consultar destinos populares.",
+    "locationPermissionDenied": "Permiso de ubicación denegado. Por favor, habilítalo en la configuración del dispositivo."
+  },
+  "destinationDetails": {
+    "noDestinationFound": "No se encontró el destino",
+    "fetchError": "Error al consultar destino.",
+    "landmarks": "Lugares Turísticos",
+    "averageCost": "Costo Promedio",
+    "generalTips": "Consejos Generales",
+    "safetyInfo": "Información de Seguridad",
+    "climate": "Clima",
+    "documents": "Documentos Necesarios"
+  },
+  "profile": {
+    "title": "Perfil",
+    "editProfile": "Editar Perfil",
+    "language": "Idioma",
+    "preferences": "Preferencias",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "newPassword": "Nueva Contraseña (dejar en blanco para mantener la actual)",
+    "confirmPassword": "Confirmar Nueva Contraseña",
+    "saveChanges": "Guardar Cambios",
+    "nameRequired": "El nombre es obligatorio",
+    "profileUpdated": "¡Perfil actualizado con éxito!",
+    "profileUpdateError": "Error al actualizar perfil",
+    "languageUpdated": "¡Idioma actualizado con éxito!",
+    "languageUpdateError": "Error al actualizar idioma",
+    "preferencesUpdated": "¡Preferencias actualizadas con éxito!",
+    "preferencesUpdateError": "Error al actualizar preferencias",
+    "preferredTransport": "Transporte Preferido",
+    "accommodationType": "Tipo de Alojamiento",
+    "budget": "Presupuesto"
+  }
+}

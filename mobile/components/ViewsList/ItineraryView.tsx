@@ -16,6 +16,7 @@ export type ItineraryViewProps = {
   atividades?: Atividade[];
   passagens?: Passagem[];
   acomodacoes?: Acomodacao[];
+  setDataSelecionada: (data: string | null) => void;
 };
 
 const sameDayKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -79,23 +80,17 @@ const ItineraryItemCard = ({ item }: { item: FeedItem }) => {
         {item.type === 'atividade' && item.atividade?.atividadeLocal?.localizacao && (
           <Text style={styles.linkText}>{item.atividade.atividadeLocal.localizacao}</Text>
         )}
-        {item.type === 'acomodacao_checkin' && item.acomodacao?.nome && (
-          <Text style={styles.linkText}>{item.acomodacao.check_in.toString()}</Text>
-        )}
-        {item.type === 'acomodacao_checkout' && item.acomodacao?.nome && (
-          <Text style={styles.linkText}>{item.acomodacao.check_out.toString()}</Text>
-        )}
       </View>
     </View>
   );
 };
 
-export default function ItineraryView({ viagem, atividades = [], passagens = [], acomodacoes }: ItineraryViewProps) {
+export default function ItineraryView({ viagem, atividades = [], passagens = [], acomodacoes, setDataSelecionada }: ItineraryViewProps) {
   const tripDays = useMemo(() => getTripDates(viagem?.dataIda ? createDateFromString(viagem.dataIda) : undefined, viagem?.dataVolta ? createDateFromString(viagem.dataVolta) : undefined), [viagem?.dataIda, viagem?.dataVolta]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   useEffect(() => {
     console.log('[Itinerary] tripDays keys', tripDays.map(d => sameDayKey(d)));
-    // reset selection when date range changes
+    setDataSelecionada(format(tripDays[0], 'yyyy-MM-dd'));
     setSelectedIndex(0);
   }, [tripDays]);
   useEffect(() => {
@@ -224,7 +219,7 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
             key={sameDayKey(d)}
             label={format(d, 'd/LLL', { locale: ptBR }).replace('.', '')}
             active={idx === selectedIndex}
-            onPress={() => setSelectedIndex(idx)}
+            onPress={() => {setSelectedIndex(idx); setDataSelecionada(format(d, 'yyyy-MM-dd')); }}
           />
         ))}
       </ScrollView>

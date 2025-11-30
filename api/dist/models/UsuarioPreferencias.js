@@ -27,7 +27,7 @@ __decorate([
 ], UsuarioPreferencia.prototype, "id", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.ENUM('portugues', 'ingles', 'espanhol', 'frances'),
+        type: sequelize_typescript_1.DataType.ENUM('pt', 'en', 'es', 'fr'),
         allowNull: false
     }),
     __metadata("design:type", String)

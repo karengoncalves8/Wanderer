@@ -2,7 +2,9 @@ export interface AcomodacaoAPISearch {
     cidade: string,
     checkin: string,
     checkout: string,
-    hospedes: number
+    hospedes: number,
+    usuarioPais: string;
+    idioma: string;
 }
 
 export interface AcomodacaoAPI {

@@ -1,4 +1,5 @@
 
+import { useSession } from '@/context/AuthContext';
 import { AcomodacaoAPI, AcomodacaoAPISearch } from '@/interfaces/acomodacaoAPI';
 import { acomodacaoAPIService } from '@/services/acomodacaoAPIService';
 import { colors } from '@/styles/globalStyles';
@@ -11,6 +12,7 @@ import MaIcon from 'react-native-vector-icons/MaterialIcons';
 
 export default function BookingFlights() {
     const { cidade, checkin, checkout, hospedes } = useLocalSearchParams(); 
+    const { session } = useSession();
 
     const [acomocodacoes, setAcomodacoes] = useState<AcomodacaoAPI[] | null>(null);
     
@@ -29,13 +31,11 @@ export default function BookingFlights() {
     
     const fetchResults = async (params: AcomodacaoAPISearch) => {
         try{
-            console.log("params", params)
             const data = await acomodacaoAPIService.searchAcomodacao(params);
-            console.log("data", data)
             if (Array.isArray(data)) {
                 setAcomodacoes(data);
             } else {
-                console.warn('Erro na busca de voos:', data);
+                console.warn('Erro na busca de acomodações:', data);
                 setAcomodacoes([]);
             }
         } catch (error) {
@@ -50,6 +50,8 @@ export default function BookingFlights() {
             checkin: String(checkin ?? ''),
             checkout: String(checkout ?? ''),
             hospedes: Number(hospedes ?? 0),
+            usuarioPais: session!.user.pais,
+            idioma: session!.user.preferencias.idioma
         })
     }, [cidade, checkin, checkout, hospedes])
     

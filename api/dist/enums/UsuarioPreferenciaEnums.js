@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrefOrcamento = exports.PrefAcomodacao = exports.PrefTransporte = exports.PrefIdioma = void 0;
 var PrefIdioma;
 (function (PrefIdioma) {
-    PrefIdioma["Portugues"] = "portugues";
-    PrefIdioma["Ingles"] = "ingles";
-    PrefIdioma["Espanhol"] = "espanhol";
-    PrefIdioma["Frances"] = "frances";
+    PrefIdioma["Portugues"] = "pt";
+    PrefIdioma["Ingles"] = "en";
+    PrefIdioma["Espanhol"] = "es";
+    PrefIdioma["Frances"] = "fr";
 })(PrefIdioma || (exports.PrefIdioma = PrefIdioma = {}));
 var PrefTransporte;
 (function (PrefTransporte) {

@@ -42,7 +42,7 @@ export default function Booking() {
         {key:'2', value:'Premium'},
         {key:'3', value:'Executiva'},
         {key:'4', value:'Primeira Classe'},
-        ]
+    ]
 
     const handleSubmit = async () => {
         try{
