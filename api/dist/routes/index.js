@@ -18,6 +18,7 @@ const atividadeCategoriaRoutes_1 = __importDefault(require("./atividadeCategoria
 const listaRoutes_1 = __importDefault(require("./listaRoutes"));
 const listaItemRoutes_1 = __importDefault(require("./listaItemRoutes"));
 const avaliacaoRoutes_1 = __importDefault(require("./avaliacaoRoutes"));
+const destinosRoutes_1 = __importDefault(require("./destinosRoutes"));
 const router = (0, express_1.Router)();
 router.use('/usuario', usuarioRoutes_1.default);
 router.use('/voos', voosRoutes_1.default);
@@ -33,4 +34,5 @@ router.use('/atividadeCategoria', atividadeCategoriaRoutes_1.default);
 router.use('/lista', listaRoutes_1.default);
 router.use('/listaItem', listaItemRoutes_1.default);
 router.use('/avaliacao', avaliacaoRoutes_1.default);
+router.use('/destinos', destinosRoutes_1.default);
 exports.default = router;

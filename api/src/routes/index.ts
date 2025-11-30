@@ -14,6 +14,7 @@ import atividadeCategoriaRoutes from './atividadeCategoriaRoutes';
 import listaRoutes from './listaRoutes';
 import listaItemRoutes from './listaItemRoutes';
 import avaliacaoRoutes from './avaliacaoRoutes';
+import destinosRoutes from './destinosRoutes';
 
 const router = Router();
 
@@ -31,5 +32,6 @@ router.use('/atividadeCategoria', atividadeCategoriaRoutes)
 router.use('/lista', listaRoutes)
 router.use('/listaItem', listaItemRoutes)
 router.use('/avaliacao', avaliacaoRoutes)
+router.use('/destinos', destinosRoutes);
 
 export default router;

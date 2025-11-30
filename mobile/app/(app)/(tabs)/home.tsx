@@ -7,15 +7,21 @@ import { Viagem } from '@/interfaces/Viagem';
 import { viagemService } from '@/services/viagemService';
 import { is } from 'date-fns/locale';
 import { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { router } from 'expo-router';
+import { destinoService } from "@/services/destinoSevice";
+import { Destino } from "@/interfaces/Destino";
+import DestinationCard from "@/components/Cards/DestinationCard";
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 export default function Home() {
     const { signOut, session } = useSession();
+    const router = useRouter();
     
     const [viagens, setViagens] = useState<Viagem[] | null>(null);
     const [viagemSelecionada, setViagemSelecionada] = useState(null);
+    const [destinos, setDestinos] = useState<Destino[] | null>(null);
     const [userLocation, setUserLocation] = useState<{ lat: number; long: number } | null>(null);
 
     const [showFormModal, setShowFormModal] = useState(false);
@@ -31,19 +37,34 @@ export default function Home() {
                 text1: 'Erro',
                 text2: response.message || 'Erro ao consultar viagens.'
             });
-            setIsLoading(false);
             return;
         }
         // sort by start date (dataIda) descending so most recent/upcoming appear first
         let sorted = response.sort((a, b) => (new Date(b.dataIda).getTime() - new Date(a.dataIda).getTime()));
 
         setViagens(sorted);
-        setIsLoading(false);
     }
 
+    const fetchDestinos = async () => {
+        const response = await destinoService.getPopularDestinations('pt');
+        if (response instanceof ApiException) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erro',
+                text2: response.message || 'Erro ao consultar destinos populares.'
+            });
+            setIsLoading(false);
+            return;
+        }
+        setDestinos(response);
+        setIsLoading(false);
+    };
+
     useEffect(() => {
-        // fetch viagens when component mounts or when session changes
-        if (session?.user?.id) fetchViagens();
+        if (session?.user?.id) {
+            fetchViagens();
+            fetchDestinos();
+        }   
     }, [session]);
 
     useEffect(() => {
@@ -107,6 +128,31 @@ export default function Home() {
                         ) : (
                             <Text style={styles.title}>Nenhuma viagem encontrada</Text>
                         )}
+                    </View>
+
+                    <View style={styles.contentPlanning}>
+                        <Text style={styles.subTitle}>Destinos Populares</Text>
+                        <FlatList
+                            data={destinos || []}
+                            keyExtractor={(item) => item._id}
+                            renderItem={({ item }) => (
+                            <TouchableOpacity 
+                                style={{ marginRight: 20 }}
+                                onPress={() => router.push({
+                                    pathname: '/(app)/destination-details',
+                                    params: { id: item._id }
+                                })}
+                            >
+                                <DestinationCard
+                                    imageURL={item.imgsUrl[0]}
+                                    label={item.name}
+                                />
+                            </TouchableOpacity>
+                            )}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{ paddingHorizontal: 20 }}
+                        />
                     </View>
 
                 </View>
