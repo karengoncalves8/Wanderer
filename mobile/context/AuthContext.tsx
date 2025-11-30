@@ -4,21 +4,36 @@ import { createContext, use, type PropsWithChildren } from 'react';
 import { useStorageState } from '../hooks/useStorageState';
 import { authenticateWithBiometrics } from '@/utils/biometry/biometricAuth';
 import Toast from 'react-native-toast-message';
+import { PrefIdioma, PrefTransporte, PrefAcomodacao, PrefOrcamento } from '@/enums/UsuarioPrefs';
 
 type JwtPayload = {
   id: number;
   nome: string;
   email: string;
+  pais: string;
+  preferencias: {
+    idioma: PrefIdioma;
+    transporte: PrefTransporte;
+    acomodacao: PrefAcomodacao;
+    orcamento: PrefOrcamento;
+  };
   exp?: number;
   iat?: number;
 };
 
-type Session = {
+export type Session = {
   token: string;
   user: {
     id: number;
     nome: string;
     email: string;
+    pais: string;
+    preferencias: {
+      idioma: PrefIdioma;
+      transporte: PrefTransporte;
+      acomodacao: PrefAcomodacao;
+      orcamento: PrefOrcamento;
+    };
   };
 };
 
@@ -26,6 +41,7 @@ const AuthContext = createContext<{
   signIn: (token: string) => void;
   signOut: () => void;
   signInWithBiometrics: () => Promise<void>;
+  updateSession: (updates: Partial<Session['user']>) => void;
   session?: Session | null;
   user?: Session['user'] | null;
   token?: string | null;
@@ -34,6 +50,7 @@ const AuthContext = createContext<{
   signIn: (_token: string) => null,
   signOut: () => null,
   signInWithBiometrics: () => Promise.resolve(),
+  updateSession: (_updates: Partial<Session['user']>) => null,
   session: null,
   user: null,
   token: null,
@@ -56,13 +73,35 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
   const signIn = async (token: string) => {
     const payload = jwtDecode<JwtPayload>(token);
-    const user = { id: payload.id, nome: payload.nome, email: payload.email };
+    const user = { id: payload.id, nome: payload.nome, email: payload.email, pais: payload.pais, preferencias: payload.preferencias };
     setSession(JSON.stringify({ token, user }));
     setCachedSession(JSON.stringify({ token, user }));
   };
 
   const signOut = async () => {
     setSession(null);
+  };
+
+  const updateSession = (updates: Partial<Session['user']>) => {
+    if (!sessionData) return;
+    
+    const updatedUser = {
+      ...sessionData.user,
+      ...updates,
+      preferencias: {
+        ...sessionData.user.preferencias,
+        ...(updates.preferencias || {})
+      }
+    };
+    
+    const updatedSession = {
+      ...sessionData,
+      user: updatedUser
+    };
+    
+    const serialized = JSON.stringify(updatedSession);
+    setSession(serialized);
+    setCachedSession(serialized);
   };
 
   async function signInWithBiometrics() {
@@ -104,7 +143,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   if (session && !session.trim().startsWith('{')) {
     try {
       const payload = jwtDecode<JwtPayload>(session);
-      const user = { id: payload.id, nome: payload.nome, email: payload.email };
+      const user = { id: payload.id, nome: payload.nome, email: payload.email, pais: payload.pais, preferencias: { idioma: payload.preferencias.idioma, transporte: payload.preferencias.transporte, acomodacao: payload.preferencias.acomodacao, orcamento: payload.preferencias.orcamento } };
       const normalized = JSON.stringify({ token: session, user });
       // Defer mutation with microtask to avoid side effects during render
       Promise.resolve().then(() => setSession(normalized));
@@ -122,6 +161,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
       signIn, 
       signOut, 
       signInWithBiometrics,
+      updateSession,
       session: sessionData, 
       user: sessionData?.user || null,
       token: sessionData?.token || null,

@@ -26,7 +26,7 @@ export const fetchTravelInfoByDestination = async (destination: string, language
         const ai = new GoogleGenAI({apiKey: process.env.GOOGLE_GENAI_API_KEY as string});
 
         // Prompt to generate the travel guide
-        const prompt = `give me a travel guide for ${destination} in ${languageCode} (code for ISO 639-1) with the following topics: Location (country and city, if location provided is a country then let city info empty); Short description about the destination; Average daily cost; best places to visit and short descriptions about each of them; general tips; information about safety and tips; climate; documents need as a citizen of ${userCountry}`;
+        const prompt = `give me a travel guide for ${destination} in ${languageCode} (code for ISO 639-1) with the following topics: Location (country and city, if location provided is a country then let city info empty); Short description about the destination; Average daily cost; best places to visit and short descriptions about each of them; general tips; information about safety and tips; climate; documents need as a citizen of ${userCountry} (code for ISO 3166-1 alpha-2).`;
 
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import BuscaAcomodacao from '../models/BuscaAcomodacao';
 import { formatAcomodacoes } from '../utils/api_formater/acomodacaoFormater';
+import { Currency } from '../constants/Currency';
 
 dotenv.config();
 
@@ -14,9 +15,9 @@ export const acomodacoesController = {
 
     // Buscar acomodacoes
     searchAcomodacoes: async (req: Request, res: Response): Promise<void> => {
-        const { cidade, checkin, checkout, hospedes } = req.query;
+        const { cidade, checkin, checkout, hospedes, idioma, usuarioPais } = req.query;
 
-        if (!cidade || !checkin || !checkout || !hospedes) {
+        if (!cidade || !checkin || !checkout || !hospedes || !idioma || !usuarioPais) {
             res.status(400).json({ error: 'Parâmetros inválidos.' });
             return;
         }
@@ -27,7 +28,9 @@ export const acomodacoesController = {
                 cidade: (cidade as string).toUpperCase(),
                 checkin,
                 checkout,
-                hospedes
+                hospedes,
+                idioma,
+                usuarioPais
             });
 
             if (existente) {
@@ -38,7 +41,8 @@ export const acomodacoesController = {
 
             // 2. Montar URL e buscar na API externa
             const query = (cidade as string).trim().replace(/\s+/g, "+");
-            const url = `${SERPAPI_URL}?engine=google_hotels&q=${query}&check_in_date=${checkin}&check_out_date=${checkout}&adults=2&currency=BRL&gl=br&hl=pt-br&api_key=${SERPAPI_KEY}`;
+            const userCurrency = Currency[(idioma as string)] || 'BRL';
+            const url = `${SERPAPI_URL}?engine=google_hotels&q=${query}&check_in_date=${checkin}&check_out_date=${checkout}&adults=${hospedes}&currency=${userCurrency}&gl=${usuarioPais}&hl=${idioma}&api_key=${SERPAPI_KEY}`;
     
             const response = await axios.get(url);
 
@@ -50,6 +54,8 @@ export const acomodacoesController = {
                 checkin,
                 checkout,
                 hospedes,
+                idioma,
+                usuarioPais,
                 resultados: formattedAcomodacoes
             });
 

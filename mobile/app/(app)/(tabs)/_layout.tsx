@@ -4,6 +4,7 @@ import React from 'react';
 import FeIcon from 'react-native-vector-icons/Feather';
 import IoIcon from 'react-native-vector-icons/Ionicons';
 import MaIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FaIcon from 'react-native-vector-icons/FontAwesome6';
 
 export default function TabLayout() {
 
@@ -48,6 +49,12 @@ export default function TabLayout() {
         name="booking/index"
         options={{
           tabBarIcon: ({ color }) => <MaIcon name='ticket-confirmation-outline' color={color} size={28}/>
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarIcon: ({ color }) => <FaIcon name='user' color={color} size={28}/>
         }}
       />
     </Tabs>

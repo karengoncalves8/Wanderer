@@ -1,0 +1,59 @@
+{
+  "common": {
+    "success": "Sucesso",
+    "error": "Erro",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "loading": "Carregando...",
+    "logout": "Sair"
+  },
+  "validation": {
+    "required": "Campo obrigatório",
+    "passwordMismatch": "As senhas não conferem",
+    "invalidEmail": "Email inválido"
+  },
+  "home": {
+    "greeting": "Olá, {{name}}",
+    "continuePlanning": "Continue Planejando",
+    "popularDestinations": "Destinos Populares",
+    "noTripsFound": "Nenhuma viagem encontrada. Começe uma agora!",
+    "loadingTrips": "Carregando viagens...",
+    "tripsFetchError": "Erro ao consultar viagens.",
+    "destinationsFetchError": "Erro ao consultar destinos populares.",
+    "locationPermissionDenied": "Permissão para acessar localização negada. Por favor, habilite nas configurações do dispositivo."
+  },
+  "destinationDetails": {
+    "noDestinationFound": "Nenhum destino encontrado",
+    "fetchError": "Erro ao consultar destino.",
+    "landmarks": "Pontos Turísticos",
+    "averageCost": "Custo Médio",
+    "generalTips": "Dicas Gerais",
+    "safetyInfo": "Informações de Segurança",
+    "climate": "Clima",
+    "documents": "Documentos Necessários"
+  },
+  "profile": {
+    "title": "Perfil",
+    "editProfile": "Editar Perfil",
+    "language": "Idioma",
+    "preferences": "Preferências",
+    "name": "Nome",
+    "email": "Email",
+    "newPassword": "Nova Senha (deixe em branco para manter a atual)",
+    "confirmPassword": "Confirmar Nova Senha",
+    "saveChanges": "Salvar Alterações",
+    "nameRequired": "O nome é obrigatório",
+    "profileUpdated": "Perfil atualizado com sucesso!",
+    "profileUpdateError": "Erro ao atualizar perfil",
+    "languageUpdated": "Idioma atualizado com sucesso!",
+    "languageUpdateError": "Erro ao atualizar idioma",
+    "preferencesUpdated": "Preferências atualizadas com sucesso!",
+    "preferencesUpdateError": "Erro ao atualizar preferências",
+    "preferredTransport": "Transporte Preferido",
+    "accommodationType": "Tipo de Acomodação",
+    "budget": "Orçamento"
+  }
+}

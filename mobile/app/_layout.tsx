@@ -2,8 +2,11 @@
 import { SessionProvider, useSession } from '@/context/AuthContext';
 import { SplashScreenController } from '@/splash/splash';
 import { Stack } from 'expo-router';
+import '@/config/i18next';
+import { useTranslation } from 'react-i18next';
 
 import Toast from 'react-native-toast-message';
+import { useEffect } from 'react';
 
 
 export default function Root() {
@@ -19,6 +22,14 @@ export default function Root() {
 // Create a new component that can access the SessionProvider context later.
 function RootNavigator() {
   const { session } = useSession();
+
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    if (session?.user?.preferencias?.idioma) {
+      i18n.changeLanguage(session.user.preferencias.idioma.toLowerCase());
+    }
+  }, [session?.user?.preferencias?.idioma]);
 
   return (
     <>

@@ -5,7 +5,6 @@ import { ApiException } from '@/config/apiException';
 import { useSession } from '@/context/AuthContext';
 import { Viagem } from '@/interfaces/Viagem';
 import { viagemService } from '@/services/viagemService';
-import { is } from 'date-fns/locale';
 import { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -13,11 +12,14 @@ import { router } from 'expo-router';
 import { destinoService } from "@/services/destinoSevice";
 import { Destino } from "@/interfaces/Destino";
 import DestinationCard from "@/components/Cards/DestinationCard";
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { colors } from "@/styles/globalStyles";
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
     const { signOut, session } = useSession();
     const router = useRouter();
+    const { t } = useTranslation();
     
     const [viagens, setViagens] = useState<Viagem[] | null>(null);
     const [viagemSelecionada, setViagemSelecionada] = useState(null);
@@ -34,8 +36,8 @@ export default function Home() {
         if (response instanceof ApiException) {
             Toast.show({
                 type: 'error',
-                text1: 'Erro',
-                text2: response.message || 'Erro ao consultar viagens.'
+                text1: t('common.error'),
+                text2: response.message || t('home.tripsFetchError')
             });
             return;
         }
@@ -46,12 +48,12 @@ export default function Home() {
     }
 
     const fetchDestinos = async () => {
-        const response = await destinoService.getPopularDestinations('pt');
+        const response = await destinoService.getPopularDestinations(session?.user.preferencias.idioma || 'pt');
         if (response instanceof ApiException) {
             Toast.show({
                 type: 'error',
-                text1: 'Erro',
-                text2: response.message || 'Erro ao consultar destinos populares.'
+                text1: t('common.error'),
+                text2: response.message || t('home.destinationsFetchError')
             });
             setIsLoading(false);
             return;
@@ -77,8 +79,8 @@ export default function Home() {
                 console.warn("Permission denied");
                 Toast.show({
                     type: 'error',
-                    text1: 'Erro',
-                    text2: 'Permissão para acessar localização negada. Por favor, habilite nas configurações do dispositivo.'
+                    text1: t('common.error'),
+                    text2: t('home.locationPermissionDenied')
                 });
                 return;
             }
@@ -105,33 +107,33 @@ export default function Home() {
             {isLoading ? (
                 <View style={[styles.container, { justifyContent: 'center' }]}>
                     <ActivityIndicator size="large" color="#000" />
-                    <Text style={styles.title}>Carregando...</Text>
+                    <Text style={styles.title}>{t('home.loadingTrips')}</Text>
                 </View>
             ) : (
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>Olá, {session?.user.nome}</Text>
+                        <Text style={styles.title}>{t('home.greeting', { name: session?.user.nome })}</Text>
                         <Text 
                             onPress={() => {
                                 signOut();
                             }}
                             style={{ color: 'red', fontWeight: 'bold' }}
                         >
-                            Sair
+                            {t('common.logout')}
                         </Text>
                     </View>
 
                     <View style={styles.contentPlanning}>
-                        <Text style={styles.subTitle}>Continue Planejando</Text>
+                        <Text style={styles.subTitle}>{t('home.continuePlanning')}</Text>
                         {viagens && viagens.length > 0 ? (
                             <ViagemCard viagem={viagens[0]} onPress={() => handleViagemPress(viagens[0])} />
                         ) : (
-                            <Text style={styles.title}>Nenhuma viagem encontrada</Text>
+                            <Text style={styles.notFoundText}>{t('home.noTripsFound')}</Text>
                         )}
                     </View>
 
                     <View style={styles.contentPlanning}>
-                        <Text style={styles.subTitle}>Destinos Populares</Text>
+                        <Text style={styles.subTitle}>{t('home.popularDestinations')}</Text>
                         <FlatList
                             data={destinos || []}
                             keyExtractor={(item) => item._id}
@@ -177,6 +179,11 @@ const styles = StyleSheet.create({
     subTitle: {
         fontSize: 20,
         fontWeight: '600',
+    },
+    notFoundText: {
+        fontSize: 14,
+        color: colors.gray500,
+        marginTop: 10,
     },
     header: {
         width: '100%',

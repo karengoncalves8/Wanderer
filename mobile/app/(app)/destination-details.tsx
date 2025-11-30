@@ -8,37 +8,36 @@ import { ApiException } from '@/config/apiException';
 import Toast from 'react-native-toast-message';
 import { ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSession } from '@/context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const { width } = Dimensions.get('window');
 
 export default function DestinationDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
+    const { session } = useSession();   
     const router = useRouter();
+    const { t } = useTranslation();
 
     const [destinationData, setDestinationData] = useState<Destino | null>(null);
-
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    const carouselRef = useRef(null);
-    const [activeSlide, setActiveSlide] = useState(0);
 
     if (!id) {
         return (
             <View style={styles.container}>
-                <Text>Nenhum destino encontrado</Text>
+                <Text>{t('destinationDetails.noDestinationFound')}</Text>
             </View>
         );
     }
 
     useEffect(() => {
         const fetchDestination = async () => {
-            const response = await destinoService.getDestinationDetails(id, 'Brasil');
-            console.log("fetch response", response)
+            const response = await destinoService.getDestinationDetails(id, session?.user.pais || 'br');
             if (response instanceof ApiException) {
                 Toast.show({
                     type: 'error',
-                    text1: 'Erro',
-                    text2: response.message || 'Erro ao consultar destino.'
+                    text1: t('common.error'),
+                    text2: response.message || t('destinationDetails.fetchError')
                 });
                 return;
             }
@@ -93,17 +92,16 @@ export default function DestinationDetails() {
             {isLoading && !destinationData ? (
                 <View style={[styles.container, { justifyContent: 'center' }]}>
                     <ActivityIndicator size="large" color="#000" />
-                    <Text style={styles.title}>Carregando...</Text>
+                    <Text style={styles.title}>{t('common.loading')}</Text>
                 </View>
             ) : (
-                
-                    <ScrollView>
-                        {/* Header with back button */}
-                        <View style={styles.header}>
-                            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                        <Ionicons name="arrow-back" size={24} color="#000" />
-                    </TouchableOpacity>
-                    <Text style={styles.headerTitle}>{destinationData?.name}</Text>
+                <ScrollView>
+                    {/* Header with back button */}
+                    <View style={styles.header}>
+                        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                            <Ionicons name="arrow-back" size={24} color="#000" />
+                        </TouchableOpacity>
+                        <Text style={styles.headerTitle}>{destinationData?.name}</Text>
                         <View style={{ width: 24 }} />
                     </View>
 
@@ -141,12 +139,12 @@ export default function DestinationDetails() {
                             </View>
                         )}
 
-                        {renderSection('Pontos Turísticos', destinationData?.results?.landmarks)}
-                        {renderSection('Custo Médio', destinationData?.results?.average_cost)}
-                        {renderSection('Dicas Gerais', destinationData?.results?.general_tips)}
-                        {renderSection('Informações de Segurança', destinationData?.results?.safety_info)}
-                        {renderSection('Clima', destinationData?.results?.climate)}
-                        {renderSection('Documentos Necessários', destinationData?.results?.documents)}
+                        {renderSection(t('destinationDetails.landmarks'), destinationData?.results?.landmarks)}
+                        {renderSection(t('destinationDetails.averageCost'), destinationData?.results?.average_cost)}
+                        {renderSection(t('destinationDetails.generalTips'), destinationData?.results?.general_tips)}
+                        {renderSection(t('destinationDetails.safetyInfo'), destinationData?.results?.safety_info)}
+                        {renderSection(t('destinationDetails.climate'), destinationData?.results?.climate)}
+                        {renderSection(t('destinationDetails.documents'), destinationData?.results?.documents)}
                     </View>
                 </ScrollView>
             )}
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     carouselContainer: {
-        height: 250, // Fixed height for the carousel
+        height: 250,
         width: '100%',
         marginBottom: 16,
     },

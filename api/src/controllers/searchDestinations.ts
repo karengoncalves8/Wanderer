@@ -13,6 +13,7 @@ export const destinosController = {
             // 1. Checar se já existe a pesquisa no MongoDB
             const existentes = await Destino.find({
                 flag: "worldwide",
+                languageCode: languageCode?.toString().toLowerCase()
             });
 
             if (existentes.length > 0) {
