@@ -1,6 +1,6 @@
 import InputWithIcon from '@/components/Inputs/InputWithIcon/InputWithIcon';
 import { useSession } from '@/context/AuthContext';
-import { Image, ImageBackground, KeyboardAvoidingView, Text, View } from 'react-native';
+import { Image, ImageBackground, KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
 
 import Button from '@/components/Buttons/Button';
 import InputPassword from '@/components/Inputs/InputPassword/InputPassword';
@@ -11,9 +11,10 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
+import IoIcons from 'react-native-vector-icons/Ionicons';
 
 export default function SignIn() {
-  const { signIn, session } = useSession();
+  const { signIn, session, signInWithBiometrics } = useSession();
 
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
@@ -71,6 +72,11 @@ return (
             />
             <Button label="Entrar" onPress={() => handleLogin()} />
           </View>
+
+          <TouchableOpacity onPress={signInWithBiometrics} style={styles.biometricsLogin}>
+            <IoIcons name="finger-print" size={30} color={colors.blue800} />
+            <Text style={{ fontSize: 14, color: colors.blue800 }}>Entrar com digital</Text>
+          </TouchableOpacity>
 
           <View style={styles.registerMessage}>
               <Text style={styles.registerQuestion}>Ainda não tem uma conta?</Text>

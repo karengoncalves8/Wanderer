@@ -45,7 +45,7 @@ export const usuarioController = {
         try {
             const { email, senha } = req.body
 
-            const usuario = await Usuario.findOne({ where: { email } })
+            const usuario = await Usuario.findOne({ where: { email }, include: [UsuarioPreferencia] })
             if (!usuario) {
                 return res.status(404).json({ message: 'Usuário não encontrado' })
             }
@@ -55,7 +55,7 @@ export const usuarioController = {
                 return res.status(401).json({ message: 'Senha incorreta' })
             }
 
-            const token = jwt.sign({ id: usuario.id, nome: usuario.nome, email: usuario.email }, JWT_SECRET, { expiresIn: '24h' })
+            const token = jwt.sign({ id: usuario.id, nome: usuario.nome, email: usuario.email, pais: usuario.pais, preferencias: usuario.preferencias }, JWT_SECRET, { expiresIn: '24h' })
 
             return res.status(200).json({ token })
         } catch (error: any) {
@@ -78,7 +78,7 @@ export const usuarioController = {
     updateUser: async (req: Request, res: Response) => {
         try {
             const { id } = req.params
-            const { nome, email, senha, dataNascimento, cidade, pais } = req.body
+            const { nome, email, senha, dataNascimento, cidade, pais, preferencias } = req.body
 
             const usuario = await Usuario.findByPk(id)
             if (!usuario) {
@@ -108,12 +108,12 @@ export const usuarioController = {
     // CRUD: Atualizar preferências de usuário
     updateUserPreferences: async (req: Request, res: Response) => {
         try {
-            const { usuarioId } = req.params
+            const { id } = req.params
             const { idioma, transporte, acomodacao, orcamento } = req.body
 
             // Encontrar a preferência do usuário
             const preferencia = await UsuarioPreferencia.findOne({
-                where: { usuarioId }
+                where: { usuarioId: id }
             })
 
             if (!preferencia) {

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import BuscarVoo from '../models/BuscaVoo';
 import { formatVoos } from '../utils/api_formater/vooFormater';
+import { Currency } from '../constants/Currency';
 
 dotenv.config();
 
@@ -26,12 +27,12 @@ export const voosController = {
 
 	// Buscar voos
 	searchVoos: async (req: Request, res: Response): Promise<void> => {
-		const { iataOrigem, iataDestino, dataPartida, dataVolta, idaEVolta, classe } = req.query;
+		const { iataOrigem, iataDestino, dataPartida, dataVolta, idaEVolta, classe, idioma, usuarioPais } = req.query;
 
 		const isIdaEVolta: boolean = typeof idaEVolta === 'string' && idaEVolta.toLowerCase() === 'true';
 
-		if (!iataOrigem || !iataDestino || !dataPartida) {
-			res.status(400).json({ error: 'Parâmetros obrigatórios: iataOrigem, iataDestino e dataPartida.' });
+		if (!iataOrigem || !iataDestino || !dataPartida || !idioma || !usuarioPais) {
+			res.status(400).json({ error: 'Parâmetros obrigatórios: iataOrigem, iataDestino, dataPartida, idioma e usuarioPais.' });
 			return;
 		}
 		if (isIdaEVolta && !dataVolta) {
@@ -49,7 +50,9 @@ export const voosController = {
 				dataPartida,
 				dataVolta,
 				idaEVolta: isIdaEVolta,
-				classe
+				classe,
+				idioma,
+				usuarioPais
 			});
 
 			if (existente) {
@@ -60,6 +63,7 @@ export const voosController = {
 
 			// 2. Montar URL e buscar na API externa
 			const type = isIdaEVolta ? "1" : "2";
+			const userCurrency = Currency[(idioma as string)] || 'BRL';
 			let flightUrl = `${SERPAPI_URL}?engine=google_flights`;
 			flightUrl += `&departure_id=${(iataOrigem as string).toUpperCase()}`;
 			flightUrl += `&arrival_id=${(iataDestino as string).toUpperCase()}`;
@@ -67,7 +71,7 @@ export const voosController = {
 			if (isIdaEVolta) flightUrl += `&return_date=${dataVolta}`;
 			flightUrl += `&type=${type}`;
 			flightUrl += `&travel_class=${classe}`;
-			flightUrl += `&currency=BRL&hl=en&api_key=${SERPAPI_KEY}`;
+			flightUrl += `&currency=${userCurrency}&gl=${usuarioPais}&hl=${idioma}&api_key=${SERPAPI_KEY}`;
 
 			const response = await axios.get(flightUrl);
 
@@ -95,6 +99,8 @@ export const voosController = {
 				dataVolta,
 				idaEVolta: isIdaEVolta,
 				classe,
+				idioma,
+				usuarioPais,
 				resultados: flightsWithRedirects
 			});
 

@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
   
   caixa:{
-    flex: 1,
+    flex: 1.5,
     height: '100%',
     backgroundColor: colors.gray200,
     padding: 20,
@@ -74,11 +74,15 @@ const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: 'center',
     fontWeight: 'bold',
-  }
+  },
 
-
-
-
+  biometricsLogin: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 1,
+    marginTop: 10
+  },
 });
 
 export default styles;

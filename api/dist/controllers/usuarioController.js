@@ -52,7 +52,7 @@ exports.usuarioController = {
     login: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { email, senha } = req.body;
-            const usuario = yield Usuario_1.default.findOne({ where: { email } });
+            const usuario = yield Usuario_1.default.findOne({ where: { email }, include: [UsuarioPreferencias_1.default] });
             if (!usuario) {
                 return res.status(404).json({ message: 'Usuário não encontrado' });
             }
@@ -60,7 +60,7 @@ exports.usuarioController = {
             if (!isMatch) {
                 return res.status(401).json({ message: 'Senha incorreta' });
             }
-            const token = jsonwebtoken_1.default.sign({ id: usuario.id, nome: usuario.nome, email: usuario.email }, JWT_SECRET, { expiresIn: '24h' });
+            const token = jsonwebtoken_1.default.sign({ id: usuario.id, nome: usuario.nome, email: usuario.email, pais: usuario.pais, preferencias: usuario.preferencias }, JWT_SECRET, { expiresIn: '24h' });
             return res.status(200).json({ token });
         }
         catch (error) {
@@ -82,7 +82,7 @@ exports.usuarioController = {
     updateUser: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { id } = req.params;
-            const { nome, email, senha, dataNascimento, cidade, pais } = req.body;
+            const { nome, email, senha, dataNascimento, cidade, pais, preferencias } = req.body;
             const usuario = yield Usuario_1.default.findByPk(id);
             if (!usuario) {
                 return res.status(404).json({ message: 'Usuário não encontrado' });
@@ -107,11 +107,11 @@ exports.usuarioController = {
     // CRUD: Atualizar preferências de usuário
     updateUserPreferences: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { usuarioId } = req.params;
+            const { id } = req.params;
             const { idioma, transporte, acomodacao, orcamento } = req.body;
             // Encontrar a preferência do usuário
             const preferencia = yield UsuarioPreferencias_1.default.findOne({
-                where: { usuarioId }
+                where: { usuarioId: id }
             });
             if (!preferencia) {
                 return res.status(404).json({ message: 'Preferência não encontrada' });

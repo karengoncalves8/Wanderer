@@ -1,0 +1,59 @@
+{
+  "common": {
+    "success": "Succès",
+    "error": "Erreur",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "loading": "Chargement...",
+    "logout": "Déconnexion"
+  },
+  "validation": {
+    "required": "Champ obligatoire",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "invalidEmail": "Email invalide"
+  },
+  "home": {
+    "greeting": "Bonjour, {{name}}",
+    "continuePlanning": "Continuer la Planification",
+    "popularDestinations": "Destinations Populaires",
+    "noTripsFound": "Aucun voyage trouvé. Commencez-en un maintenant!",
+    "loadingTrips": "Chargement des voyages...",
+    "tripsFetchError": "Erreur lors de la consultation des voyages.",
+    "destinationsFetchError": "Erreur lors de la consultation des destinations populaires.",
+    "locationPermissionDenied": "Permission de localisation refusée. Veuillez l'activer dans les paramètres de l'appareil."
+  },
+  "destinationDetails": {
+    "noDestinationFound": "Aucune destination trouvée",
+    "fetchError": "Erreur lors de la consultation de la destination.",
+    "landmarks": "Sites Touristiques",
+    "averageCost": "Coût Moyen",
+    "generalTips": "Conseils Généraux",
+    "safetyInfo": "Informations de Sécurité",
+    "climate": "Climat",
+    "documents": "Documents Nécessaires"
+  },
+  "profile": {
+    "title": "Profil",
+    "editProfile": "Modifier le Profil",
+    "language": "Langue",
+    "preferences": "Préférences",
+    "name": "Nom",
+    "email": "Email",
+    "newPassword": "Nouveau Mot de Passe (laisser vide pour conserver l'actuel)",
+    "confirmPassword": "Confirmer le Nouveau Mot de Passe",
+    "saveChanges": "Enregistrer les Modifications",
+    "nameRequired": "Le nom est obligatoire",
+    "profileUpdated": "Profil mis à jour avec succès!",
+    "profileUpdateError": "Erreur lors de la mise à jour du profil",
+    "languageUpdated": "Langue mise à jour avec succès!",
+    "languageUpdateError": "Erreur lors de la mise à jour de la langue",
+    "preferencesUpdated": "Préférences mises à jour avec succès!",
+    "preferencesUpdateError": "Erreur lors de la mise à jour des préférences",
+    "preferredTransport": "Transport Préféré",
+    "accommodationType": "Type d'Hébergement",
+    "budget": "Budget"
+  }
+}

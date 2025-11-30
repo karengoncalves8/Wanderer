@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const getPlaceImageUri = async (img_name: string): Promise<string | ApiException> => {
   try {
-    const url = `https://places.googleapis.com/v1/${img_name}/media?maxHeightPx=400&maxWidthPx=400&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}`;
+    const url = `https://places.googleapis.com/v1/${img_name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyCh1SXUnWnRQBSuLk8H9TMXD62YOOsKvec`;
     const response = await axios.get(url);
     console.log("response", response);
     return response.data.photoUri
@@ -18,8 +18,7 @@ const getPlaceImageUri = async (img_name: string): Promise<string | ApiException
 
 const getReverseGeolocation = async (lat: number, lng: number): Promise<any | ApiException> => {
   try {
-    console.log("EXPO_PUBLIC_GOOGLE_API_KEY", process.env.EXPO_PUBLIC_GOOGLE_API_KEY);
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}`;
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCh1SXUnWnRQBSuLk8H9TMXD62YOOsKvec`;
     console.log("url", url)
     const response = await axios.get(url);
     return response.data;

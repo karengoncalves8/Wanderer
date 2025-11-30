@@ -16,7 +16,7 @@ export default class UsuarioPreferencia extends Model {
     id!: number
 
     @Column({
-        type: DataType.ENUM('portugues', 'ingles', 'espanhol', 'frances'),
+        type: DataType.ENUM('pt', 'en', 'es', 'fr'),
         allowNull: false
     })
     idioma!: PrefIdioma 

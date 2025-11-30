@@ -1,8 +1,8 @@
 export enum PrefIdioma {
-    Portugues = 'portugues',
-    Ingles = 'ingles',
-    Espanhol = 'espanhol',
-    Frances = 'frances',
+    Portugues = 'pt',
+    Ingles = 'en',
+    Espanhol = 'es',
+    Frances = 'fr',
 }
 
 export enum PrefTransporte {

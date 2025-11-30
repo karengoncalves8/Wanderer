@@ -20,9 +20,8 @@ export default function BookingFlights() {
 
     const fetchResults = async (params: VooAPISearch) => {
         try{
-            console.log("token", session)
-            const data = await vooAPIService.searchVoo(params, session!);
-            console.log("data", data)
+            const data = await vooAPIService.searchVoo(params);
+            
             if (Array.isArray(data)) {
                 setVoos(data);
             } else {
@@ -41,7 +40,9 @@ export default function BookingFlights() {
             iataDestino: String(destino ?? ''),
             dataPartida: String(dataPartida ?? ''),
             classe: Number(classe ?? 0),
-            idaEVolta: false
+            idaEVolta: false,
+            usuarioPais: session!.user.pais,
+            idioma: session!.user.preferencias.idioma
         })
     }, [origem, destino, dataPartida, classe])
 

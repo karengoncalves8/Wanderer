@@ -1,0 +1,59 @@
+{
+  "common": {
+    "success": "Success",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "logout": "Logout"
+  },
+  "validation": {
+    "required": "Required field",
+    "passwordMismatch": "Passwords do not match",
+    "invalidEmail": "Invalid email"
+  },
+  "home": {
+    "greeting": "Hello, {{name}}",
+    "continuePlanning": "Continue Planning",
+    "popularDestinations": "Popular Destinations",
+    "noTripsFound": "No trips found. Start one now!",
+    "loadingTrips": "Loading trips...",
+    "tripsFetchError": "Error fetching trips.",
+    "destinationsFetchError": "Error fetching popular destinations.",
+    "locationPermissionDenied": "Location permission denied. Please enable it in device settings."
+  },
+  "destinationDetails": {
+    "noDestinationFound": "No destination found",
+    "fetchError": "Error fetching destination.",
+    "landmarks": "Landmarks",
+    "averageCost": "Average Cost",
+    "generalTips": "General Tips",
+    "safetyInfo": "Safety Information",
+    "climate": "Climate",
+    "documents": "Required Documents"
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "language": "Language",
+    "preferences": "Preferences",
+    "name": "Name",
+    "email": "Email",
+    "newPassword": "New Password (leave blank to keep current)",
+    "confirmPassword": "Confirm New Password",
+    "saveChanges": "Save Changes",
+    "nameRequired": "Name is required",
+    "profileUpdated": "Profile updated successfully!",
+    "profileUpdateError": "Error updating profile",
+    "languageUpdated": "Language updated successfully!",
+    "languageUpdateError": "Error updating language",
+    "preferencesUpdated": "Preferences updated successfully!",
+    "preferencesUpdateError": "Error updating preferences",
+    "preferredTransport": "Preferred Transport",
+    "accommodationType": "Accommodation Type",
+    "budget": "Budget"
+  }
+}

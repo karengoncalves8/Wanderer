@@ -23,8 +23,25 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 dotenv_1.default.config();
+// More permissive CORS for mobile apps
 app.use(cors({
-    origin: ['http://localhost:8081', 'http://10.0.2.2:8081', `http://${process.env.IP_ADDRESS}:8081`, `exp://${process.env.IP_ADDRESS}:8081`],
+    origin: function (origin, callback) {
+        // Allow requests with no origin (mobile apps, Postman, etc.)
+        if (!origin)
+            return callback(null, true);
+        const allowedOrigins = [
+            'http://localhost:8081',
+            'http://10.0.2.2:8081',
+            `http://${process.env.IP_ADDRESS}:8081`,
+            `exp://${process.env.IP_ADDRESS}:8081`
+        ];
+        if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('exp://')) {
+            callback(null, true);
+        }
+        else {
+            callback(null, true); // Allow all for now (restrict in production)
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -42,6 +59,7 @@ db_connection_1.default.sync({ force: false })
     const server = app.listen(PORT, '0.0.0.0', () => {
         console.log(`Server running on port ${PORT}`);
         console.log(`Server accessible at http://0.0.0.0:${PORT}`);
+        console.log(`Local network: http://${process.env.IP_ADDRESS}:${PORT}`);
     });
 }))
     .catch((error) => {

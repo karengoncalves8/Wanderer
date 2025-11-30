@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "-": "^0.0.1",
+    "@google/genai": "^1.30.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/multer": "^1.4.12",
     "axios": "^1.12.2",
@@ -40,6 +41,7 @@
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.6.1",
     "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2",
     "pg": "^8.13.0",
     "pg-hstore": "^2.3.4",
     "read-chunk": "^5.0.0",

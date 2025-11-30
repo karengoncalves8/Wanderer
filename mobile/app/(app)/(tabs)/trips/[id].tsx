@@ -1,9 +1,10 @@
 import { Text, View, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
 
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import { Viagem } from '@/interfaces/Viagem';
 import { viagemService } from '@/services/viagemService';
 import { ApiException } from '@/config/apiException';
@@ -24,6 +25,7 @@ export default function TripDetails() {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<string>('visao');
     const [atividadeModalOpen, setAtividadeModalOpen] = useState(false);
+    const [dataSelecionada, setDataSelecionada] = useState<string | null>(null);
 
     const fetchViagemDetails = async () => {
         if (!id) return;
@@ -71,7 +73,7 @@ export default function TripDetails() {
             case 'visao':
                 return <VisaoGeralView viagem={viagem} />;
             case 'itinerario':
-                return <ItineraryView viagem={viagem} acomodacoes={viagem.acomodacoes} atividades={viagem.atividades} passagens={viagem.passagens} />;
+                return <ItineraryView viagem={viagem} acomodacoes={viagem.acomodacoes} atividades={viagem.atividades} passagens={viagem.passagens} setDataSelecionada={setDataSelecionada} />;
             case 'gastos':
                 return <GastosView viagem={viagem} onCreated={() => fetchViagemDetails()}/>;
             case 'listas':
@@ -101,13 +103,25 @@ export default function TripDetails() {
             {renderTabContent()}
 
             {activeTab === 'itinerario' && (
-                <TouchableOpacity
-                    style={styles.fab}
-                    onPress={() => setAtividadeModalOpen(true)}
-                    accessibilityLabel="Adicionar atividade"
-                >
-                    <Ionicons name="add" size={28} color="#fff" />
-                </TouchableOpacity>
+                <View style={styles.floatButtons}>
+                    <TouchableOpacity
+                        style={styles.fab}
+                        onPress={() => router.push({
+                            pathname: '/itinerary-map',
+                            params: { viagemId: viagem.id, data: dataSelecionada }
+                        })}
+                        accessibilityLabel="Visualizar atividade no mapa"
+                    >
+                        <FontAwesomeIcon name="map-marked-alt" size={28} color="#fff" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.fab}
+                        onPress={() => setAtividadeModalOpen(true)}
+                        accessibilityLabel="Adicionar atividade"
+                    >
+                        <Ionicons name="add" size={28} color="#fff" />
+                    </TouchableOpacity>
+                </View>
             )}
 
             <GenericModal
@@ -228,10 +242,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         minHeight: 100,
     },
-    fab: {
+    floatButtons: {
         position: 'absolute',
         right: 20,
         bottom: 30,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+    },  
+    fab: {
         width: 56,
         height: 56,
         borderRadius: 28,

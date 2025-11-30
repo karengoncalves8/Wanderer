@@ -98,9 +98,9 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
                     onChangeText={setNome}
                     value={nome}
                 /> 
-                {process.env.EXPO_PUBLIC_GOOGLE_API_KEY &&
+                {true &&
                     <GooglePlacesTextInput
-                        apiKey={process.env.EXPO_PUBLIC_GOOGLE_API_KEY}
+                        apiKey="AIzaSyCh1SXUnWnRQBSuLk8H9TMXD62YOOsKvec"
                         onPlaceSelect={(place: Place) => handlePlaceSelect(place)}
                         languageCode="pt-BR"
                         fetchDetails={true}

@@ -123,11 +123,11 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
             onChangeText={setNome}
         />
 
-        {process.env.EXPO_PUBLIC_GOOGLE_API_KEY && (
+        {true && (
         <View>
           <Text style={styles.label}>Localização</Text>
           <GooglePlacesTextInput
-            apiKey={process.env.EXPO_PUBLIC_GOOGLE_API_KEY}
+            apiKey="AIzaSyCh1SXUnWnRQBSuLk8H9TMXD62YOOsKvec"
             onPlaceSelect={(place: Place) => handlePlaceSelect(place)}
             languageCode="pt-BR"
             fetchDetails={true}
