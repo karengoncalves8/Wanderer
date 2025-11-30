@@ -16,6 +16,7 @@ import { Atividade } from '@/interfaces/Atividade';
 import MaIcons from 'react-native-vector-icons/MaterialIcons';
 import FonIcons from 'react-native-vector-icons/Fontisto';
 import { colors } from '@/styles/globalStyles';
+import { LeafletMap } from '@/components/LeafletMap/LeafletMap';
 
 export default function ItineraryMap() {
   const { viagemId, data } = useLocalSearchParams();
@@ -99,37 +100,28 @@ export default function ItineraryMap() {
         <Text>Loading...</Text>
       ) : (
         <>
-          <MapView
-            showsUserLocation
-            style={styles.map}
-            initialRegion={{
-              latitude: Number.isFinite(initialLat) ? initialLat : 37.78825,
-              longitude: Number.isFinite(initialLng) ? initialLng : -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+          <LeafletMap
+            activities={atividades.map((atv, index) => ({
+              lat: Number(atv.atividadeLocal?.lat),
+              lng: Number(atv.atividadeLocal?.long),
+              name: atv.nome,
+              index,
+            }))}
+            userLocation={
+              userLocation
+                ? { lat: userLocation.lat, lng: userLocation.long }
+                : undefined
+            }
+            initialRegion={
+              Number.isFinite(initialLat) && Number.isFinite(initialLng)
+                ? { lat: initialLat, lng: initialLng }
+                : undefined
+            }
+            onMarkerPress={(activity) => {
+              const selected = atividades[activity.index!];
+              setSelectedAtividade(selected);
             }}
-          >
-            {atividades!.map((atv, index) => {
-              const lat = Number(atv.atividadeLocal?.lat);
-              const lng = Number(atv.atividadeLocal?.long);
-
-              if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-
-              return (
-                <Marker
-                  key={index}
-                  coordinate={{ latitude: lat, longitude: lng }}
-                  onPress={() => setSelectedAtividade(atv)}
-                >
-                  <View style={styles.pinContainer}>
-                    <View style={styles.pin}>
-                      <Text style={styles.pinText}>{index + 1}</Text>
-                    </View>
-                  </View>
-                </Marker>
-              );
-            })}
-          </MapView>
+          />
 
           {/* --- BOTTOM CARD --- */}
           {selectedAtividade && (

@@ -48,7 +48,7 @@ export default function Home() {
     }
 
     const fetchDestinos = async () => {
-        const response = await destinoService.getPopularDestinations(session?.user.preferencias.idioma || 'pt');
+        const response = await destinoService.getPopularDestinations(session?.user?.preferencias?.idioma || 'pt');
         if (response instanceof ApiException) {
             Toast.show({
                 type: 'error',

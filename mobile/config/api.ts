@@ -2,14 +2,8 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
-// Replace 'YOUR_LOCAL_IP' with your actual local IP address
-// To find your IP: run 'ipconfig' in Windows Command Prompt and look for IPv4 Address
-// Example: 'http://192.168.1.100:5000' or 'http://192.168.0.105:5000'
 export const Api = axios.create({
-  // baseURL: Platform.OS === 'android' 
-  //   ? 'http://10.0.2.2:5000'  // Android emulator localhost
-  //   : 'http://192.168.137.1:5000', // iOS simulator or physical device
-  baseURL: `http://${process.env.EXPO_PUBLIC_IP}:5000`,
+  baseURL: `https://96c97cfcb5a9.ngrok-free.app`,
   timeout: 10000, // 10 second timeout
   headers: {
     'Content-Type': 'application/json',
