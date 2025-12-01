@@ -54,19 +54,19 @@ Desde o cadastro e preferências do usuário até o planejamento completo com vo
 | 02 | 3 | Média | Como usuário, quero visualizar o histórico de destinos visitados, para relembrar viagens. | 3 | 2 |
 | 02 | 4 | Baixa | Como usuário, quero editar informações dos destinos visitados, para manter histórico atualizado. | 3 | 2 |
 | 03 | 5 | Alta | Como usuário, quero pesquisar voos com filtros, para encontrar a melhor opção. | 13 | 1 |
-| 04 | 6 | Alta | Como usuário, quero agendar um voo e salvar a reserva, para garantir minha viagem. | 5 | 1 |
-| 05 | 7 | Alta | Como usuário, quero pesquisar acomodações com filtros, para escolher a melhor opção. | 13 | 1 |
-| 06 | 8 | Alta | Como usuário, quero reservar acomodações e salvar a reserva, para garantir meu lugar. | 5 | 1 |
-| 07 | 9 | Alta | Como usuário, quero criar itinerários personalizados, para planejar minha viagem. | 8 | 2 |
-| 07 | 10 | Média | Como usuário, quero visualizar meu itinerário em um mapa interativo, para ter visão geográfica. | 8 | 3 |
-| 08 | 11 | Alta | Como usuário, quero receber sugestões automáticas de atrações, para aproveitar melhor a viagem. | 13 | 3 |
-| 09 | 12 | Média | Como usuário, quero criar lista de tarefas relacionadas à viagem, para me preparar adequadamente. | 3 | 2 |
-| 09 | 13 | Média | Como usuário, quero criar lista de itens de viagem, para não esquecer nada. | 3 | 2 |
-| 10 | 14 | Alta | Como usuário, quero registrar e visualizar gastos, para acompanhar meu orçamento. | 8 | 2 |
-| 11 | 15 | Alta | Como usuário, quero receber notificações inteligentes, para não perder horários importantes. | 8 | 3 |
-| 12 | 16 | Média | Como usuário, quero integrar transporte local (Uber etc.), para facilitar deslocamentos. | 5 | 3 |
-| 13 | 17 | Baixa | Como usuário, quero compartilhar meu itinerário com amigos/familiares, para que acompanhem minha viagem. | 5 | 3 |
-| 14 | 18 | Baixa | Como usuário, quero avaliar e comentar acomodações/atrações, para compartilhar experiência. | 3 | 3 |
+| 14 | 6 | Baixa | Como usuário, quero avaliar e comentar acomodações/atrações, para compartilhar experiência. | 3 | 3 |
+| 04 | 7 | Alta | Como usuário, quero agendar um voo e salvar a reserva, para garantir minha viagem. | 5 | 1 |
+| 11 | 8 | Alta | Como usuário, quero receber notificações inteligentes, para não perder horários importantes. | 8 | 3 |
+| 05 | 9 | Alta | Como usuário, quero pesquisar acomodações com filtros, para escolher a melhor opção. | 13 | 1 |
+| 06 | 10 | Alta | Como usuário, quero reservar acomodações e salvar a reserva, para garantir meu lugar. | 5 | 1 |
+| 07 | 11 | Alta | Como usuário, quero criar itinerários personalizados, para planejar minha viagem. | 8 | 2 |
+| 13 | 12 | Baixa | Como usuário, quero compartilhar meu itinerário com amigos/familiares, para que acompanhem minha viagem. | 5 | 3 |
+| 09 | 13 | Média | Como usuário, quero criar lista de tarefas relacionadas à viagem, para me preparar adequadamente. | 3 | 2 |
+| 09 | 14 | Média | Como usuário, quero criar lista de itens de viagem, para não esquecer nada. | 3 | 2 |
+| 10 | 15 | Alta | Como usuário, quero registrar e visualizar gastos, para acompanhar meu orçamento. | 8 | 2 |
+| 07 | 16 | Média | Como usuário, quero visualizar meu itinerário em um mapa interativo, para ter visão geográfica. | 8 | 3 |
+| 08 | 17 | Alta | Como usuário, quero receber sugestões automáticas de atrações, para aproveitar melhor a viagem. | 13 | 3 |
+| 12 | 18 | Média | Como usuário, quero integrar transporte local (Uber etc.), para facilitar deslocamentos. | 5 | 3 |
 | 15 | 19 | Baixa | Como usuário, quero acessar conteúdos de apoio, para me preparar melhor para a viagem. | 3 | 3 |
 | 16 | 20 | Alta | Como usuário, quero fazer login com senha ou biometria, para acessar meus dados com segurança. | 2 | 1 |
 | 17 | 21 | Média | Como usuário, quero tradução automática de informações básicas, para facilitar comunicação. | 3 | 3 |
