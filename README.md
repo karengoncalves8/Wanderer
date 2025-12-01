@@ -60,7 +60,7 @@ Desde o cadastro e preferências do usuário até o planejamento completo com vo
 | 09 | 14 | Média | Como usuário, quero criar lista de itens de viagem, para não esquecer nada. | 3 | 2 |
 | 10 | 15 | Alta | Como usuário, quero registrar e visualizar gastos, para acompanhar meu orçamento. | 8 | 2 |
 | 07 | 16 | Média | Como usuário, quero visualizar meu itinerário em um mapa interativo, para ter visão geográfica. | 8 | 3 |
-| 08 | 17 | Alta | Como usuário, quero receber sugestões automáticas de atrações, para aproveitar melhor a viagem. | 13 | 3 |
+| 08 | 17 | Alta | Como usuário, quero receber sugestões automáticas de destinos, para aproveitar melhor a viagem. | 13 | 3 |
 | 11 | 18 | Média | Como usuário, quero integrar transporte local (Uber etc.), para facilitar deslocamentos. | 5 | 3 |
 | 12 | 19 | Baixa | Como usuário, quero acessar conteúdos de apoio, para me preparar melhor para a viagem. | 3 | 3 |
 | 14 | 21 | Média | Como usuário, quero tradução automática de informações básicas, para facilitar comunicação. | 3 | 3 |
