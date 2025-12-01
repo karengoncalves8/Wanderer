@@ -10,6 +10,7 @@ import { colors } from '@/styles/globalStyles';
 import { despesaService } from '@/services/despesaService';
 import GenericModal from '@/components/Modals/GenericModal/Modal';
 import DespesaForm from '@/components/Forms/DespesaForm';
+import { useTranslation } from 'react-i18next';
 
 export type GastosViewProps = {
   viagem: Viagem;
@@ -17,14 +18,15 @@ export type GastosViewProps = {
 };
 
 const DespesaItem = ({ item }: { item: Despesa }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardTitle}>{item.nome}</Text>
-        <Text style={styles.cardValue}>R$ {item.valor?.toFixed(2)}</Text>
+        <Text style={styles.cardValue}>{t('common.currency', { value: item.valor?.toFixed(2) })}</Text>
       </View>
       <View style={styles.cardFooter}>
-        <Text style={styles.cardCategory}>{item.despesaCategoria?.nome ?? 'Sem categoria'}</Text>
+        <Text style={styles.cardCategory}>{item.despesaCategoria?.nome ?? t('expenses.noCategory')}</Text>
         <Text style={styles.cardDate}>{item.createdAt ? format(new Date(item.createdAt), "d 'de' LLL", { locale: ptBR }) : ''}</Text>
       </View>
     </View>
@@ -32,6 +34,7 @@ const DespesaItem = ({ item }: { item: Despesa }) => {
 };
 
 export default function GastosView({ viagem, onCreated }: GastosViewProps) {
+  const { t } = useTranslation();
   const [despesas, setDespesas] = useState<Despesa[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -39,7 +42,6 @@ export default function GastosView({ viagem, onCreated }: GastosViewProps) {
   const gastosId = viagem?.gastos?.id;
   const orcamento = viagem?.gastos?.orcamento ?? 0;
   const totalFromState = useMemo(() => despesas.reduce((acc, d) => acc + (d.valor ?? 0), 0), [despesas]);
-  // Prefer backend total if available; fall back to computed
   const total = viagem?.gastos?.total ?? totalFromState;
   const percent = orcamento > 0 ? Math.min(100, Math.round((total / orcamento) * 100)) : 0;
 
@@ -53,19 +55,20 @@ export default function GastosView({ viagem, onCreated }: GastosViewProps) {
 
   useEffect(() => {
     fetchDespesas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gastosId]);
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.totalLabel}>Total</Text>
-        <Text style={styles.totalValue}>R$ {total.toFixed(2)}</Text>
+        <Text style={styles.totalLabel}>{t('expenses.total')}</Text>
+        <Text style={styles.totalValue}>{t('common.currency', { value: total.toFixed(2) })}</Text>
         <View style={styles.progressBar}>
           <View style={[styles.progressFill, { width: `${percent}%` }]} />
         </View>
-        <Text style={styles.orcamentoText}>Orçamento: R$ {orcamento.toFixed(2)} ({percent}%)</Text>
+        <Text style={styles.orcamentoText}>
+          {t('expenses.budget', { value: orcamento.toFixed(2), percent })}
+        </Text>
       </View>
 
       {/* List */}
@@ -73,17 +76,25 @@ export default function GastosView({ viagem, onCreated }: GastosViewProps) {
         data={[...despesas].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())}
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => <DespesaItem item={item} />}
-        ListEmptyComponent={!loading ? <Text style={styles.emptyText}>Sem despesas ainda.</Text> : null}
+        ListEmptyComponent={!loading ? <Text style={styles.emptyText}>{t('expenses.noExpenses')}</Text> : null}
         contentContainerStyle={{ paddingBottom: 120 }}
       />
 
       {/* FAB */}
-      <TouchableOpacity style={styles.fab} onPress={() => setModalOpen(true)} accessibilityLabel="Adicionar despesa">
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setModalOpen(true)}
+        accessibilityLabel={t('expenses.addExpense')}
+      >
         <Ionicons name="add" size={28} color="#fff" />
       </TouchableOpacity>
 
       {/* Modal */}
-      <GenericModal visible={modalOpen} title="Nova Despesa" onClose={() => setModalOpen(false)}>
+      <GenericModal
+        visible={modalOpen}
+        title={t('expenses.newExpense')}
+        onClose={() => setModalOpen(false)}
+      >
         {gastosId && (
           <DespesaForm
             gastosId={gastosId}

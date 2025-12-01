@@ -17,8 +17,10 @@ import MaIcons from 'react-native-vector-icons/MaterialIcons';
 import FonIcons from 'react-native-vector-icons/Fontisto';
 import { colors } from '@/styles/globalStyles';
 import { LeafletMap } from '@/components/LeafletMap/LeafletMap';
+import { useTranslation } from 'react-i18next';
 
 export default function ItineraryMap() {
+  const { t } = useTranslation();
   const { viagemId, data } = useLocalSearchParams();
 
   const [atividades, setAtividades] = useState<Atividade[] | null>(null);
@@ -56,8 +58,8 @@ export default function ItineraryMap() {
         if (response.status !== "granted") {
           Toast.show({
             type: 'error',
-            text1: 'Erro',
-            text2: 'Permissão para acessar localização negada.'
+            text1: t('common.error'),
+            text2: t('itineraryMap.locationPermissionDenied')
           });
           return;
         }
@@ -97,7 +99,7 @@ export default function ItineraryMap() {
   return (
     <View style={styles.container}>
       {isLoading || !atividades?.length ? (
-        <Text>Loading...</Text>
+        <Text>{t('common.loading')}</Text>
       ) : (
         <>
           <LeafletMap
@@ -139,7 +141,7 @@ export default function ItineraryMap() {
               </Text>
 
               <Text style={styles.bottomLocation}>
-                {selectedAtividade.atividadeLocal?.localizacao ?? 'Local indefinido'}
+                {selectedAtividade.atividadeLocal?.localizacao ?? t('itineraryMap.undefinedLocation')}
               </Text>
 
               {/* ACTION BUTTONS */}
@@ -155,7 +157,9 @@ export default function ItineraryMap() {
                   }
                 >
                   <FonIcons name="google" size={12} color="#EA4435" />
-                  <Text style={[styles.actionButtonText, { color: '#EA4435' }]}>Maps</Text>
+                  <Text style={[styles.actionButtonText, { color: '#EA4435' }]}>
+                    {t('itineraryMap.googleMaps')}
+                  </Text>
                 </TouchableOpacity>
 
                 {userLocation && (
@@ -171,7 +175,7 @@ export default function ItineraryMap() {
                     }
                   >
                     <MaIcons name="navigation" size={12} color="white" />
-                    <Text style={styles.actionButtonText}>Rota</Text>
+                    <Text style={styles.actionButtonText}>{t('itineraryMap.route')}</Text>
                   </TouchableOpacity>
                 )}
 
@@ -186,7 +190,7 @@ export default function ItineraryMap() {
                   }
                 >
                   <FonIcons name="uber" size={12} color="white" />
-                  <Text style={styles.actionButtonText}>Uber</Text>
+                  <Text style={styles.actionButtonText}>{t('itineraryMap.uber')}</Text>
                 </TouchableOpacity>
               </View>
             </View>

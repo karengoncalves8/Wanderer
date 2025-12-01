@@ -1,5 +1,15 @@
 {
+  "overview":{
+    "accommodations": "Accommodations",
+    "flights": "Flights",
+    "expenses": "Expenses",
+    "noAccommodations": "No accommodations added yet.",
+    "addAccommodation": "Add accommodation",
+    "departure": "Departure",
+    "arrival": "Arrival"
+  },
   "common": {
+    "currency": "Expenses",
     "success": "Success",
     "error": "Error",
     "save": "Save",
@@ -8,7 +18,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "loading": "Loading...",
-    "logout": "Logout"
+    "logout": "Logout",
+    "search": "Search"
   },
   "validation": {
     "required": "Required field",
@@ -22,6 +33,7 @@
     "noTripsFound": "No trips found. Start one now!",
     "loadingTrips": "Loading trips...",
     "tripsFetchError": "Error fetching trips.",
+    "nearbyAttractions": "Nearby Places",
     "destinationsFetchError": "Error fetching popular destinations.",
     "locationPermissionDenied": "Location permission denied. Please enable it in device settings."
   },
@@ -33,7 +45,16 @@
     "generalTips": "General Tips",
     "safetyInfo": "Safety Information",
     "climate": "Climate",
-    "documents": "Required Documents"
+    "documents": "Required Documents",
+    "destinationGuide": "Destination Guide",
+    "noGuideAvailable": "No guide available for this destination yet.",
+    "retry": "Try Again",
+    "errorLoadingData": "Error loading guide. Please try again.",
+    "seasons": "Seasons",
+    "documentsRequired": "Documents Required",
+    "tipsForYourTrip": "Tips for your trip to {{destination}}",
+    "safetyTips": "Safety tips for {{destination}}",
+    "weatherInfo": "Weather information"
   },
   "profile": {
     "title": "Profile",
@@ -55,5 +76,225 @@
     "preferredTransport": "Preferred Transport",
     "accommodationType": "Accommodation Type",
     "budget": "Budget"
+  },
+  "login": {
+    "title": "Sign In",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "loginButton": "Sign In",
+    "biometricLogin": "Sign in with fingerprint",
+    "noAccountQuestion": "Don't have an account yet?",
+    "registerLink": "Register"
+  },
+  "booking": {
+    "title": "Booking",
+    "tickets": "Tickets",
+    "accommodations": "Accommodations",
+    "origin": "Origin",
+    "originPlaceholder": "Departure airport IATA",
+    "destination": "Destination",
+    "destinationPlaceholder": "Destination airport IATA",
+    "departureDate": "Departure Date",
+    "selectClass": "Select a class",
+    "search": "Search",
+    "economy": "Economy",
+    "premium": "Premium",
+    "business": "Business",
+    "firstClass": "First Class",
+    "city": "City",
+    "cityPlaceholder": "Destination city",
+    "guests": "Guests",
+    "guestsPlaceholder": "Number of guests",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out"
+  },
+  "trips": {
+    "title": "Trips",
+    "newTrip": "New Trip",
+    "current": "Current",
+    "future": "Future",
+    "history": "History",
+    "editTrip": "Edit Trip",
+    "fetchError": "Error fetching trips."
+  },
+  "flights": {
+    "noFlightsFound": "No flights found",
+    "searchError": "Error searching for flights",
+    "dateFormat": "EEEE, MMMM dd, yyyy",
+    "buy": "Buy"
+  },
+  "hotels": {
+    "cannotOpenUrl": "Cannot open the URL",
+    "errorOpeningUrl": "Error opening the URL",
+    "errorLoadingDetails": "Error loading hotel details",
+    "accommodationsIn": "Accommodations in",
+    "reviews": "reviews",
+    "perNight": "per night",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "guest(s)",
+    "description": "Description",
+    "timings": "Timings",
+    "notProvided": "Not provided",
+    "amenities": "Amenities",
+    "additionalInfo": "Additional Information",
+    "bookNow": "Book Now",
+    "saveAccommodationTitle": "Do you want to save your accommodation details?",
+    "saveAccommodationMessage": "We noticed you selected the accommodation {{name}}, from {{checkin}} to {{checkout}}, for {{guests}} guest(s). If you have booked it, we can save it to your trip.",
+    "saveAccommodation": "Save Accommodation"
+  },
+  "register": {
+    "title": "Register",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "birthDate": "Birth Date",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "country": "Country",
+    "countryPlaceholder": "Enter your country",
+    "next": "Next",
+    "preferences": "Preferences",
+    "language": "Language",
+    "languagePlaceholder": "English",
+    "search": "Search",
+    "transportPreference": "For traveling, I prefer:",
+    "transportPlane": "Plane",
+    "transportCar": "Car",
+    "transportBus": "Bus",
+    "transportTrain": "Train",
+    "accommodationPreference": "I prefer staying in:",
+    "accommodationHotel": "Hotel",
+    "accommodationApartment": "Apartment",
+    "accommodationHostel": "Hostel",
+    "accommodationInn": "Inn",
+    "budget": "My budget is:",
+    "budgetLow": "Low",
+    "budgetMedium": "Medium",
+    "budgetHigh": "High",
+    "register": "Register"
+  },
+  "itineraryMap": {
+    "locationPermissionDenied": "Permission to access location denied.",
+    "undefinedLocation": "Undefined location",
+    "googleMaps": "Maps",
+    "route": "Route",
+    "uber": "Uber"
+  },
+  "tripDetails": {
+    "fetchError": "Error loading trip details.",
+    "notFound": "Trip not found",
+    "viewOnMap": "View on map",
+    "addActivity": "Add activity",
+    "newActivity": "New Activity"
+  },
+  "expenses": {
+    "total": "Total",
+    "budget": "Budget: ${{value}} ({{percent}}%)",
+    "noExpenses": "No expenses yet.",
+    "noCategory": "No category",
+    "addExpense": "Add expense",
+    "newExpense": "New Expense"
+  },
+  "itinerary": {
+    "downloadTicket": "Download Ticket ⬇️",
+    "flightFrom": "Flight from",
+    "arrivalFrom": "Arrival from",
+    "defaultRoute": "Origin to Destination",
+    "defaultFlight": "Flight",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "noItems": "No items for this day."
+  },
+  "lists": {
+    "newItem": "New item  +",
+    "newItemPlaceholder": "New item",
+    "newList": "New List  +",
+    "newListPlaceholder": "New list title",
+    "createItemError": "Could not create item.",
+    "updateItemError": "Failed to update item."
+  },
+  "tabs": {
+    "overview": "Overview",
+    "itinerary": "Itinerary",
+    "expenses": "Expenses",
+    "lists": "Lists"
+  },
+  "viagemForm": {
+    "name": "Name",
+    "namePlaceholder": "Trip name",
+    "departureDate": "Departure Date",
+    "departureDatePlaceholder": "10/10/2025",
+    "returnDate": "Return Date",
+    "returnDatePlaceholder": "10/10/2025",
+    "budget": "Budget",
+    "budgetPlaceholder": "$0.00",
+    "fillAllFields": "Fill in all fields!",
+    "tripCreated": "Trip created successfully!",
+    "tripCreateError": "Error creating trip!"
+  },
+  "tripInfoCard": {
+    "share": "Share",
+    "duration": "Duration: {{days}} days",
+    "totalSpent": "Total spent: {{value}}"
+  },
+  "despesaForm": {
+    "name": "Expense name",
+    "namePlaceholder": "Enter expense name",
+    "value": "Value",
+    "valuePlaceholder": "Enter value",
+    "selectCategory": "Select a category",
+    "fillAllFields": "Fill in all fields!",
+    "expenseCreated": "Expense created successfully!",
+    "expenseCreateError": "Error creating expense!"
+  },
+  "atividadeForm": {
+    "name": "Activity name",
+    "namePlaceholder": "Enter activity name",
+    "location": "Location",
+    "selectDay": "Select the day",
+    "selectCategory": "Select a category",
+    "start": "Start",
+    "startPlaceholder": "08:00",
+    "end": "End",
+    "endPlaceholder": "10:00",
+    "price": "Price",
+    "pricePlaceholder": "Enter the price",
+    "fillAllFields": "Fill in all fields!",
+    "activityCreated": "Activity created successfully!",
+    "activityCreateError": "Error creating activity!"
+  },
+  "acomodacaoForm": {
+    "selectTrip": "Select trip",
+    "name": "Accommodation name",
+    "namePlaceholder": "Enter accommodation name",
+    "location": "Location",
+    "locationPlaceholder": "Enter location",
+    "entryDate": "Entry date",
+    "entryDatePlaceholder": "10/10/2025",
+    "exitDate": "Exit date",
+    "exitDatePlaceholder": "10/10/2025",
+    "checkIn": "Check-in",
+    "checkInPlaceholder": "10:00",
+    "checkOut": "Check-out",
+    "checkOutPlaceholder": "10:00",
+    "price": "Price",
+    "pricePlaceholder": "Enter price",
+    "days": "Days",
+    "daysPlaceholder": "Number of days",
+    "created": "Accommodation created successfully!",
+    "createError": "Error creating accommodation!",
+    "fetchT,ripsError": "Error fetching trips."
+  },
+  "guide": {
+    "generalTips": "General Tips",
+    "safetyInfo": "Safety Information",
+    "climate": "Climate",
+    "documents": "Required Documents"
   }
 }

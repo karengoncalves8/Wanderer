@@ -10,6 +10,7 @@ import { colors } from '@/styles/globalStyles';
 import { formatDateStringToStringWithBar } from '@/utils/formatters/formatDateToString';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createDateFromString } from '@/utils/dateRelated/createDateFromString';
+import { useTranslation } from 'react-i18next';
 
 export type ItineraryViewProps = {
   viagem: Viagem;
@@ -32,11 +33,14 @@ const getTripDates = (start?: Date, end?: Date) => {
   return days;
 };
 
-const DatePill = ({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) => (
-  <TouchableOpacity onPress={onPress} style={[styles.datePill, active && styles.datePillActive]}>
-    <Text style={[styles.datePillText, active && styles.datePillTextActive]}>{label}</Text>
-  </TouchableOpacity>
-);
+const DatePill = ({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) => {
+  const { t } = useTranslation();
+  return (
+    <TouchableOpacity onPress={onPress} style={[styles.datePill, active && styles.datePillActive]}>
+      <Text style={[styles.datePillText, active && styles.datePillTextActive]}>{label}</Text>
+    </TouchableOpacity>
+  );
+};
 
 type FeedItemType = 'atividade' | 'passagem' | 'acomodacao_checkin' | 'acomodacao_checkout';
 type FeedItem = {
@@ -53,6 +57,7 @@ type FeedItem = {
 };
 
 const ItineraryItemCard = ({ item }: { item: FeedItem }) => {
+  const { t } = useTranslation();
   const hasRange = item.startTime && item.endTime;
   const hasStart = !!item.startTime;
   const timeText = hasRange ? `${item.startTime} - ${item.endTime}` : hasStart ? item.startTime : undefined;
@@ -75,7 +80,7 @@ const ItineraryItemCard = ({ item }: { item: FeedItem }) => {
         <Text style={styles.cardTitle}>{item.title}</Text>
         {!!item.subtitle && <Text style={styles.cardSub}>{item.subtitle}</Text>}
         {item.type === 'passagem' && item.passagem?.arquivo_pdf && (
-          <Text style={styles.linkText}>Baixar Passagem  ⬇️</Text>
+          <Text style={styles.linkText}>{t('itinerary.downloadTicket')}</Text>
         )}
         {item.type === 'atividade' && item.atividade?.atividadeLocal?.localizacao && (
           <Text style={styles.linkText}>{item.atividade.atividadeLocal.localizacao}</Text>
@@ -86,19 +91,14 @@ const ItineraryItemCard = ({ item }: { item: FeedItem }) => {
 };
 
 export default function ItineraryView({ viagem, atividades = [], passagens = [], acomodacoes, setDataSelecionada }: ItineraryViewProps) {
+  const { t } = useTranslation();
   const tripDays = useMemo(() => getTripDates(viagem?.dataIda ? createDateFromString(viagem.dataIda) : undefined, viagem?.dataVolta ? createDateFromString(viagem.dataVolta) : undefined), [viagem?.dataIda, viagem?.dataVolta]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
   useEffect(() => {
-    console.log('[Itinerary] tripDays keys', tripDays.map(d => sameDayKey(d)));
     setDataSelecionada(format(tripDays[0], 'yyyy-MM-dd'));
     setSelectedIndex(0);
   }, [tripDays]);
-  useEffect(() => {
-    console.log('[Itinerary] atividades count', atividades?.length ?? 0, (atividades ?? []).map(a => a.data));
-  }, [atividades]);
-  useEffect(() => {
-    console.log('[Itinerary] selectedIndex', selectedIndex, 'selectedDay', tripDays[selectedIndex]?.toISOString?.());
-  }, [selectedIndex, tripDays]);
 
   const acc = (acomodacoes ?? viagem?.acomodacoes ?? []) as Acomodacao[];
 
@@ -113,12 +113,9 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
   const buildFeedForDay = (day: Date): FeedItem[] => {
     const key = sameDayKey(day);
     const items: FeedItem[] = [];
-    console.log('[Itinerary] Building feed for day', day?.toISOString?.(), 'key', key);
 
-    // Atividades exactly on the day
     (atividades ?? []).forEach(a => {
       const d = createDateFromString(a.data);
-      console.log('[Itinerary] atividade', a.id, 'raw', a.data, 'parsed', d?.toISOString?.(), 'dayKey', sameDayKey(d), 'matches?', sameDayKey(d) === key);
       if (!d || sameDayKey(d) !== key) return;
       items.push({
         type: 'atividade',
@@ -131,7 +128,6 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
       });
     });
 
-    // Passagens only on departure or arrival day
     (passagens ?? []).forEach(p => {
       const locais = p.passagemLocais ?? [];
       const partida = locais.find(l => l.tipo === 'partida');
@@ -140,15 +136,13 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
       const partidaDate = createDateFromString(partida?.data);
       const chegadaDate = createDateFromString(chegada?.data);
 
-      const route = [partida?.localizacao, chegada?.localizacao].filter(Boolean).join(' para ');
+      const route = [partida?.localizacao, chegada?.localizacao].filter(Boolean).join(` ${t('common.to')} `);
 
       if (partidaDate && sameDayKey(partidaDate) === key) {
         items.push({
           type: 'passagem',
           id: `p-${p.id}-partida`,
-          title: `Voo de ${route || 'Origem para Destino'}`,
-          subtitle: undefined,
-          // Times not available in interface; show none
+          title: `${t('itinerary.flightFrom')} ${route || t('itinerary.defaultRoute')}`,
           passagem: p,
         });
       }
@@ -156,14 +150,12 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
         items.push({
           type: 'passagem',
           id: `p-${p.id}-chegada`,
-          title: `Chegada de ${route || 'Voo'}`,
-          subtitle: undefined,
+          title: `${t('itinerary.arrivalFrom')} ${route || t('itinerary.defaultFlight')}`,
           passagem: p,
         });
       }
     });
 
-    // Acomodações only on check-in and checkout days
     (acc ?? []).forEach(s => {
       const entrada = createDateFromString(s.data_entrada);
       const saida = createDateFromString(s.data_saida);
@@ -174,7 +166,7 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
         items.push({
           type: 'acomodacao_checkin',
           id: `s-${s.id}-in`,
-          title: `Check-in • ${s.nome}`,
+          title: `${t('itinerary.checkIn')} • ${s.nome}`,
           subtitle: `${formatDateStringToStringWithBar(s.data_entrada)} - ${formatDateStringToStringWithBar(s.data_saida)}`,
           startTime: checkIn,
           acomodacao: s,
@@ -184,7 +176,7 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
         items.push({
           type: 'acomodacao_checkout',
           id: `s-${s.id}-out`,
-          title: `Check-out • ${s.nome}`,
+          title: `${t('itinerary.checkOut')} • ${s.nome}`,
           subtitle: `${formatDateStringToStringWithBar(s.data_entrada)} - ${formatDateStringToStringWithBar(s.data_saida)}`,
           startTime: checkOut,
           acomodacao: s,
@@ -192,12 +184,10 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
       }
     });
 
-    // Sort by time if present
     items.sort((a, b) => {
       const aMin = timeToMinutes(a.startTime) ?? 99999;
       const bMin = timeToMinutes(b.startTime) ?? 99999;
       if (aMin !== bMin) return aMin - bMin;
-      // then by type to keep deterministic
       return a.type.localeCompare(b.type);
     });
 
@@ -227,7 +217,7 @@ export default function ItineraryView({ viagem, atividades = [], passagens = [],
       <View style={styles.feedContainer}>
         {feed.length === 0 ? (
           <View style={styles.emptyBlock}>
-            <Text style={styles.emptyText}>Sem itens para este dia.</Text>
+            <Text style={styles.emptyText}>{t('itinerary.noItems')}</Text>
           </View>
         ) : (
           feed.map(item => <ItineraryItemCard key={item.id} item={item} />)
@@ -320,3 +310,7 @@ const styles = StyleSheet.create({
     color: colors.gray600,
   },
 });
+function timeToMinutes(startTime: string | undefined) {
+    throw new Error('Function not implemented.');
+}
+

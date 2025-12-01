@@ -1,5 +1,15 @@
 {
+  "overview":{
+    "accommodations": "Acomodações",
+    "flights": "Voos",
+    "expenses": "Despesas",
+    "noAccommodations": "Nenhuma acomodação adicionada ainda.",
+    "addAccommodation": "Adicionar acomodação",
+    "departure": "Partida",
+    "arrival": "Chegada"
+  },
   "common": {
+    "currency": "Gastos",
     "success": "Sucesso",
     "error": "Erro",
     "save": "Salvar",
@@ -8,7 +18,8 @@
     "delete": "Excluir",
     "edit": "Editar",
     "loading": "Carregando...",
-    "logout": "Sair"
+    "logout": "Sair",
+    "search": "Pesquisar"
   },
   "validation": {
     "required": "Campo obrigatório",
@@ -22,6 +33,7 @@
     "noTripsFound": "Nenhuma viagem encontrada. Começe uma agora!",
     "loadingTrips": "Carregando viagens...",
     "tripsFetchError": "Erro ao consultar viagens.",
+    "nearbyAttractions": "Lugares Proximos",
     "destinationsFetchError": "Erro ao consultar destinos populares.",
     "locationPermissionDenied": "Permissão para acessar localização negada. Por favor, habilite nas configurações do dispositivo."
   },
@@ -33,7 +45,16 @@
     "generalTips": "Dicas Gerais",
     "safetyInfo": "Informações de Segurança",
     "climate": "Clima",
-    "documents": "Documentos Necessários"
+    "documents": "Documentos Necessários",
+    "destinationGuide": "Guia do Destino",
+    "noGuideAvailable": "Nenhum guia disponível para este destino ainda.",
+    "retry": "Tentar Novamente",
+    "errorLoadingData": "Erro ao carregar o guia. Por favor, tente novamente.",
+    "seasons": "Estações do Ano",
+    "documentsRequired": "Documentos Necessários",
+    "tipsForYourTrip": "Dicas para sua viagem para {{destination}}",
+    "safetyTips": "Dicas de segurança para {{destination}}",
+    "weatherInfo": "Informações climáticas"
   },
   "profile": {
     "title": "Perfil",
@@ -55,5 +76,224 @@
     "preferredTransport": "Transporte Preferido",
     "accommodationType": "Tipo de Acomodação",
     "budget": "Orçamento"
+  },
+  "login": {
+    "title": "Entrar",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Digite seu email",
+    "passwordLabel": "Senha",
+    "passwordPlaceholder": "Digite sua senha",
+    "loginButton": "Entrar",
+    "biometricLogin": "Entrar com digital",
+    "noAccountQuestion": "Ainda não tem uma conta?",
+    "registerLink": "Cadastre-se"
+  },
+  "register": {
+    "title": "Cadastrar",
+    "name": "Nome",
+    "namePlaceholder": "Digite seu nome",
+    "birthDate": "Data de Nascimento",
+    "email": "Email",
+    "emailPlaceholder": "Digite seu email",
+    "password": "Senha",
+    "passwordPlaceholder": "Digite sua senha",
+    "city": "Cidade",
+    "cityPlaceholder": "Digite sua cidade",
+    "country": "País",
+    "countryPlaceholder": "Digite seu país",
+    "next": "Próximo",
+    "preferences": "Preferências",
+    "language": "Idioma",
+    "languagePlaceholder": "Português-BR",
+    "transportPreference": "Para me locomover na viagem eu prefiro:",
+    "transportPlane": "Avião",
+    "transportCar": "Carro",
+    "transportBus": "Ônibus",
+    "transportTrain": "Trem",
+    "accommodationPreference": "Prefiro ficar hospedado em:",
+    "accommodationHotel": "Hotel",
+    "accommodationApartment": "Apartamento",
+    "accommodationHostel": "Hostel",
+    "accommodationInn": "Pousada",
+    "budget": "Como está o meu orçamento:",
+    "budgetLow": "Baixo",
+    "budgetMedium": "Médio",
+    "budgetHigh": "Alto",
+    "register": "Cadastrar"
+  },
+  "booking": {
+    "title": "Reservar",
+    "tickets": "Passagens",
+    "accommodations": "Acomodações",
+    "origin": "Origem",
+    "originPlaceholder": "IATA do aeroporto de partida",
+    "destination": "Destino",
+    "destinationPlaceholder": "IATA do aeroporto de destino",
+    "departureDate": "Data de Partida",
+    "selectClass": "Selecione uma classe",
+    "search": "Pesquisar",
+    "economy": "Econômica",
+    "premium": "Premium",
+    "business": "Executiva",
+    "firstClass": "Primeira Classe",
+    "city": "Cidade",
+    "cityPlaceholder": "Cidade de destino",
+    "guests": "Hóspedes",
+    "guestsPlaceholder": "Quantidade de hóspedes",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out"
+  },
+  "hotels": {
+    "cannotOpenUrl": "Não foi possível abrir a URL",
+    "errorOpeningUrl": "Erro ao abrir a URL",
+    "errorLoadingDetails": "Erro ao carregar detalhes do hotel",
+    "accommodationsIn": "Acomodações em",
+    "reviews": "avaliações",
+    "perNight": "por noite",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "hóspede(s)",
+    "description": "Descrição",
+    "timings": "Horários",
+    "notProvided": "Não informado",
+    "amenities": "Comodidades",
+    "additionalInfo": "Informações Adicionais",
+    "bookNow": "Reservar Agora",
+    "saveAccommodationTitle": "Deseja salvar as informações de sua acomodação?",
+    "saveAccommodationMessage": "Vimos que você selecionou a acomodação {{name}}, dia {{checkin}} até {{checkout}}, para {{guests}} hóspede(s). Caso tenha de fato agendado, podemos salvá-la na sua viagem.",
+    "saveAccommodation": "Salvar Acomodação"
+  },
+  "trips": {
+    "title": "Viagens",
+    "newTrip": "Nova Viagem",
+    "current": "Atual",
+    "future": "Futuras",
+    "history": "Histórico",
+    "editTrip": "Editar Viagem",
+    "fetchError": "Erro ao consultar viagens."
+  },
+  "flights": {
+    "noFlightsFound": "Nenhum voo encontrado",
+    "searchError": "Erro na busca de voos",
+    "dateFormat": "EEEE, dd 'de' MMMM 'de' yyyy",
+    "buy": "Comprar"
+  },
+  "itineraryMap": {
+    "locationPermissionDenied": "Permissão para acessar localização negada.",
+    "undefinedLocation": "Local indefinido",
+    "googleMaps": "Maps",
+    "route": "Rota",
+    "uber": "Uber"
+  },
+  "tripDetails": {
+    "fetchError": "Erro ao carregar detalhes da viagem.",
+    "notFound": "Viagem não encontrada",
+    "viewOnMap": "Visualizar no mapa",
+    "addActivity": "Adicionar atividade",
+    "newActivity": "Nova Atividade"
+  },
+  "expenses": {
+    "total": "Total",
+    "budget": "Orçamento: R$ {{value}} ({{percent}}%)",
+    "noExpenses": "Sem despesas ainda.",
+    "noCategory": "Sem categoria",
+    "addExpense": "Adicionar despesa",
+    "newExpense": "Nova Despesa"
+  },
+  "itinerary": {
+    "downloadTicket": "Baixar Passagem ⬇️",
+    "flightFrom": "Voo de",
+    "arrivalFrom": "Chegada de",
+    "defaultRoute": "Origem para Destino",
+    "defaultFlight": "Voo",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "noItems": "Sem itens para este dia."
+  },
+  "lists": {
+    "newItem": "Novo item  +",
+    "newItemPlaceholder": "Novo item",
+    "newList": "Nova Lista  +",
+    "newListPlaceholder": "Título da nova lista",
+    "createItemError": "Não foi possível criar o item.",
+    "updateItemError": "Falha ao atualizar item."
+  },
+  "tabs": {
+    "overview": "Visão Geral",
+    "itinerary": "Itinerário",
+    "expenses": "Despesas",
+    "lists": "Listas"
+  },
+  "viagemForm": {
+    "name": "Nome",
+    "namePlaceholder": "Nome da viagem",
+    "departureDate": "Data de Ida",
+    "departureDatePlaceholder": "10/10/2025",
+    "returnDate": "Data de Volta",
+    "returnDatePlaceholder": "10/10/2025",
+    "budget": "Orçamento",
+    "budgetPlaceholder": "R$ 0,00",
+    "fillAllFields": "Preencha todos os campos!",
+    "tripCreated": "Viagem criada com sucesso!",
+    "tripCreateError": "Erro ao criar viagem!"
+  },
+  "tripInfoCard": {
+    "share": "Compartilhar",
+    "duration": "Duração: {{days}} dias",
+    "totalSpent": "Gasto total: {{value}}"
+  },
+  "despesaForm": {
+    "name": "Nome da despesa",
+    "namePlaceholder": "Digite o nome da despesa",
+    "value": "Valor",
+    "valuePlaceholder": "Digite o valor",
+    "selectCategory": "Selecione uma categoria",
+    "fillAllFields": "Preencha todos os campos!",
+    "expenseCreated": "Despesa criada com sucesso!",
+    "expenseCreateError": "Erro ao criar despesa!"
+  },
+  "atividadeForm": {
+    "name": "Nome da atividade",
+    "namePlaceholder": "Digite o nome da atividade",
+    "location": "Localização",
+    "selectDay": "Selecione o dia",
+    "selectCategory": "Selecione uma categoria",
+    "start": "Início",
+    "startPlaceholder": "08:00",
+    "end": "Fim",
+    "endPlaceholder": "10:00",
+    "price": "Preço",
+    "pricePlaceholder": "Digite o preço",
+    "fillAllFields": "Preencha todos os campos!",
+    "activityCreated": "Atividade criada com sucesso!",
+    "activityCreateError": "Erro ao criar atividade!"
+  },
+  "acomodacaoForm": {
+    "selectTrip": "Selecione a viagem",
+    "name": "Nome da acomodação",
+    "namePlaceholder": "Digite o nome da acomodação",
+    "location": "Localização",
+    "locationPlaceholder": "Digite a localização",
+    "entryDate": "Data de entrada",
+    "entryDatePlaceholder": "10/10/2025",
+    "exitDate": "Data de saída",
+    "exitDatePlaceholder": "10/10/2025",
+    "checkIn": "Check-in",
+    "checkInPlaceholder": "10:00",
+    "checkOut": "Check-out",
+    "checkOutPlaceholder": "10:00",
+    "price": "Preço",
+    "pricePlaceholder": "Digite o preço",
+    "days": "Dias",
+    "daysPlaceholder": "Quantidade de dias",
+    "created": "Acomodação criada com sucesso!",
+    "createError": "Erro ao criar acomodação!",
+    "fetchTripsError": "Erro ao buscar viagens."
+  },
+  "guide": {
+    "generalTips": "Conceitos Gerais",
+    "safetyInfo": "Informações de Segurança",
+    "climate": "Clima",
+    "documents": "Documentos Requeridos"
   }
 }

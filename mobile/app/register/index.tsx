@@ -17,9 +17,11 @@ import FaIcon from 'react-native-vector-icons/FontAwesome6';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaIcon from 'react-native-vector-icons/MaterialIcons';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
+import { useTranslation } from 'react-i18next';
 import styles from './styles';
 
 export default function Register() {
+    const { t } = useTranslation();
 
 	const [processStep, setProcessStep] = useState(1)
 
@@ -85,7 +87,7 @@ export default function Register() {
                     <View style={styles.container}>
                     {processStep == 1 ? (
                         <View style={styles.caixaCadastrar}> 
-                            <Text style={styles.title}>Cadastrar</Text>
+                            <Text style={styles.title}>{t('register.title')}</Text>
                             <ScrollView 
                                 style={styles.formLogin}
                                 contentContainerStyle={styles.scrollContent}
@@ -93,8 +95,8 @@ export default function Register() {
                                 showsVerticalScrollIndicator={false}
                             >
                                 <InputWithIcon 
-                                    label="Nome"
-                                    placeholder="Digite seu nome"
+                                    label={t('register.name')}
+                                    placeholder={t('register.namePlaceholder')}
                                     Icon={FaIcon} 
                                     iconProps={{ name: 'user' }} 
                                     inputType="default"
@@ -102,7 +104,7 @@ export default function Register() {
                                     value={nome}  
                                 />
                                 <InputDateWithIcon 
-                                    label="Data de Nascimento"
+                                    label={t('register.birthDate')}
                                     placeholder="2025/08/02"
                                     Icon={Icon} 
                                     iconProps={{ name: 'calendar-month-outline' }} 
@@ -110,8 +112,8 @@ export default function Register() {
                                     value={dataNascimento}  
                                 />
                                 <InputWithIcon 
-                                    label="Email"
-                                    placeholder="Digite seu email"
+                                    label={t('register.email')}
+                                    placeholder={t('register.emailPlaceholder')}
                                     Icon={MaIcon} 
                                     iconProps={{ name: 'alternate-email' }} 
                                     inputType="email-address"
@@ -119,14 +121,14 @@ export default function Register() {
                                     value={email}  
                                 />
                                 <InputPassword 
-                                    label="Senha"
-                                    placeholder="Digite sua senha"
+                                    label={t('register.password')}
+                                    placeholder={t('register.passwordPlaceholder')}
                                     onChangeText={setPassword}
                                     value={password}  
                                 />
                                 <InputWithIcon 
-                                    label="Cidade"
-                                    placeholder="Digite sua cidade"
+                                    label={t('register.city')}
+                                    placeholder={t('register.cityPlaceholder')}
                                     Icon={SimpleIcon} 
                                     iconProps={{ name: 'location-pin' }} 
                                     inputType="default"
@@ -134,8 +136,8 @@ export default function Register() {
                                     value={cidade}  
                                 />
                                 <InputWithIcon 
-                                    label="País"
-                                    placeholder="Digite seu país"
+                                    label={t('register.country')}
+                                    placeholder={t('register.countryPlaceholder')}
                                     Icon={SimpleIcon} 
                                     iconProps={{ name: 'location-pin' }} 
                                     inputType="default"
@@ -143,57 +145,57 @@ export default function Register() {
                                     value={pais}  
                                 />
                             </ScrollView>
-                            <Button label='Próximo' style={styles.Button} onPress={() => setProcessStep(2)}/>
+                            <Button label={t('register.next')} style={styles.Button} onPress={() => setProcessStep(2)}/>
                         </View>   
                     ) : (
                         <View style={styles.caixaCheckBox}>
-                            <Text style={styles.title}>Preferências</Text>
+                            <Text style={styles.title}>{t('register.preferences')}</Text>
                             <ScrollView 
                                 contentContainerStyle={styles.scrollContent}
                                 keyboardShouldPersistTaps="handled"
                                 showsVerticalScrollIndicator={false}
                             >
-                                <Text style={styles.label}>Idioma</Text>
+                                <Text style={styles.label}>{t('register.language')}</Text>
                                 <SelectList 
                                     setSelected={(val: string) => setIdioma(val as PrefIdioma)} 
                                     data={data} 
                                     save="key"
-                                    placeholder='Português-BR'
-                                    searchPlaceholder='pesquisar'
+                                    placeholder={t('register.languagePlaceholder')}
+                                    searchPlaceholder={t('register.search')}
                                     maxHeight={120}
                                     boxStyles={styles.selectBox}
                                 />
                 
-                                <Text style={styles.label}>Para me locomover na viagem eu prefiro:</Text>
+                                <Text style={styles.label}>{t('register.transportPreference')}</Text>
                                 <RadioButton.Group onValueChange={value => setTransporte(value as PrefTransporte)} value={transporte}>
                                     <View style={styles.checkBox}>
-                                        <RadioButton.Item value={PrefTransporte.Aviao} label="Avião" style={styles.radioItem}/>
-                                        <RadioButton.Item label="Carro" value={PrefTransporte.Carro} style={styles.radioItem}/>
-                                        <RadioButton.Item label="Ônibus" value={PrefTransporte.Onibus} style={styles.radioItem}/>
-                                        <RadioButton.Item label="Trem" value={PrefTransporte.Trem} style={styles.radioItem}/>
+                                        <RadioButton.Item value={PrefTransporte.Aviao} label={t('register.transportPlane')} style={styles.radioItem}/>
+                                        <RadioButton.Item label={t('register.transportCar')} value={PrefTransporte.Carro} style={styles.radioItem}/>
+                                        <RadioButton.Item label={t('register.transportBus')} value={PrefTransporte.Onibus} style={styles.radioItem}/>
+                                        <RadioButton.Item label={t('register.transportTrain')} value={PrefTransporte.Trem} style={styles.radioItem}/>
                                     </View>
                                 </RadioButton.Group>
                                 
-                                <Text style={styles.label}>Prefiro ficar hospedado em:</Text>
+                                <Text style={styles.label}>{t('register.accommodationPreference')}</Text>
                                 <RadioButton.Group onValueChange={value => setAcomodacao(value as PrefAcomodacao)} value={acomodacao}>
                                     <View style={styles.checkBox}>
-                                        <RadioButton.Item value={PrefAcomodacao.Hotel} label="Hotel" style={styles.radioItem}/>
-                                        <RadioButton.Item label="Apartamento" value={PrefAcomodacao.Apartamento} style={styles.radioItem}/>
-                                        <RadioButton.Item label="Hostel" value={PrefAcomodacao.Hostel} style={styles.radioItem}/>
-                                        <RadioButton.Item label="Pousada" value={PrefAcomodacao.Pousada} style={styles.radioItem}/>
+                                        <RadioButton.Item value={PrefAcomodacao.Hotel} label={t('register.accommodationHotel')} style={styles.radioItem}/>
+                                        <RadioButton.Item label={t('register.accommodationApartment')} value={PrefAcomodacao.Apartamento} style={styles.radioItem}/>
+                                        <RadioButton.Item label={t('register.accommodationHostel')} value={PrefAcomodacao.Hostel} style={styles.radioItem}/>
+                                        <RadioButton.Item label={t('register.accommodationInn')} value={PrefAcomodacao.Pousada} style={styles.radioItem}/>
                                     </View>
                                 </RadioButton.Group>
                                 
-                                <Text style={styles.label}>Como está o meu orçamento:</Text>
+                                <Text style={styles.label}>{t('register.budget')}</Text>
                                 <RadioButton.Group onValueChange={value => setOrcamento(value as PrefOrcamento)} value={orcamento}>
                                     <View style={styles.checkBox}>
-                                        <RadioButton.Item value={PrefOrcamento.Baixo} label="Baixo" style={styles.radioItem}/>
-                                        <RadioButton.Item label="Medio" value={PrefOrcamento.Medio} style={styles.radioItem}/>
-                                        <RadioButton.Item label="Alto" value={PrefOrcamento.Alto} style={styles.radioItem}/>
+                                        <RadioButton.Item value={PrefOrcamento.Baixo} label={t('register.budgetLow')} style={styles.radioItem}/>
+                                        <RadioButton.Item label={t('register.budgetMedium')} value={PrefOrcamento.Medio} style={styles.radioItem}/>
+                                        <RadioButton.Item label={t('register.budgetHigh')} value={PrefOrcamento.Alto} style={styles.radioItem}/>
                                     </View>
                                 </RadioButton.Group>
                             </ScrollView>
-                            <Button label='Cadastrar' style={styles.Button} onPress={() => handleSubmit()}/>
+                            <Button label={t('register.register')} style={styles.Button} onPress={() => handleSubmit()}/>
                         </View>
                     )}
                 </View>

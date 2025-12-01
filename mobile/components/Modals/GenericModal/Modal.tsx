@@ -14,6 +14,7 @@ import MaIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { colors } from "@/styles/globalStyles";
 import styles from './styles';
+import { useTranslation } from 'react-i18next';
 
 type ModalProps = {
   visible: boolean;
@@ -35,6 +36,8 @@ export default function GenericModal({
   // animações (fade no backdrop + slide no conteúdo)
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(20)).current;
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (visible) {
@@ -71,10 +74,11 @@ export default function GenericModal({
         <View style={styles.centeredView}>
             <View style={styles.modalView}>
                 <View style={styles.modalHeader}> 
-                    <Text style={styles.modalTitle}>{title}</Text>
+                    <Text style={styles.modalTitle}>{title ? t(title) : ''}</Text>
                     <Pressable
                         style={styles.closeButton}
                         onPress={() => onClose()}
+                        accessibilityLabel={t('common.cancel')}
                     >
                         <MaIcons name="close" size={24} color={colors.gray500} />
                     </Pressable>

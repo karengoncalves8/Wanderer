@@ -21,11 +21,12 @@ import AcomodacaoForm from '@/components/Forms/AcomodacaoForm';
 import { googleAPIService } from '@/services/googleAPIService';
 import { ApiException } from '@/config/apiException';
 import { calculateDaysBetweenDates } from '@/utils/dateRelated/calculateDaysBetweenDates';
-
+import { useTranslation } from 'react-i18next';
 
 const { width } = Dimensions.get('window');
 
 const HotelDetails = () => {
+    const { t } = useTranslation();
     const { hotelData, checkin, checkout, hospedes } = useLocalSearchParams();
 
     const [formattedAcomodacao, setFormattedAcomodacao] = useState<Acomodacao | null>(null);
@@ -61,10 +62,10 @@ const HotelDetails = () => {
                     await Linking.openURL(hotel.link);
                     setOpenConfirmationModal(true);
                 } else {
-                    console.warn('Não foi possível abrir a URL:', hotel.link);
+                    console.warn(t('hotels.cannotOpenUrl'), hotel.link);
                 }
             } catch (error) {
-                console.warn('Erro ao abrir a URL:', hotel.link, error);
+                console.warn(t('hotels.errorOpeningUrl'), hotel.link, error);
             }
         }
     };
@@ -116,7 +117,7 @@ const HotelDetails = () => {
     if (!hotel.name) {
         return (
             <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>Erro ao carregar detalhes do hotel</Text>
+                <Text style={styles.errorText}>{t('hotels.errorLoadingDetails')}</Text>
             </View>
         );
     }
@@ -127,7 +128,7 @@ const HotelDetails = () => {
                 options={{
                     title: hotel.name,
                     headerShown: true,
-                    headerBackTitle: 'Voltar',
+                    headerBackTitle: t('common.back'),
                     headerTitleStyle: { fontSize: 16 },
                 }}
             />
@@ -158,14 +159,16 @@ const HotelDetails = () => {
                         <View style={styles.ratingContainer}>
                             <MaIcon name="star" size={20} color="#FFB800" />
                             <Text style={styles.rating}>{hotel.ratings?.toFixed(1)}</Text>
-                            <Text style={styles.reviewCount}>({hotel.reviews} avaliações)</Text>
+                            <Text style={styles.reviewCount}>
+                                ({hotel.reviews} {t('hotels.reviews')})
+                            </Text>
                         </View>
                     </View>
 
                     {/* Price */}
                     <View style={styles.priceContainer}>
                         <Text style={styles.price}>{formatBRL(hotel.prices)}</Text>
-                        <Text style={styles.priceSubtext}>por noite</Text>
+                        <Text style={styles.priceSubtext}>{t('hotels.perNight')}</Text>
                     </View>
 
                     {/* Booking Info */}
@@ -173,34 +176,40 @@ const HotelDetails = () => {
                         <View style={styles.bookingRow}>
                             <MaIcon name="event" size={20} color={colors.gray600} />
                             <Text style={styles.bookingText}>
-                                Check-in: {checkin} • Check-out: {checkout}
+                                {t('hotels.checkIn')}: {checkin} • {t('hotels.checkOut')}: {checkout}
                             </Text>
                         </View>
                         <View style={styles.bookingRow}>
                             <MaIcon name="people" size={20} color={colors.gray600} />
-                            <Text style={styles.bookingText}>{hospedes} hóspede(s)</Text>
+                            <Text style={styles.bookingText}>
+                                {hospedes} {t('hotels.guests')}
+                            </Text>
                         </View>
                     </View>
 
                     {/* Description */}
                     {hotel.description && (
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Descrição</Text>
+                            <Text style={styles.sectionTitle}>{t('hotels.description')}</Text>
                             <Text style={styles.description}>{hotel.description}</Text>
                         </View>
                     )}
 
                     {/* Check-in/Check-out Times */}
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Horários</Text>
+                        <Text style={styles.sectionTitle}>{t('hotels.timings')}</Text>
                         <View style={styles.timeContainer}>
                             <View style={styles.timeRow}>
-                                <Text style={styles.timeLabel}>Check-in:</Text>
-                                <Text style={styles.timeValue}>{hotel.check_in_time || 'Não informado'}</Text>
+                                <Text style={styles.timeLabel}>{t('hotels.checkIn')}:</Text>
+                                <Text style={styles.timeValue}>
+                                    {hotel.check_in_time || t('hotels.notProvided')}
+                                </Text>
                             </View>
                             <View style={styles.timeRow}>
-                                <Text style={styles.timeLabel}>Check-out:</Text>
-                                <Text style={styles.timeValue}>{hotel.check_out_time || 'Não informado'}</Text>
+                                <Text style={styles.timeLabel}>{t('hotels.checkOut')}:</Text>
+                                <Text style={styles.timeValue}>
+                                    {hotel.check_out_time || t('hotels.notProvided')}
+                                </Text>
                             </View>
                         </View>
                     </View>
@@ -208,7 +217,7 @@ const HotelDetails = () => {
                     {/* Amenities */}
                     {hotel.amenities && hotel.amenities.length > 0 && (
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Comodidades</Text>
+                            <Text style={styles.sectionTitle}>{t('hotels.amenities')}</Text>
                             <View style={styles.amenitiesContainer}>
                                 {hotel.amenities.map((amenity, index) => (
                                     <View key={index} style={styles.amenityItem}>
@@ -223,61 +232,53 @@ const HotelDetails = () => {
                     {/* Additional Info */}
                     {hotel.info && hotel.info.length > 0 && (
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Informações Adicionais</Text>
+                            <Text style={styles.sectionTitle}>{t('hotels.additionalInfo')}</Text>
                             {hotel.info.map((info, index) => (
                                 <Text key={index} style={styles.infoItem}>• {info}</Text>
                             ))}
                         </View>
                     )}
-
-                    {/* Location */}
-                    {/* <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Localização</Text>
-                        <View style={styles.locationContainer}>
-                            <MaIcon name="location-on" size={20} color={colors.red500} />
-                            <Text style={styles.locationText}>
-                                Lat: {hotel.gps_latitude?.toFixed(6)}, Lng: {hotel.gps_longtitude?.toFixed(6)}
-                            </Text>
-                        </View>
-                    </View> */}
                 </View>
             </ScrollView>
 
             {/* Booking Button */}
             <View style={styles.bookingButtonContainer}>
                 <TouchableOpacity style={styles.bookingButton} onPress={handleBooking}>
-                    <Text style={styles.bookingButtonText}>Reservar Agora</Text>
+                    <Text style={styles.bookingButtonText}>{t('hotels.bookNow')}</Text>
                 </TouchableOpacity>
             </View>
 
-            
             <GenericModal
                 visible={openConfirmationModal}
                 onClose={() => setOpenConfirmationModal(false)}
-                title="Deseja salvar as informações de sua acomodação?"
+                title={t('hotels.saveAccommodationTitle')}
                 footerButtons={
                     <>
-                        <Button label="Cancelar" style={styles.modalButton} onPress={() => setOpenConfirmationModal(false)} />
-                        <Button label="Salvar" style={styles.modalButton} onPress={() => handleSaveConfirmation()} />
+                        <Button label={t('common.cancel')} style={styles.modalButton} onPress={() => setOpenConfirmationModal(false)} />
+                        <Button label={t('common.save')} style={styles.modalButton} onPress={() => handleSaveConfirmation()} />
                     </>
                 }
             >
                 <Text>
-                    Vimos que você selecionou a acomodação {hotel.name}, dia {checkin} até {checkout}, para {hospedes} hóspede(s). Caso tenha de fato agendado, podemos salva-lá a sua viagem.
+                    {t('hotels.saveAccommodationMessage', {
+                        name: hotel.name,
+                        checkin,
+                        checkout,
+                        guests: hospedes,
+                    })}
                 </Text>
             </GenericModal>
 
             <GenericModal
                 visible={openSaveModal}
                 onClose={() => setOpenSaveModal(false)}
-                title="Salvar Acomodação"
+                title={t('hotels.saveAccommodation')}
             >
                 <AcomodacaoForm
                     data={formattedAcomodacao!}
                     onClose={onCloseSave}
                 />
             </GenericModal>
-            
         </>
     );
 };

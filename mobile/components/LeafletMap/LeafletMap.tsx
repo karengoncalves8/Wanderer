@@ -2,6 +2,7 @@
 import React, { useMemo } from "react";
 import { WebView } from "react-native-webview";
 import { View, StyleSheet } from "react-native";
+import { useTranslation } from 'react-i18next';
 
 export interface LeafletActivity {
   lat: number;
@@ -23,6 +24,7 @@ export function LeafletMap({
   initialRegion,
   onMarkerPress,
 }: LeafletMapProps) {
+  const { t } = useTranslation();
   const html = useMemo(() => {
     const center = initialRegion ?? activities?.[0] ?? { lat: 0, lng: 0 };
 
@@ -44,6 +46,19 @@ export function LeafletMap({
               width: 30px;
               height: 30px;
               border-radius: 15px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 2px solid white;
+            }
+            .user-marker {
+              background-color: #1976D2;
+              color: white;
+              font-size: 12px;
+              font-weight: bold;
+              width: 24px;
+              height: 24px;
+              border-radius: 12px;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -85,16 +100,20 @@ export function LeafletMap({
             });
 
             ${userLocation ? `
-              L.circleMarker([${userLocation.lat}, ${userLocation.lng}], {
-                color: 'blue',
-                radius: 6
+              const userMarkerHtml = '<div class="user-marker">${t('itineraryMap.googleMaps')}</div>';
+              L.marker([${userLocation.lat}, ${userLocation.lng}], {
+                icon: L.divIcon({
+                  html: userMarkerHtml,
+                  className: "",
+                  iconSize: [24, 24],
+                })
               }).addTo(map);
             ` : ""}
           </script>
         </body>
       </html>
     `;
-  }, [activities, userLocation, initialRegion]);
+  }, [activities, userLocation, initialRegion, t]);
 
   return (
     <View style={styles.container}>

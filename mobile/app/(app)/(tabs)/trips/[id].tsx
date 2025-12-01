@@ -18,9 +18,12 @@ import { atividadeService } from '@/services/atividadeService';
 import { Atividade } from '@/interfaces/Atividade';
 import GastosView from '@/components/ViewsList/GastosView';
 import ListasView from '@/components/ViewsList/ListasView';
+import { useTranslation } from 'react-i18next';
 
 export default function TripDetails() {
     const { id } = useLocalSearchParams();
+    const { t } = useTranslation();
+
     const [viagem, setViagem] = useState<Viagem | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<string>('visao');
@@ -36,14 +39,12 @@ export default function TripDetails() {
         if (response instanceof ApiException) {
             Toast.show({
                 type: 'error',
-                text1: 'Erro',
-                text2: response.message || 'Erro ao carregar detalhes da viagem.'
+                text1: t('common.error'),
+                text2: response.message || t('tripDetails.fetchError')
             });
             return;
         }
 
-        console.log("viagem", response)
-        
         setViagem(response);
         setLoading(false);
     };
@@ -55,7 +56,7 @@ export default function TripDetails() {
     if (loading) {
         return (
             <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-                <Text>Carregando...</Text>
+                <Text>{t('common.loading')}</Text>
             </View>
         );
     }
@@ -63,7 +64,7 @@ export default function TripDetails() {
     if (!viagem) {
         return (
             <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-                <Text>Viagem não encontrada</Text>
+                <Text>{t('tripDetails.notFound')}</Text>
             </View>
         );
     }
@@ -91,9 +92,6 @@ export default function TripDetails() {
                     <Ionicons name="chevron-back" size={24} color={colors.lblue500} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>{viagem.nome}</Text>
-                <TouchableOpacity style={styles.shareButton}>
-                    <Ionicons name="share-outline" size={24} color={colors.lblue500} />
-                </TouchableOpacity>
             </View>
 
             {/* Trip Info Card */}
@@ -110,14 +108,14 @@ export default function TripDetails() {
                             pathname: '/itinerary-map',
                             params: { viagemId: viagem.id, data: dataSelecionada }
                         })}
-                        accessibilityLabel="Visualizar atividade no mapa"
+                        accessibilityLabel={t('tripDetails.viewOnMap')}
                     >
                         <FontAwesomeIcon name="map-marked-alt" size={28} color="#fff" />
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.fab}
                         onPress={() => setAtividadeModalOpen(true)}
-                        accessibilityLabel="Adicionar atividade"
+                        accessibilityLabel={t('tripDetails.addActivity')}
                     >
                         <Ionicons name="add" size={28} color="#fff" />
                     </TouchableOpacity>
@@ -126,7 +124,7 @@ export default function TripDetails() {
 
             <GenericModal
                 visible={atividadeModalOpen}
-                title="Nova Atividade"
+                title={t('tripDetails.newActivity')}
                 onClose={() => setAtividadeModalOpen(false)}
             >
                 {viagem && (

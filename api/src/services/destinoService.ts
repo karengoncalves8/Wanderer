@@ -3,6 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 import { travelInfoResponseSchema, TravelInfo } from '../interfaces/travelInfoInterface';
 
 import axios from 'axios';
+import { NearbyAttraction, nearbyAttractionResponseSchema } from '../interfaces/nearbyAttractionInterface';
 
 const SERPAPI_KEY = process.env.SERPAPI_KEY;
 const SERPAPI_URL = "https://serpapi.com/search.json";
@@ -70,5 +71,44 @@ export const fetchWorldPopularDestinations = async (languageCode: string) => {
     }
     catch (error) {
         console.error("Error fetching popular destinations:", error);
+    }
+}
+
+const mapResponseToNearbyAttractions = (data: any) => {
+    return data.results.map((attraction: any) => ({
+        name: attraction.name,
+        short_description: attraction.short_description,
+        full_address: attraction.full_address,
+        imgUrl: attraction.imgUrl
+    }));
+}
+
+export const fetchCityDestinations = async (city: string, languageCode: string) => {
+    try {
+
+        const ai = new GoogleGenAI({apiKey: process.env.GOOGLE_GENAI_API_KEY as string});
+
+        // Prompt to generate the travel guide
+        const prompt = `give me a top 5 activites to do in the city ${city} with the following topics: Name of the attraction; Short description about the activity (max 2 lines); Full adress. Answer in the language ${languageCode} (code for ISO 639-1)`;
+
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseJsonSchema: nearbyAttractionResponseSchema, 
+            },
+        });
+
+        const nearbyAttractions: NearbyAttraction[] = mapResponseToNearbyAttractions(JSON.parse(response.text));
+
+        if (!nearbyAttractions) {
+            throw new Error("Failed to parse nearby attractions from Gemini");
+        }
+
+        return nearbyAttractions;
+    } catch (error) {
+        console.error("Error generating content:", error);
+        return null;
     }
 }

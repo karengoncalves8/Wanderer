@@ -3,6 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import Toast from 'react-native-toast-message';
 import MaIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
+import { useTranslation } from 'react-i18next';
 
 import InputWithIcon from '@/components/Inputs/InputWithIcon/InputWithIcon';
 import Button from '@/components/Buttons/Button';
@@ -40,6 +41,8 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
   const [categorias, setCategorias] = useState<AtividadeCategoria[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<AtividadeCategoria | null>(null);
 
+  const { t } = useTranslation();
+
   const days = useMemo(() => {
     const s = startOfDay(createDateFromString(dataIda));
     const e = startOfDay(createDateFromString(dataVolta));
@@ -63,7 +66,7 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
 
   const handleSubmit = async () => {
     if (!nome || !selectedDay) {
-      Toast.show({ type: 'error', text1: 'Erro', text2: 'Preencha ao menos nome e dia.' });
+      Toast.show({ type: 'error', text1: t('common.error'), text2: t('atividadeForm.fillAllFields') });
       return;
     }
 
@@ -89,11 +92,11 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
       const res = await atividadeService.createAtividade(payload);
       if ((res as any)?.error) throw new Error('Erro na API');
 
-      Toast.show({ type: 'success', text1: 'Sucesso', text2: 'Atividade criada!' });
+      Toast.show({ type: 'success', text1: t('common.success'), text2: t('atividadeForm.activityCreated') });
       onCreated?.();
       onClose();
     } catch (e) {
-      Toast.show({ type: 'error', text1: 'Erro', text2: 'Não foi possível criar a atividade.' });
+      Toast.show({ type: 'error', text1: t('common.error'), text2: t('atividadeForm.activityCreateError') });
     }
   };
 
@@ -112,10 +115,9 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
 
   return (
     <View style={styles.form}>
-    
         <InputWithIcon
-            label='Nome'
-            placeholder='Ex: Visita ao Louvre'
+            label={t('atividadeForm.name')}
+            placeholder={t('atividadeForm.namePlaceholder')}
             Icon={SimpleIcon}
             iconProps={{ name: 'location-pin' }}
             inputType='default'
@@ -125,7 +127,7 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
 
         {true && (
         <View>
-          <Text style={styles.label}>Localização</Text>
+          <Text style={styles.label}>{t('atividadeForm.location')}</Text>
           <GooglePlacesTextInput
             apiKey="AIzaSyCh1SXUnWnRQBSuLk8H9TMXD62YOOsKvec"
             onPlaceSelect={(place: Place) => handlePlaceSelect(place)}
@@ -138,40 +140,39 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
         )}
 
       <SelectList 
-            setSelected={(value: string | number) => {
+        setSelected={(value: string | number) => {
           const opt = dayOptions.find(o => String(o.key) === String(value));
           if (opt) setSelectedDay(new Date(opt.iso));
         }} 
-            data={dayOptions} 
-            save="key"
-            placeholder='Selecione um dia'
-            searchPlaceholder='Pesquisar'
-        />
-
+        data={dayOptions} 
+        save="key"
+        placeholder={t('atividadeForm.selectDay')}
+        searchPlaceholder={t('common.search')}
+      />
 
       <SelectList 
-            setSelected={(value: string | number) => {
-                const cat = categorias.find(c => String(c.id) === String(value)) || null;
-                setCategoriaSelecionada(cat);
-            }} 
-            data={categorias.map(c => ({ key: c.id, value: c.nome }))} 
-            save="key"
-            placeholder='Selecione uma categoria'
-            searchPlaceholder='Pesquisar'
-        />
+        setSelected={(value: string | number) => {
+            const cat = categorias.find(c => String(c.id) === String(value)) || null;
+            setCategoriaSelecionada(cat);
+        }} 
+        data={categorias.map(c => ({ key: c.id, value: c.nome }))} 
+        save="key"
+        placeholder={t('atividadeForm.selectCategory')}
+        searchPlaceholder={t('common.search')}
+      />
 
       <View style={styles.row}>
         <InputTimeWithIcon
-          label='Início'
-          placeholder='08:00'
+          label={t('atividadeForm.start')}
+          placeholder={t('atividadeForm.startPlaceholder')}
           Icon={MaIcon}
           iconProps={{ name: 'clock-time-four-outline' }}
           value={horaInicio}
           onChange={setHoraInicio}
         />
         <InputTimeWithIcon
-          label='Fim'
-          placeholder='10:00'
+          label={t('atividadeForm.end')}
+          placeholder={t('atividadeForm.endPlaceholder')}
           Icon={MaIcon}
           iconProps={{ name: 'clock-time-four-outline' }}
           value={horaFim}
@@ -180,8 +181,8 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
       </View>
 
       <InputWithIcon
-        label='Preço'
-        placeholder='0,00'
+        label={t('atividadeForm.price')}
+        placeholder={t('atividadeForm.pricePlaceholder')}
         Icon={MaIcon}
         iconProps={{ name: 'cash' }}
         inputType='numeric'
@@ -189,7 +190,7 @@ export default function AtividadeForm({ viagemId, dataIda, dataVolta, onClose, o
         onChangeText={setPreco}
       />
 
-      <Button label='Salvar' onPress={handleSubmit} />
+      <Button label={t('common.save')} onPress={handleSubmit} />
     </View>
   );
 }

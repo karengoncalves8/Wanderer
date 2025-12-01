@@ -5,7 +5,7 @@ import { colors } from '@/styles/globalStyles';
 import TabSelector, { TabItem } from '@/components/Tabs/Tabs';
 import { formatDateStringToStringWithBar } from '@/utils/formatters/formatDateToString';
 import { formatCurrency } from '@/utils/formatters/formatMoney';
-
+import { useTranslation } from 'react-i18next';
 
 interface TripInfoCardProps {
     viagem: Viagem;
@@ -14,12 +14,13 @@ interface TripInfoCardProps {
 }
 
 export default function TripInfoCard({ viagem, activeTab, onTabChange }: TripInfoCardProps) {
+    const { t } = useTranslation();
     const tabs: TabItem[] = [
-    { label: 'Visão Geral', value: 'visao' },
-    { label: 'Itinerário', value: 'itinerario' },
-    { label: 'Gastos', value: 'gastos' },
-    { label: 'Listas', value: 'listas' },
-  ];
+        { label: t('tabs.overview'), value: 'visao' },
+        { label: t('tabs.itinerary'), value: 'itinerario' },
+        { label: t('tabs.expenses'), value: 'gastos' },
+        { label: t('tabs.lists'), value: 'listas' },
+    ];
 
     return (
         <View style={styles.container}>
@@ -28,15 +29,11 @@ export default function TripInfoCard({ viagem, activeTab, onTabChange }: TripInf
                     <Text style={styles.dateText}>
                         {formatDateStringToStringWithBar(viagem.dataIda)} - {formatDateStringToStringWithBar(viagem.dataVolta)}
                     </Text>
-                    <TouchableOpacity style={styles.shareButton}>
-                        <Text style={styles.shareText}>Compartilhar</Text>
-                        <Ionicons name="share-outline" size={16} color={colors.lblue500} />
-                    </TouchableOpacity>
                 </View>
                 
                 <View style={styles.tripInfo}>
-                    <Text style={styles.duration}>Duração: {viagem.duracao} dias</Text>
-                    <Text style={styles.totalCost}>Gasto total: {formatCurrency(viagem.gastos?.total || 0)}</Text>
+                    <Text style={styles.duration}>{t('tripInfoCard.duration', { days: viagem.duracao })}</Text>
+                    <Text style={styles.totalCost}>{t('tripInfoCard.totalSpent', { value: formatCurrency(viagem.gastos?.total || 0) })}</Text>
                 </View>
             </View>
 

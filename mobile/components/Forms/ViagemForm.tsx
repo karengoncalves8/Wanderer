@@ -12,6 +12,7 @@ import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 import Button from '../Buttons/Button';
 import InputDateWithIcon from '../Inputs/InputDate/InputDate';
 import { calculateDaysBetweenDates }  from '../../utils/dateRelated/calculateDaysBetweenDates';
+import { useTranslation } from 'react-i18next';
 
 type ViagemFormProps = {
     data: Viagem | undefined
@@ -20,6 +21,7 @@ type ViagemFormProps = {
 
 const ViagemForm = ({data, onClose}: ViagemFormProps) => {
     const { session } = useSession();
+    const { t } = useTranslation();
     
     const [nome, setNome ] = useState(data?.nome || '')
     const [dataIda, setDataIda] = useState(data?.dataIda || new Date())
@@ -33,8 +35,8 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
         if(!nome || !dataIda || !dataVolta || !destino_pais || !orcamento) {
             Toast.show({
                 type: 'error',
-                text1: 'Erro',
-                text2: 'Preencha todos os campos!'
+                text1: t('common.error'),
+                text2: t('viagemForm.fillAllFields')
             });
             return
         }
@@ -61,15 +63,15 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
                 }, session?.user.id!)
                 Toast.show({
                     type: 'success',
-                    text1: 'Sucesso',
-                    text2: 'Viagem criada com sucesso!'
+                    text1: t('common.success'),
+                    text2: t('viagemForm.tripCreated')
                 });
                 onClose();
             } catch (error) {
                 Toast.show({
                     type: 'error',
-                    text1: 'Erro',
-                    text2: 'Erro ao criar viagem!'
+                    text1: t('common.error'),
+                    text2: t('viagemForm.tripCreateError')
                 });
             }
         } 
@@ -90,8 +92,8 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
     return (
          <View style={styles.form}>
                 <InputWithIcon 
-                    label='Nome'
-                    placeholder='Nome da viagem'
+                    label={t('viagemForm.name')}
+                    placeholder={t('viagemForm.namePlaceholder')}
                     Icon={SimpleIcon} 
                     iconProps={{ name: 'location-pin' }} 
                     inputType="default"
@@ -111,16 +113,16 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
                 
                 <View style={styles.inputGroup}>
                     <InputDateWithIcon 
-                        label="Data de Ida"
-                        placeholder="10/10/2025"
+                        label={t('viagemForm.departureDate')}
+                        placeholder={t('viagemForm.departureDatePlaceholder')}
                         Icon={MaIcon} 
                         iconProps={{ name: 'calendar-month-outline' }} 
                         onChange={setDataIda}
                         value={dataIda}  
                     />
                     <InputDateWithIcon 
-                        label="Data de Volta"
-                        placeholder="10/10/2025"
+                        label={t('viagemForm.returnDate')}
+                        placeholder={t('viagemForm.returnDatePlaceholder')}
                         Icon={MaIcon} 
                         iconProps={{ name: 'calendar-month-outline' }} 
                         onChange={setDataVolta}
@@ -128,8 +130,8 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
                     />
                 </View>
                 <InputWithIcon 
-                    label="Orçamento"
-                    placeholder="R$ 0,00"
+                    label={t('viagemForm.budget')}
+                    placeholder={t('viagemForm.budgetPlaceholder')}
                     Icon={MaIcon} 
                     inputType='numeric'
                     iconProps={{ name: 'calendar-month-outline' }} 
@@ -137,7 +139,7 @@ const ViagemForm = ({data, onClose}: ViagemFormProps) => {
                     value={orcamento as string}  
                 />
                 <Button 
-                    label="Salvar"
+                    label={t('common.save')}
                     onPress={() => handleSubmit()}
                 />
         </View>

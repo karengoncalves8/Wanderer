@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { Checkbox } from 'react-native-paper';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
+import { useTranslation } from 'react-i18next';
 
 import { Viagem } from '@/interfaces/Viagem';
 import { Lista, ListaItem } from '@/interfaces/Lista';
@@ -26,18 +26,17 @@ const ListaCard = ({
   onSubmitItem: (listaId: number, item: ListaItem) => void;
   onToggleItem: (item: ListaItem) => void;
 }) => {
+  const { t } = useTranslation();
   const [localList, setLocalList] = useState(lista);
 
   useEffect(() => setLocalList(lista), [lista]);
-
-  console.log("localList", localList)
 
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardTitle}>{localList.titulo}</Text>
         <TouchableOpacity onPress={() => onAddItem(localList.id)}>
-          <Text style={styles.linkText}>Novo item  +</Text>
+          <Text style={styles.linkText}>{t('lists.newItem')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -54,11 +53,13 @@ const ListaCard = ({
             <Checkbox status={it.status ? 'checked' : 'unchecked'} onPress={() => {}} />
             <TextInput
               style={[styles.itemText, styles.itemInput]}
-              placeholder="Novo item"
+              placeholder={t('lists.newItemPlaceholder')}
               defaultValue={it.nome}
               autoFocus
               onSubmitEditing={(e) => onSubmitItem(localList.id, { ...it, nome: e.nativeEvent.text })}
-              onBlur={(e) => onSubmitItem(localList.id, { ...it, nome: e.nativeEvent.text })}
+              onBlur={(e) => {
+                return onSubmitItem(localList.id, { ...it, nome: e.nativeEvent.target });
+              }}
             />
           </View>
         ))}
@@ -68,15 +69,14 @@ const ListaCard = ({
 };
 
 export default function ListasView({ viagem, onCreated }: ListasViewProps) {
+  const { t } = useTranslation();
   const [listas, setListas] = useState<(Lista & { _tempItems?: ListaItem[] })[]>([]);
   const [creatingList, setCreatingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState('');
 
   const fetchListas = async () => {
-    console.log("trying to fetch")
     if (!viagem?.id) return;
     const resp = await listaService.getAllListas(viagem.id);
-    console.log("resp", resp)
     if ((resp as any)?.message) return;
     const raw: any = resp;
     const data: Lista[] = Array.isArray(raw) ? raw : (raw ? [raw] : []);
@@ -85,10 +85,7 @@ export default function ListasView({ viagem, onCreated }: ListasViewProps) {
 
   useEffect(() => {
     fetchListas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viagem]);
-
-
 
   const handleAddTempItem = (listaId: number) => {
     setListas((prev) =>
@@ -108,18 +105,16 @@ export default function ListasView({ viagem, onCreated }: ListasViewProps) {
 
   const handleSubmitItem = async (listaId: number, item: ListaItem) => {
     if (!item.nome?.trim()) {
-      // remove the temp line if empty
       setListas((prev) => prev.map((l) => (l.id === listaId ? { ...l, _tempItems: [] } : l)));
       return;
     }
     try {
-      console.log('[Listas] creating item', item.nome, 'listaId', listaId);
       const res = await listaItemService.createListaItem({ nome: item.nome, status: false, listaId });
       if ((res as any)?.message) throw new Error((res as any).message);
       await fetchListas();
       onCreated?.();
     } catch (e) {
-      Toast.show({ type: 'error', text1: 'Erro', text2: 'Não foi possível criar o item.' });
+      Toast.show({ type: 'error', text1: t('common.error'), text2: t('lists.createItemError') });
     }
   };
 
@@ -135,8 +130,6 @@ export default function ListasView({ viagem, onCreated }: ListasViewProps) {
 
   const handleToggleItem = async (item: ListaItem) => {
     try {
-      console.log('[Listas] toggling item', item.id, 'to', !item.status);
-      // Optimistic UI
       setListas(prev => prev.map(l => ({
         ...l,
         listaItems: l.listaItems.map(it => it.id === item.id ? { ...it, status: !item.status } : it)
@@ -146,8 +139,7 @@ export default function ListasView({ viagem, onCreated }: ListasViewProps) {
       await fetchListas();
       onCreated?.();
     } catch (e) {
-      Toast.show({ type: 'error', text1: 'Erro', text2: 'Falha ao atualizar item.' });
-      // Revert on error
+      Toast.show({ type: 'error', text1: t('common.error'), text2: t('lists.updateItemError') });
       setListas(prev => prev.map(l => ({
         ...l,
         listaItems: l.listaItems.map(it => it.id === item.id ? { ...it, status: item.status } : it)
@@ -173,7 +165,7 @@ export default function ListasView({ viagem, onCreated }: ListasViewProps) {
           >
             {creatingList ? (
               <TextInput
-                placeholder="Título da nova lista"
+                placeholder={t('lists.newListPlaceholder')}
                 style={styles.newListInput}
                 autoFocus
                 value={newListTitle}
@@ -181,7 +173,7 @@ export default function ListasView({ viagem, onCreated }: ListasViewProps) {
                 onBlur={handleCreateListOnBlur}
               />
             ) : (
-              <Text style={styles.dashedText}>Nova Lista  +</Text>
+              <Text style={styles.dashedText}>{t('lists.newList')}</Text>
             )}
           </TouchableOpacity>
         }

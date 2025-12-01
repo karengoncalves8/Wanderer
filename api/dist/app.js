@@ -25,23 +25,7 @@ const bodyParser = require('body-parser');
 dotenv_1.default.config();
 // More permissive CORS for mobile apps
 app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (mobile apps, Postman, etc.)
-        if (!origin)
-            return callback(null, true);
-        const allowedOrigins = [
-            'http://localhost:8081',
-            'http://10.0.2.2:8081',
-            `http://${process.env.IP_ADDRESS}:8081`,
-            `exp://${process.env.IP_ADDRESS}:8081`
-        ];
-        if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('exp://')) {
-            callback(null, true);
-        }
-        else {
-            callback(null, true); // Allow all for now (restrict in production)
-        }
-    },
+    origin: '*',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']

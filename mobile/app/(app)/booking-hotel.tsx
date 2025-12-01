@@ -1,4 +1,3 @@
-
 import { useSession } from '@/context/AuthContext';
 import { AcomodacaoAPI, AcomodacaoAPISearch } from '@/interfaces/acomodacaoAPI';
 import { acomodacaoAPIService } from '@/services/acomodacaoAPIService';
@@ -7,12 +6,14 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import MaIcon from 'react-native-vector-icons/MaterialIcons';
+import { useTranslation } from 'react-i18next';
 
 
 
 export default function BookingFlights() {
     const { cidade, checkin, checkout, hospedes } = useLocalSearchParams(); 
     const { session } = useSession();
+    const { t } = useTranslation();
 
     const [acomocodacoes, setAcomodacoes] = useState<AcomodacaoAPI[] | null>(null);
     
@@ -30,20 +31,20 @@ export default function BookingFlights() {
     }, []);
     
     const fetchResults = async (params: AcomodacaoAPISearch) => {
-        try{
+        try {
             const data = await acomodacaoAPIService.searchAcomodacao(params);
             if (Array.isArray(data)) {
                 setAcomodacoes(data);
             } else {
-                console.warn('Erro na busca de acomodações:', data);
+                console.warn(t('hotels.searchError'), data);
                 setAcomodacoes([]);
             }
         } catch (error) {
             console.log(error);
             setAcomodacoes([]);
         }
-    }
-    
+    };
+
     useEffect(() => {
         fetchResults({
             cidade: String(cidade ?? ''),
@@ -52,14 +53,13 @@ export default function BookingFlights() {
             hospedes: Number(hospedes ?? 0),
             usuarioPais: session!.user.pais,
             idioma: session!.user.preferencias.idioma
-        })
-    }, [cidade, checkin, checkout, hospedes])
-    
+        });
+    }, [cidade, checkin, checkout, hospedes]);
 
     return (
         <View style={{ flex: 1, backgroundColor: colors.gray100, padding: 12 }}>
             {cidade &&
-                <Text style={styles.subtitle}>Acomodações em {cidade}</Text>
+                <Text style={styles.subtitle}>{t('hotels.accommodationsIn')} {cidade}</Text>
             }
             {acomocodacoes && acomocodacoes.length > 0 ? (
                 <FlatList
@@ -82,7 +82,7 @@ export default function BookingFlights() {
                                 });
                             }}
                             accessibilityRole="button"
-                            accessibilityLabel={`Abrir detalhes de ${item.name}`}
+                            accessibilityLabel={t('hotels.openDetails', { name: item.name })}
                         >
                             {typeof item.images?.[0] === 'string' && item.images[0].startsWith('http') ? (
                                 <Image
@@ -124,7 +124,7 @@ export default function BookingFlights() {
                 />
             ) : (
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: colors.gray300 }}>Nenhuma acomodação encontrada</Text>
+                    <Text style={{ color: colors.gray300 }}>{t('hotels.noAccommodationsFound')}</Text>
                 </View>
             )}
         </View>

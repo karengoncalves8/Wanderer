@@ -47,12 +47,6 @@ export default function DestinationDetails() {
         fetchDestination();
     }, [id]);
 
-    const renderImageItem = ({ item }: { item: string }) => (
-        <View style={styles.slide}>
-            <Image source={{ uri: item }} style={styles.image} resizeMode="cover" />
-        </View>
-    );
-
     const renderSection = (title: string, content: any) => {
         if (!content || (Array.isArray(content) && content.length === 0)) return null;
 

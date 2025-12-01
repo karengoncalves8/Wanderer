@@ -1,4 +1,3 @@
-
 import { Text, View } from 'react-native';
 import { router } from 'expo-router';
 
@@ -14,9 +13,11 @@ import { useEffect, useState } from 'react';
 import Toast from 'react-native-toast-message';
 import styles from './styles';
 import { ViagemStatus } from '@/enums/ViagemStatus';
+import { useTranslation } from 'react-i18next';
 
 export default function Trips() {
     const { session } = useSession();
+    const { t } = useTranslation();
 
     const [viagensAtuais, setViagensAtuais] = useState<Viagem[] | null>(null);
     const [viagensFuturas, setViagensFuturas] = useState<Viagem[] | null>(null);
@@ -30,8 +31,8 @@ export default function Trips() {
         if (response instanceof ApiException) {
             Toast.show({
                 type: 'error',
-                text1: 'Erro',
-                text2: response.message || 'Erro ao consultar viagens.'
+                text1: t('common.error'),
+                text2: response.message || t('trips.fetchError'),
             });
             return;
         }
@@ -42,7 +43,7 @@ export default function Trips() {
         setViagensAtuais(viagensAtuais);
         setViagensFuturas(viagensFuturas);
         setViagensHistorico(viagensHistorico);
-    }
+    };
 
     const handleViagemPress = (viagem: Viagem) => {
         router.push({
@@ -55,7 +56,7 @@ export default function Trips() {
         setShowFormModal(false);
         setViagemSelecionada(null);
         fetchViagens();
-    }
+    };
 
     useEffect(() => {
         fetchViagens();
@@ -64,21 +65,21 @@ export default function Trips() {
     return (
         <View style={{ flex: 1, margin: 15, backgroundColor: '#f0f0f0' }}>
             <View style={styles.header}>
-                <Text style={styles.title}> Viagens</Text>
-                <Button style={styles.button} label='Nova Viagem' onPress={() => setShowFormModal(true)} /> 
+                <Text style={styles.title}>{t('trips.title')}</Text>
+                <Button style={styles.button} label={t('trips.newTrip')} onPress={() => setShowFormModal(true)} /> 
             </View>
-              <Text style={styles.subTitle}> Atual </Text>
+              <Text style={styles.subTitle}>{t('trips.current')}</Text>
                 {viagensAtuais?.map((viagem) => (
                     <ViagemCard key={viagem.id} viagem={viagem} onPress={handleViagemPress} />
                 ))}
 
             
-            <Text style={styles.subTitle}> Futuras </Text>
+            <Text style={styles.subTitle}>{t('trips.future')}</Text>
                 {viagensFuturas?.map((viagem) => (
                     <ViagemCard key={viagem.id} viagem={viagem} onPress={handleViagemPress} />
                 ))}
             
-            <Text style={styles.subTitle}> Histórico </Text>
+            <Text style={styles.subTitle}>{t('trips.history')}</Text>
                  {viagensHistorico?.map((viagem) => (
                     <ViagemCard key={viagem.id} viagem={viagem} onPress={handleViagemPress} />
                 ))}
@@ -86,7 +87,7 @@ export default function Trips() {
             <GenericModal 
                 visible={showFormModal}
                 onClose={() => setShowFormModal(false)}
-                title={viagemSelecionada ? "Editar Viagem" : "Nova Viagem"}
+                title={viagemSelecionada ? t('trips.editTrip') : t('trips.newTrip')}
                 children={<ViagemForm data={viagemSelecionada || undefined} onClose={() => handleModalClose()}/>}
             />
         </View>

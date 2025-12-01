@@ -6,7 +6,7 @@ import { useSession } from '@/context/AuthContext';
 import { Viagem } from '@/interfaces/Viagem';
 import { viagemService } from '@/services/viagemService';
 import { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { router } from 'expo-router';
 import { destinoService } from "@/services/destinoSevice";
@@ -15,6 +15,9 @@ import DestinationCard from "@/components/Cards/DestinationCard";
 import { useRouter } from 'expo-router';
 import { colors } from "@/styles/globalStyles";
 import { useTranslation } from 'react-i18next';
+import { googleAPIService } from '@/services/googleAPIService';
+import AttractionCard from "@/components/Cards/AttractionCard.";
+import { Atracao, AtracaoResult } from '@/interfaces/Atracao';
 
 export default function Home() {
     const { signOut, session } = useSession();
@@ -25,7 +28,7 @@ export default function Home() {
     const [viagemSelecionada, setViagemSelecionada] = useState(null);
     const [destinos, setDestinos] = useState<Destino[] | null>(null);
     const [userLocation, setUserLocation] = useState<{ lat: number; long: number } | null>(null);
-
+    const [attractions, setAttractions] = useState<AtracaoResult[] | null>(null);
     const [showFormModal, setShowFormModal] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -55,24 +58,61 @@ export default function Home() {
                 text1: t('common.error'),
                 text2: response.message || t('home.destinationsFetchError')
             });
-            setIsLoading(false);
             return;
         }
         setDestinos(response);
-        setIsLoading(false);
+    };
+
+    const fetchNearbyAttractions = async () => {
+        if (!userLocation || !userLocation.lat || !userLocation.long) {
+            console.log('User location not available yet');
+            return;
+        }
+        
+        try {
+            const resultReverseGeo = await googleAPIService.getReverseGeolocation(userLocation.lat, userLocation.long);
+            const city = resultReverseGeo.results[0]?.address_components.find((component: any) => component.types.includes('administrative_area_level_2'))?.long_name;
+            const response = await destinoService.getNearbyAttractions(city || '', session?.user?.preferencias?.idioma || 'pt');
+            
+            if (response instanceof ApiException) {
+                Toast.show({
+                    type: 'error',
+                    text1: t('common.error'),
+                    text2: response.message || t('home.attractionsFetchError')
+                });
+                return;
+            }
+            console.log("response", response);
+            setAttractions(response);
+        } catch (error) {
+            console.error('Error fetching nearby attractions:', error);
+            Toast.show({
+                type: 'error',
+                text1: t('common.error'),
+                text2: t('home.attractionsFetchError')
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     useEffect(() => {
-        if (session?.user?.id) {
+        console.log("userLocation", userLocation);
+        if (session?.user?.id && userLocation && userLocation.lat && userLocation.long) {
             fetchViagens();
             fetchDestinos();
+            fetchNearbyAttractions();
         }   
-    }, [session]);
+    }, [session, userLocation]);
 
     useEffect(() => {
         (async () => {
             const { status } = await Location.getForegroundPermissionsAsync();
-            if (status === 'granted') return;
+            if (status === 'granted') {
+                const location = await Location.getCurrentPositionAsync({});
+                setUserLocation({ lat: location.coords.latitude, long: location.coords.longitude });
+                return;
+            };
 
             const response  = await Location.requestForegroundPermissionsAsync();
             if (response.status !== "granted") {
@@ -97,11 +137,7 @@ export default function Home() {
         } as any);
     };
 
-    useEffect(() => {
-        console.log("User location updated:", userLocation);
-    }, [userLocation]);
-
-        
+      
     return (
         <>
             {isLoading ? (
@@ -110,18 +146,19 @@ export default function Home() {
                     <Text style={styles.title}>{t('home.loadingTrips')}</Text>
                 </View>
             ) : (
-                <View style={styles.container}>
-                    <View style={styles.header}>
-                        <Text style={styles.title}>{t('home.greeting', { name: session?.user.nome })}</Text>
-                        <Text 
-                            onPress={() => {
-                                signOut();
-                            }}
-                            style={{ color: 'red', fontWeight: 'bold' }}
-                        >
-                            {t('common.logout')}
-                        </Text>
-                    </View>
+                <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+                    <View style={styles.container}>
+                        <View style={styles.header}>
+                            <Text style={styles.title}>{t('home.greeting', { name: session?.user.nome })}</Text>
+                            <Text 
+                                onPress={() => {
+                                    signOut();
+                                }}
+                                style={{ color: 'red', fontWeight: 'bold' }}
+                            >
+                                {t('common.logout')}
+                            </Text>
+                        </View>
 
                     <View style={styles.contentPlanning}>
                         <Text style={styles.subTitle}>{t('home.continuePlanning')}</Text>
@@ -153,28 +190,53 @@ export default function Home() {
                             )}
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={{ paddingHorizontal: 20 }}
+                            contentContainerStyle={{ paddingHorizontal: 5 }}
+                        />
+                    </View>
+
+                    <View style={styles.contentPlanning}>
+                        <Text style={styles.subTitle}>{t('home.nearbyAttractions')}</Text>
+                        <FlatList
+                            data={attractions || []}
+                            keyExtractor={(item) => item.name}
+                            renderItem={({ item }) => (
+                                <AttractionCard
+                                    atracao={item}
+                                />
+                            )}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{ paddingHorizontal: 5 }}
                         />
                     </View>
 
                 </View>
+            </ScrollView>
             )}
         </>
     );
 }
 
 const styles = StyleSheet.create({
+    scrollView: {
+        flex: 1,
+        width: '100%',
+    },
+    scrollViewContent: {
+        paddingBottom: 40, // Add some padding at the bottom
+    },
     container: {
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 20,
-        gap: 40
+        gap: 40,
+        width: '100%',
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginTop: 20,
+        marginTop: 0,
     },
     subTitle: {
         fontSize: 20,

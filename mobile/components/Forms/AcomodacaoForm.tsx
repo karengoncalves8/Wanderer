@@ -18,6 +18,7 @@ import Button from '../Buttons/Button';
 import { acomodacaoService } from '@/services/acomodacaoService';
 import { parseTime } from '@/utils/timeRelated/parseTimeString';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { useTranslation } from 'react-i18next';
 
 type AcomodacaoFormProps = {
     data: Acomodacao
@@ -26,6 +27,7 @@ type AcomodacaoFormProps = {
 
 const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
     const { session } = useSession();
+    const { t } = useTranslation();
 
     const [viagens, setViagens] = useState<Array<{ key: string; value: string }>>([])
 
@@ -33,8 +35,24 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
     const [localizacao, setLocalizacao ] = useState(data.localizacao || '')
 
 
-    const [checkIn, setCheckIn] = useState<Date | null>(parseTime(data.check_in) || null);
-    const [checkOut, setCheckOut] = useState<Date | null>(parseTime(data.check_out) || null);
+    const [checkIn, setCheckIn] = useState<Date | null>(() => {
+        if (!data.check_in) return null;
+        try {
+            return parseTime(data.check_in) || null;
+        } catch (e) {
+            console.warn('Error parsing check-in time:', e);
+            return null;
+        }
+    });
+    const [checkOut, setCheckOut] = useState<Date | null>(() => {
+        if (!data.check_out) return null;
+        try {
+            return parseTime(data.check_out) || null;
+        } catch (e) {
+            console.warn('Error parsing check-out time:', e);
+            return null;
+        }
+    });
     const [dataEntrada, setDataEntrada] = useState(data.data_entrada || new Date())
     const [dataSaida, setDataSaida] = useState(data.data_saida || new Date())
     const [preco, setPreco ] = useState(data.preco ? data.preco.toString() : '')
@@ -48,8 +66,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
         if (response instanceof ApiException) {
             Toast.show({
                 type: 'error',
-                text1: 'Erro',
-                text2: response.message || 'Erro ao consultar viagens.'
+                text1: t('common.error'),
+                text2: response.message || t('acomodacaoForm.fetchTripsError')
             });
             return;
         }
@@ -65,8 +83,21 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
 
     const handleSubmit = async () => {
         // Format time values as "HH:mm:ss" strings expected by the API
-        const formattedCheckIn = checkIn ? format(checkIn, 'HH:mm:ss') : '';
-        const formattedCheckOut = checkOut ? format(checkOut, 'HH:mm:ss') : '';
+        let formattedCheckIn = '';
+        let formattedCheckOut = '';
+        
+        try {
+            formattedCheckIn = checkIn ? format(new Date(checkIn), 'HH:mm:ss') : '';
+            formattedCheckOut = checkOut ? format(new Date(checkOut), 'HH:mm:ss') : '';
+        } catch (e) {
+            console.error('Error formatting time:', e);
+            Toast.show({
+                type: 'error',
+                text1: t('common.error'),
+                text2: t('acomodacaoForm.timeFormatError')
+            });
+            return;
+        }
 
         let acomodacaoData: Acomodacao = {
             nome,
@@ -87,16 +118,16 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
             const response = await acomodacaoService.createAcomodacao(acomodacaoData);
             Toast.show({
                 type: 'success',
-                text1: 'Sucesso',
-                text2: 'Acomodação criada com sucesso.'
+                text1: t('common.success'),
+                text2: t('acomodacaoForm.created')
             });
             onClose();
         } catch (error) {
             if (error instanceof ApiException) {
                 Toast.show({
                     type: 'error',
-                    text1: 'Erro',
-                    text2: error.message || 'Erro ao criar acomodação.'
+                    text1: t('common.error'),
+                    text2: error.message || t('acomodacaoForm.createError')
                 });
             }
         }
@@ -105,18 +136,16 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
     return (
          <View style={styles.form}>
             <SelectList
-                // setSelected receives the saved property (we'll save the key which is the id as string)
                 setSelected={(val: string) => setViagemId(Number(val))}
                 data={viagens}
-                // data items are { key: string, value: string } so save the key to get the id
                 save="key"
-                placeholder='Selecione uma viagem'
-                searchPlaceholder='Pesquisar'
+                placeholder={t('acomodacaoForm.selectTrip')}
+                searchPlaceholder={t('common.search')}
             />  
 
             <InputWithIcon 
-                label='Nome'
-                placeholder='Nome da acomodacao'
+                label={t('acomodacaoForm.name')}
+                placeholder={t('acomodacaoForm.namePlaceholder')}
                 Icon={SimpleIcon} 
                 iconProps={{ name: 'location-pin' }} 
                 inputType="default"
@@ -124,8 +153,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
                 value={nome}
             />
             <InputWithIcon 
-                label='Localização'
-                placeholder='Localização da acomodacao'
+                label={t('acomodacaoForm.location')}
+                placeholder={t('acomodacaoForm.locationPlaceholder')}
                 Icon={SimpleIcon} 
                 iconProps={{ name: 'location-pin' }} 
                 inputType="default"
@@ -135,8 +164,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
             <View style={styles.inputGroup}>
                 <View style={styles.halfInput}>
                     <InputDateWithIcon 
-                        label="Data de Entrada"
-                        placeholder="10/10/2025"
+                        label={t('acomodacaoForm.entryDate')}
+                        placeholder={t('acomodacaoForm.entryDatePlaceholder')}
                         Icon={MaIcon} 
                         iconProps={{ name: 'calendar-month-outline' }} 
                         onChange={setDataEntrada}
@@ -145,8 +174,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
                 </View>
                 <View style={styles.halfInput}>
                     <InputDateWithIcon 
-                        label="Data de Saida"
-                        placeholder="10/10/2025"
+                        label={t('acomodacaoForm.exitDate')}
+                        placeholder={t('acomodacaoForm.exitDatePlaceholder')}
                         Icon={MaIcon} 
                         iconProps={{ name: 'calendar-month-outline' }} 
                         onChange={setDataSaida}
@@ -157,8 +186,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
             <View style={styles.inputGroup}>
                 <View style={styles.halfInput}>
                     <InputTimeWithIcon 
-                        label="Check-in"
-                        placeholder="10:00"
+                        label={t('acomodacaoForm.checkIn')}
+                        placeholder={t('acomodacaoForm.checkInPlaceholder')}
                         Icon={MaIcon} 
                         iconProps={{ name: 'calendar-month-outline' }} 
                         onChange={setCheckIn}
@@ -167,8 +196,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
                 </View>
                 <View style={styles.halfInput}>
                     <InputTimeWithIcon 
-                        label="Check-out"
-                        placeholder="10:00"
+                        label={t('acomodacaoForm.checkOut')}
+                        placeholder={t('acomodacaoForm.checkOutPlaceholder')}
                         Icon={MaIcon} 
                         iconProps={{ name: 'calendar-month-outline' }} 
                         onChange={setCheckOut}
@@ -179,8 +208,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
             <View style={styles.inputGroup}>
                 <View style={styles.halfInput}>
                     <InputWithIcon 
-                        label='Preço'
-                        placeholder='Preço da acomodacao'
+                        label={t('acomodacaoForm.price')}
+                        placeholder={t('acomodacaoForm.pricePlaceholder')}
                         Icon={SimpleIcon} 
                         iconProps={{ name: 'location-pin' }} 
                         inputType="numeric"
@@ -190,8 +219,8 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
                 </View>
                 <View style={styles.halfInput}>
                     <InputWithIcon 
-                        label='Dias'
-                        placeholder='Dias da acomodacao'
+                        label={t('acomodacaoForm.days')}
+                        placeholder={t('acomodacaoForm.daysPlaceholder')}
                         Icon={SimpleIcon} 
                         iconProps={{ name: 'location-pin' }} 
                         inputType="numeric"
@@ -201,7 +230,7 @@ const AcomodacaoForm = ({data, onClose}: AcomodacaoFormProps) => {
                 </View>
             </View>
             <Button 
-                label="Salvar"
+                label={t('common.save')}
                 onPress={() => handleSubmit()}
             />
         </View>

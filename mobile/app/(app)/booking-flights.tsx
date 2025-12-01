@@ -9,30 +9,31 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
+import { useTranslation } from 'react-i18next';
 
 export default function BookingFlights() {
     const router = useRouter();
     const { origem, destino, dataPartida, classe } = useLocalSearchParams(); 
     const { session } = useSession();
+    const { t, i18n } = useTranslation();
 
     const [voos, setVoos] = useState<Voo[] | null>(null);
 
     const fetchResults = async (params: VooAPISearch) => {
-        try{
+        try {
             const data = await vooAPIService.searchVoo(params);
             
             if (Array.isArray(data)) {
                 setVoos(data);
             } else {
-                console.warn('Erro na busca de voos:', data);
+                console.warn(t('flights.searchError'), data);
                 setVoos([]);
             }
         } catch (error) {
             console.log(error);
             setVoos([]);
         }
-    }
+    };
     
     useEffect(() => {
         fetchResults({
@@ -43,13 +44,15 @@ export default function BookingFlights() {
             idaEVolta: false,
             usuarioPais: session!.user.pais,
             idioma: session!.user.preferencias.idioma
-        })
-    }, [origem, destino, dataPartida, classe])
+        });
+    }, [origem, destino, dataPartida, classe]);
 
     return (
         <View style={{ flex: 1, backgroundColor: '#fff', padding: 12 }}>
             {dataPartida &&
-                <Text style={styles.subtitle}>{format(parseISO(dataPartida as string), "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</Text>
+                <Text style={styles.subtitle}>
+                    {format(parseISO(dataPartida as string), t('flights.dateFormat'), { locale: i18n.language === 'pt' ? ptBR : undefined })}
+                </Text>
             }
             {voos && voos.length > 0 ? (
                 <FlatList
@@ -63,7 +66,7 @@ export default function BookingFlights() {
                 />
             ) : (
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: colors.gray300 }}>Nenhum voo encontrado</Text>
+                    <Text style={{ color: colors.gray300 }}>{t('flights.noFlightsFound')}</Text>
                 </View>
             )}
         </View>

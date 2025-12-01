@@ -1,6 +1,7 @@
 import { colors } from "@/styles/globalStyles";
 import React from "react";
 import { View, Text, Image, StyleSheet, ImageSourcePropType } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface DestinationCardProps {
   imageURL: string;
@@ -8,12 +9,13 @@ interface DestinationCardProps {
 }
 
 const DestinationCard: React.FC<DestinationCardProps> = ({ imageURL, label }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.card}>
       <Image source={{ uri: imageURL }} style={styles.image} />
 
       <View style={styles.badgeContainer}>
-        <Text style={styles.badgeText}>{label}</Text>
+        <Text style={styles.badgeText}>{t(label)}</Text>
       </View>
     </View>
   );

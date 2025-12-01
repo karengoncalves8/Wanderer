@@ -1,14 +1,17 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '@/styles/globalStyles';
+import { useTranslation } from 'react-i18next';
 
 interface AccommodationCardProps {
     name: string;
     dates: string;
     checkIn: string;
+    localization: string;
     checkOut: string;
 }
 
-export default function AccommodationCard({ name, dates, checkIn, checkOut }: AccommodationCardProps) {
+export default function AccommodationCard({ name, dates, checkIn, localization, checkOut }: AccommodationCardProps) {
+    const { t } = useTranslation();
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -17,14 +20,14 @@ export default function AccommodationCard({ name, dates, checkIn, checkOut }: Ac
             </View>
             
             <View style={styles.details}>
-                <Text style={styles.address}>Avenida das Cruzes, 212 Copacabana, Rio de Janeiro</Text>
+                <Text style={styles.address}>{localization}</Text>
                 
                 <View style={styles.checkInfo}>
                     <View style={styles.checkItem}>
-                        <Text style={styles.checkLabel}>Check-in {checkIn}</Text>
+                        <Text style={styles.checkLabel}>{t('booking.checkIn')} {checkIn}</Text>
                     </View>
                     <View style={styles.checkItem}>
-                        <Text style={styles.checkLabel}>Check-out {checkOut}</Text>
+                        <Text style={styles.checkLabel}>{t('booking.checkOut')} {checkOut}</Text>
                     </View>
                 </View>
             </View>

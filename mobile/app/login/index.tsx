@@ -12,9 +12,11 @@ import { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
 import IoIcons from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 
 export default function SignIn() {
   const { signIn, session, signInWithBiometrics } = useSession();
+  const { t } = useTranslation();
 
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
@@ -52,12 +54,12 @@ return (
         </View>
 
         <View style={styles.caixa}>
-          <Text style={styles.subTitle}>Entrar</Text>
+          <Text style={styles.subTitle}>{t('login.title')}</Text>
 
           <View style={styles.formLogin}>
             <InputWithIcon 
-              label="Email"
-              placeholder="Digite seu email"
+              label={t('login.emailLabel')}
+              placeholder={t('login.emailPlaceholder')}
               Icon={Icon} 
               iconProps={{ name: 'alternate-email' }} 
               inputType="email-address"
@@ -65,26 +67,26 @@ return (
               value={email}  
             />
             <InputPassword 
-              label="Senha"
-              placeholder="Digite sua senha"
+              label={t('login.passwordLabel')}
+              placeholder={t('login.passwordPlaceholder')}
               onChangeText={setPassword}
               value={password}  
             />
-            <Button label="Entrar" onPress={() => handleLogin()} />
+            <Button label={t('login.loginButton')} onPress={() => handleLogin()} />
           </View>
 
           <TouchableOpacity onPress={signInWithBiometrics} style={styles.biometricsLogin}>
             <IoIcons name="finger-print" size={30} color={colors.blue800} />
-            <Text style={{ fontSize: 14, color: colors.blue800 }}>Entrar com digital</Text>
+            <Text style={{ fontSize: 14, color: colors.blue800 }}>{t('login.biometricLogin')}</Text>
           </TouchableOpacity>
 
           <View style={styles.registerMessage}>
-              <Text style={styles.registerQuestion}>Ainda não tem uma conta?</Text>
-              <Text style={styles.link} onPress={() => router.push('/register')}>Cadastre-se </Text>
+              <Text style={styles.registerQuestion}>{t('login.noAccountQuestion')}</Text>
+              <Text style={styles.link} onPress={() => router.push('/register')}>{t('login.registerLink')}</Text>
           </View>
         </View>
         </View>
     </ImageBackground>
   </KeyboardAvoidingView>
-);
+  );
 }

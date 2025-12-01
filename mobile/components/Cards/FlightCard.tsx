@@ -3,6 +3,7 @@ import { colors } from '@/styles/globalStyles';
 import React from 'react';
 import { Image, Linking, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import MaIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTranslation } from 'react-i18next';
 
 export type FlightCardProps = {
   voo: Voo;
@@ -28,6 +29,7 @@ const formatCurrencyBRL = (value: number) => {
 };
 
 export default function FlightCard({ voo, style, onPressBuy }: FlightCardProps) {
+  const { t } = useTranslation();
   const depCode = voo.departure_airport?.id ?? '';
   const arrCode = voo.arrival_airport?.id ?? '';
   const depTime = voo.departure_airport?.time ?? '';
@@ -36,14 +38,13 @@ export default function FlightCard({ voo, style, onPressBuy }: FlightCardProps) 
   const price = formatCurrencyBRL(Number(voo.price ?? 0));
 
   const handlePress = async (link: string) => {
-    const url = link; // Replace with your desired external URL
+    const url = link;
     const supported = await Linking.canOpenURL(url);
 
     if (supported) {
       await Linking.openURL(url);
     } else {
       console.error(`Don't know how to open this URL: ${url}`);
-      // Optionally, provide user feedback, e.g., an alert
     }
   };
 
@@ -85,7 +86,7 @@ export default function FlightCard({ voo, style, onPressBuy }: FlightCardProps) 
         <View style={styles.ctaArea}>
           <Text style={styles.price}>{price}</Text>
           <TouchableOpacity style={styles.buyButton} onPress={() => handlePress(voo.booking_url!)}>
-            <Text style={styles.buyButtonText}>Comprar</Text>
+            <Text style={styles.buyButtonText}>{t('flights.buy')}</Text>
           </TouchableOpacity>
         </View>
       </View>
