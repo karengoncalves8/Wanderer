@@ -3,8 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
 export const Api = axios.create({
-  baseURL: `https://96c97cfcb5a9.ngrok-free.app`,
-  timeout: 10000, // 10 second timeout
+  baseURL: `https://ba4d97173a2d.ngrok-free.app`,
+  timeout: 120000, // 120 second timeout
   headers: {
     'Content-Type': 'application/json',
   },
