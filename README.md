@@ -63,6 +63,6 @@ Desde o cadastro e preferências do usuário até o planejamento completo com vo
 | 08 | 17 | Alta | Como usuário, quero receber sugestões automáticas de destinos, para aproveitar melhor a viagem. | 13 | 3 |
 | 11 | 18 | Média | Como usuário, quero integrar transporte local (Uber etc.), para facilitar deslocamentos. | 5 | 3 |
 | 12 | 19 | Baixa | Como usuário, quero acessar conteúdos de apoio, para me preparar melhor para a viagem. | 3 | 3 |
-| 14 | 21 | Média | Como usuário, quero tradução automática de informações básicas, para facilitar comunicação. | 3 | 3 |
+| 14 | 21 | Média | Como usuário, quero tradução automática das informações disponibilizadas, para facilitar o entendimento. | 3 | 3 |
 
 
